@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <time.h>
 
 #define SCREEN_WIDTH  640
 #define SCREEN_HEIGHT 480
@@ -37,6 +38,42 @@ void close()
     SDL_Quit();
 }
 
+// gets mouse x and y position
+// returns true if mouse position is in rect, false otherwise
+bool isMouseInRect(SDL_Rect rect, int mX, int mY)
+{
+    return (mX >= rect.x && mX <= rect.x + rect.w &&
+            mY >= rect.y && mY <= rect.y + rect.h) ? true : false;
+}
+
+void moveRect(SDL_Rect *rect)
+{
+    srandom((unsigned int) clock());
+    double n = rand();
+    n = n / RAND_MAX;
+
+    if (n <= 0.25)
+    {
+        rect->y -= 1;
+        if (rect->y < 0) rect->y = 0;
+    }
+    else if (n >= 0.26 && n <= 0.5)
+    {
+        rect->y += 1;
+        if (rect->y + RECT_HEIGHT > SCREEN_HEIGHT) rect->y = SCREEN_HEIGHT - RECT_HEIGHT;
+    }
+    else if (n >= 0.51 && n <= 0.75)
+    {
+        rect->x -= 1;
+        if (rect->x < 0) rect->x = 0;
+    }
+    else
+    {
+        rect->x += 1;
+        if (rect->x + RECT_WIDTH > SCREEN_WIDTH) rect->x = SCREEN_WIDTH - RECT_WIDTH;
+    }
+}
+
 int main(int argc, char *args[])
 {
     bool quit = false;
@@ -44,8 +81,8 @@ int main(int argc, char *args[])
     SDL_Surface *aux = NULL;
     SDL_Rect SrcR;
 
-    SrcR.x = 10;
-    SrcR.y = 10;
+    SrcR.x = SCREEN_WIDTH / 2;
+    SrcR.y = SCREEN_HEIGHT / 2;
     SrcR.w = RECT_WIDTH;
     SrcR.h = RECT_HEIGHT;
 
@@ -90,14 +127,17 @@ int main(int argc, char *args[])
                         break;
                 }
             }
+            else if (e.type == SDL_MOUSEMOTION)
+            {
+                while (isMouseInRect(SrcR, e.motion.x, e.motion.y)) moveRect(&SrcR);
+            }
         }
         SDL_RenderClear(gRenderer);
         // ==>  modifique o ultimo parametro NULL !!
         SDL_RenderCopy(gRenderer, gHelloWorld, NULL, &SrcR);
         SDL_RenderPresent(gRenderer);
-        SDL_Delay(1000);
+        SDL_Delay(30);
     }
-    printf("matheus");
     close();
 
     return 0;
