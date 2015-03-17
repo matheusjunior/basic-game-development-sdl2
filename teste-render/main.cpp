@@ -97,7 +97,7 @@ int main(int argc, char *args[])
         SDL_RenderPresent(gRenderer);
         SDL_Delay(1000);
     }
-
+    printf("matheus");
     close();
 
     return 0;
