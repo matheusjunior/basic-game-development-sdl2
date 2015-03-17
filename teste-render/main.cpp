@@ -7,7 +7,6 @@
 
 SDL_Window *gWindow = NULL;
 SDL_Renderer *gRenderer = NULL;
-SDL_Surface *gScreenSurface = NULL;
 SDL_Texture *gHelloWorld = NULL;
 
 bool init()
@@ -19,8 +18,6 @@ bool init()
     if (gWindow == NULL) return false;
 
     gRenderer = SDL_CreateRenderer(gWindow, -1, 0);
-    gScreenSurface = SDL_GetWindowSurface(gWindow);
-
     return true;
 }
 
@@ -41,7 +38,6 @@ void close()
 
 int main(int argc, char *args[])
 {
-    SDL_Surface *aux = NULL;
     SDL_Rect SrcR;
 
     SrcR.x = 10;
@@ -60,7 +56,6 @@ int main(int argc, char *args[])
         puts("Falhou media\n");
         return 0;
     }
-
 
     SDL_RenderClear(gRenderer);
 
