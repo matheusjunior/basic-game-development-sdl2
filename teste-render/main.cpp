@@ -10,6 +10,7 @@ SDL_Window *gWindow = NULL;
 SDL_Renderer *gRenderer = NULL;
 SDL_Texture *gHelloWorld = NULL;
 
+// init SDL video component and create main window
 bool init()
 {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) return false;
@@ -38,7 +39,7 @@ void close()
     SDL_Quit();
 }
 
-// gets mouse x and y position
+// get mouse x and y position
 // returns true if mouse position is in rect, false otherwise
 bool isMouseInRect(SDL_Rect rect, int mX, int mY)
 {
@@ -46,27 +47,32 @@ bool isMouseInRect(SDL_Rect rect, int mX, int mY)
             mY >= rect.y && mY <= rect.y + rect.h) ? true : false;
 }
 
+// move rect randomly on screen
 void moveRect(SDL_Rect *rect)
 {
     srandom((unsigned int) clock());
     double n = rand();
     n = n / RAND_MAX;
 
+//    move up
     if (n <= 0.25)
     {
         rect->y -= 1;
         if (rect->y < 0) rect->y = 0;
     }
+//    move down
     else if (n >= 0.26 && n <= 0.5)
     {
         rect->y += 1;
         if (rect->y + RECT_HEIGHT > SCREEN_HEIGHT) rect->y = SCREEN_HEIGHT - RECT_HEIGHT;
     }
+//    move left
     else if (n >= 0.51 && n <= 0.75)
     {
         rect->x -= 1;
         if (rect->x < 0) rect->x = 0;
     }
+//    move right
     else
     {
         rect->x += 1;
@@ -79,12 +85,12 @@ int main(int argc, char *args[])
     bool quit = false;
     SDL_Event e;
     SDL_Surface *aux = NULL;
-    SDL_Rect SrcR;
+    SDL_Rect rect;
 
-    SrcR.x = SCREEN_WIDTH / 2;
-    SrcR.y = SCREEN_HEIGHT / 2;
-    SrcR.w = RECT_WIDTH;
-    SrcR.h = RECT_HEIGHT;
+    rect.x = SCREEN_WIDTH / 2;
+    rect.y = SCREEN_HEIGHT / 2;
+    rect.w = RECT_WIDTH;
+    rect.h = RECT_HEIGHT;
 
     if (!init())
     {
@@ -97,9 +103,10 @@ int main(int argc, char *args[])
         puts("Falhou media\n");
         return 0;
     }
-
+//    game loop
     while (!quit)
     {
+//        event handler
         while (SDL_PollEvent(&e) != 0)
         {
             if (e.type == SDL_QUIT) quit = true;
@@ -108,33 +115,31 @@ int main(int argc, char *args[])
                 switch (e.key.keysym.sym)
                 {
                     case SDLK_UP:
-                        SrcR.y -= 5;
-                        if (SrcR.y < 0) SrcR.y = 0;
+                        rect.y -= 5;
+                        if (rect.y < 0) rect.y = 0;
                         break;
                     case SDLK_DOWN:
-                        SrcR.y += 5;
-                        if (SrcR.y + RECT_HEIGHT > SCREEN_HEIGHT) SrcR.y = SCREEN_HEIGHT - RECT_HEIGHT;
+                        rect.y += 5;
+                        if (rect.y + RECT_HEIGHT > SCREEN_HEIGHT) rect.y = SCREEN_HEIGHT - RECT_HEIGHT;
                         break;
                     case SDLK_LEFT:
-                        SrcR.x -= 5;
-                        if (SrcR.x < 0) SrcR.x = 0;
+                        rect.x -= 5;
+                        if (rect.x < 0) rect.x = 0;
                         break;
                     case SDLK_RIGHT:
-                        SrcR.x += 5;
-                        if (SrcR.x + RECT_WIDTH > SCREEN_WIDTH) SrcR.x = SCREEN_WIDTH - RECT_WIDTH;
+                        rect.x += 5;
+                        if (rect.x + RECT_WIDTH > SCREEN_WIDTH) rect.x = SCREEN_WIDTH - RECT_WIDTH;
                         break;
                     default:
                         break;
                 }
             }
-            else if (e.type == SDL_MOUSEMOTION)
-            {
-                while (isMouseInRect(SrcR, e.motion.x, e.motion.y)) moveRect(&SrcR);
-            }
+            else if (e.type == SDL_MOUSEMOTION) while (isMouseInRect(rect, e.motion.x, e.motion.y)) moveRect(&rect);
         }
+//        clear renderer and apply texture to rect
         SDL_RenderClear(gRenderer);
         // ==>  modifique o ultimo parametro NULL !!
-        SDL_RenderCopy(gRenderer, gHelloWorld, NULL, &SrcR);
+        SDL_RenderCopy(gRenderer, gHelloWorld, NULL, &rect);
         SDL_RenderPresent(gRenderer);
         SDL_Delay(30);
     }
