@@ -1,6 +1,7 @@
 #ifdef _WIN32
 #include <SDL.h>
 #else
+
 #include <SDL2/SDL.h>
 
 #endif
@@ -19,9 +20,7 @@ SDL_Window *gWindow = NULL;
 SDL_Renderer *gRenderer = NULL;
 SDL_Texture *gTextureBlueBox = NULL;
 SDL_Texture *gTextureYellowBox = NULL;
-SDL_Texture *gTextureGreenBoxA = NULL;
-SDL_Texture *gTextureGreenBoxB = NULL;
-SDL_Texture *gTexturePurpleBox = NULL;
+SDL_Texture *gTextureGreenBox = NULL;
 
 using namespace std;
 
@@ -30,12 +29,12 @@ using namespace std;
 // init SDL video component and create main window
 bool init()
 {
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) return false;
+    if(SDL_Init(SDL_INIT_VIDEO) < 0) return false;
 
     gWindow = SDL_CreateWindow("Testando !", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
             SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 
-    if (gWindow == NULL) return false;
+    if(gWindow == NULL) return false;
     gRenderer = SDL_CreateRenderer(gWindow, -1, 0);
 
     return true;
@@ -51,20 +50,10 @@ bool loadMedia(char *path)
 
 bool loadMedia()
 {
-    SDL_Surface *surfaceBlueBox = SDL_LoadBMP("media/blue-square.bmp");
-    SDL_Surface *surfaceYellowBox = SDL_LoadBMP("media/yellow-square.bmp");
-    SDL_Surface *surfaceGreenBoxA = SDL_LoadBMP("media/green1-square.bmp");
-    SDL_Surface *surfaceGreenBoxB = SDL_LoadBMP("media/green2-square.bmp");
-    SDL_Surface *surfacePurpleBox = SDL_LoadBMP("media/purple-square.bmp");
+    SDL_Surface *surfaceGreenBox = SDL_LoadBMP("media/green1-square.bmp");
+    gTextureGreenBox = SDL_CreateTextureFromSurface(gRenderer, surfaceGreenBox);
 
-    gTextureBlueBox = SDL_CreateTextureFromSurface(gRenderer, surfaceBlueBox);
-    gTextureYellowBox = SDL_CreateTextureFromSurface(gRenderer, surfaceYellowBox);
-    gTextureGreenBoxA = SDL_CreateTextureFromSurface(gRenderer, surfaceGreenBoxA);
-    gTextureGreenBoxB = SDL_CreateTextureFromSurface(gRenderer, surfaceGreenBoxB);
-    gTexturePurpleBox = SDL_CreateTextureFromSurface(gRenderer, surfacePurpleBox);
-
-    return (gTextureBlueBox != NULL && gTextureYellowBox != NULL &&
-            gTextureGreenBoxA != NULL && gTextureGreenBoxB != NULL && surfacePurpleBox != NULL);
+    return (gTextureGreenBox != NULL);
 }
 
 void close()
@@ -137,58 +126,44 @@ void moveRect(SDL_Rect *rect)
     if(n <= 0.25)
     {
         rect->y -= 1;
-        if (rect->y < 0) rect->y = 0;
+        if(rect->y < 0) rect->y = 0;
     }
 //    move down
     else if(n >= 0.26 && n <= 0.5)
     {
         rect->y += 1;
-        if (rect->y + RECT_HEIGHT > SCREEN_HEIGHT) rect->y = SCREEN_HEIGHT - RECT_HEIGHT;
+        if(rect->y + RECT_HEIGHT > SCREEN_HEIGHT) rect->y = SCREEN_HEIGHT - RECT_HEIGHT;
     }
 //    move left
     else if(n >= 0.51 && n <= 0.75)
     {
         rect->x -= 1;
-        if (rect->x < 0) rect->x = 0;
+        if(rect->x < 0) rect->x = 0;
     }
 //    move right
     else
     {
         rect->x += 1;
-        if (rect->x + RECT_WIDTH > SCREEN_WIDTH) rect->x = SCREEN_WIDTH - RECT_WIDTH;
+        if(rect->x + RECT_WIDTH > SCREEN_WIDTH) rect->x = SCREEN_WIDTH - RECT_WIDTH;
     }
 }
 
 int main(int argc, char *args[])
 {
     bool quit = false;
-    bool greenSelected = true;
-
     SDL_Event e;
-    SDL_Rect rect;
-    SDL_Rect yellowRect;
-    SDL_Rect greenRect;
-    SDL_Rect violetRect;
+    SDL_Rect squares[10];
+    bool selectedSquares[10];
 
-    rect.x = SCREEN_WIDTH / 2;
-    rect.y = SCREEN_HEIGHT / 2;
-    rect.w = RECT_WIDTH;
-    rect.h = RECT_HEIGHT;
-
-    yellowRect.x = SCREEN_WIDTH / 3;
-    yellowRect.y = SCREEN_HEIGHT / 3;
-    yellowRect.w = RECT_WIDTH;
-    yellowRect.h = RECT_HEIGHT;
-
-    greenRect.x = SCREEN_WIDTH / 3 + 30;
-    greenRect.y = SCREEN_HEIGHT / 3 + 100;
-    greenRect.w = RECT_WIDTH;
-    greenRect.h = RECT_HEIGHT;
-
-    violetRect.x = SCREEN_WIDTH / 3 + 190;
-    violetRect.y = SCREEN_HEIGHT / 3 + 110;
-    violetRect.w = RECT_WIDTH;
-    violetRect.h = RECT_HEIGHT;
+    srand(time(NULL));
+    for (int i = 0; i < 10; i++)
+    {
+        squares[i].x = rand() % SCREEN_WIDTH;
+        squares[i].y = rand() % SCREEN_HEIGHT;
+        squares[i].w = 30;
+        squares[i].h = 30;
+        selectedSquares[i] = false;
+    }
 
     if(!init())
     {
@@ -201,58 +176,29 @@ int main(int argc, char *args[])
         cout << "Falhou media\n";
         return 0;
     }
+
 //    game loop
     while (!quit)
     {
-        moveRectPseudo(&yellowRect);
-        moveRect(&greenRect);
 //        event handler
         while (SDL_PollEvent(&e) != 0)
         {
-            if (e.type == SDL_QUIT) quit = true;
-            else if(e.type == SDL_KEYDOWN)
+            if(e.type == SDL_MOUSEMOTION)
             {
-                switch (e.key.keysym.sym)
+                for (int i = 0; i < 10; ++i)
                 {
-                    case SDLK_UP:
-                        rect.y -= 5;
-                        if (rect.y < 0) rect.y = 0;
-                        SDL_SetWindowTitle(gWindow, "Subindo");
-                        break;
-                    case SDLK_DOWN:
-                        rect.y += 5;
-                        if (rect.y + RECT_HEIGHT > SCREEN_HEIGHT) rect.y = SCREEN_HEIGHT - RECT_HEIGHT;
-                        SDL_SetWindowTitle(gWindow, "Descendo");
-                        break;
-                    case SDLK_LEFT:
-                        rect.x -= 5;
-                        if(rect.x < 0)
-                        {
-                            rect.x = 0;
-                            SDL_SetWindowTitle(gWindow, "Limite identificado");
-                        }
-                        else SDL_SetWindowTitle(gWindow, "Esquerda");
-                        break;
-                    case SDLK_RIGHT:
-                        rect.x += 5;
-                        if (rect.x + RECT_WIDTH > SCREEN_WIDTH) rect.x = SCREEN_WIDTH - RECT_WIDTH;
-                        SDL_SetWindowTitle(gWindow, "Direita");
-                        break;
-                    default:
-                        break;
+                    selectedSquares[i] = isMouseInRect(squares[i], e.motion.x, e.motion.y) ? false : true;
                 }
             }
-            else if(e.type == SDL_MOUSEMOTION) while (isMouseInRect(violetRect, e.motion.x, e.motion.y)) moveRect(&violetRect);
-            if(e.type == SDL_MOUSEMOTION) greenSelected = isMouseInRect(greenRect, e.motion.x, e.motion.y) ? false : true;
         }
+
 //        clear renderer and apply texture to rect
         SDL_RenderClear(gRenderer);
-        SDL_RenderCopy(gRenderer, gTextureBlueBox, NULL, &rect);
-        SDL_RenderCopy(gRenderer, gTextureYellowBox, NULL, &yellowRect);
 
-        if(greenSelected) SDL_RenderCopy(gRenderer, gTextureGreenBoxA, NULL, &greenRect);
-        else SDL_RenderCopy(gRenderer, gTextureGreenBoxB, NULL, &greenRect);
-        SDL_RenderCopy(gRenderer, gTexturePurpleBox, NULL, &violetRect);
+        for (int i = 0; i < 10; i++)
+        {
+            if(selectedSquares[i]) SDL_RenderCopy(gRenderer, gTextureGreenBox, NULL, &squares[i]);
+        }
 
         SDL_RenderPresent(gRenderer);
         SDL_Delay(30);
