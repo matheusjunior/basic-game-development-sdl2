@@ -18,8 +18,8 @@ public:
     Objeto(int x, int y, int w, int h);
     Objeto(int x, int y, int w, int h, double vel);
 
-    void moverX(double tempo);
-    void moverY(double tempo);
+    void moverX(double x);
+    void moverY(double y);
 
     void setVelocidadeX(double v);
     void setVelocidadeY(double v);
@@ -81,12 +81,12 @@ void Objeto::setTexture(SDL_Texture *tex) {
     texture = tex;
 }
 
-void Objeto::moverX(double tempo) {
-    posicao.x += velX * tempo;
+void Objeto::moverX(double x) {
+    posicao.x += (velX * x) / 100;
 }
 
-void Objeto::moverY(double tempo) {
-    posicao.y += velY * tempo;
+void Objeto::moverY(double y) {
+    posicao.y += velY * y;
 }
 
 void Objeto::Update() {

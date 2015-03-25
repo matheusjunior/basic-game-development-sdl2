@@ -76,9 +76,9 @@ int main(int argc, char *args[]) {
         return 0;
     }
 
-    Canhao *zanhao = new Canhao(SCREEN_WIDTH / 2, SCREEN_WIDTH / 2, 150, 165, 10);
-    Objeto *aranha = new Objeto(SCREEN_WIDTH - 200, SCREEN_WIDTH / 6, 120, 115, 10);
-    Objeto *mosca = new Objeto(SCREEN_WIDTH / 6, SCREEN_WIDTH / 6, 54, 67, 10);
+    Canhao *zanhao = new Canhao(SCREEN_WIDTH / 2, SCREEN_HEIGHT -180, 150, 165, 10);
+    Objeto *aranha = new Objeto(SCREEN_WIDTH - 50, 25, 100, 80, 10);
+    Objeto *mosca = new Objeto(SCREEN_WIDTH / 6, SCREEN_HEIGHT / 6, 54, 67, 10);
 
 
   printf (" x vale %d", zanhao->posicao.x);
@@ -88,6 +88,11 @@ int main(int argc, char *args[]) {
     mosca->texture = getTexture("media/fly.bmp");
 
     while (!quit) {
+
+        if (aranha->posicao.x > SCREEN_WIDTH) aranha->posicao.x = 0;
+        else  aranha->moverX(28);
+        SDL_Delay(5);
+
 
         while (SDL_PollEvent(&e) != 0) {
             if (e.type == SDL_QUIT) quit = true;
@@ -109,6 +114,8 @@ int main(int argc, char *args[]) {
         aranha->desenha(gRenderer);
 
         SDL_RenderPresent(gRenderer);
+
+
 
     }
     close();
