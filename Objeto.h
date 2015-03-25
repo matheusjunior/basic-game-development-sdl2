@@ -1,6 +1,8 @@
 #ifndef objeto
 #define objeto
 
+#include "Consts.h"
+
 class Objeto {
 public:
 
@@ -12,6 +14,7 @@ public:
     double currentTime;
     double deltaT;
 
+    Objeto () {;}
     Objeto(int x, int y, int w, int h);
     Objeto(int x, int y, int w, int h, double vel);
 
@@ -26,8 +29,10 @@ public:
     void desenha(SDL_Renderer *gRenderer);
 
     void Update();
-private:
-    SDL_Surface surface;
+
+    void handleInput(SDL_Event e);
+//private:
+   // SDL_Surface surface;
 };
 
 
@@ -91,8 +96,35 @@ void Objeto::Update() {
 void Objeto::desenha(SDL_Renderer *gRenderer) {
     currentTime = SDL_GetTicks();
     Update();
+    if (NULL ==texture) exit(9);
     SDL_RenderCopy(gRenderer, texture, NULL, &posicao);
     timeStart = currentTime;
+}
+
+void Objeto::handleInput(SDL_Event e) {
+
+    switch (e.key.keysym.sym) {
+    case SDLK_UP:
+        posicao.y -= 5;
+        if (posicao.y < 0) posicao.y = 0;
+        break;
+    case SDLK_DOWN:
+        posicao.y += 5;
+        if (posicao.y + posicao.h > SCREEN_HEIGHT) posicao.y = SCREEN_HEIGHT - posicao.h;
+        break;
+    case SDLK_LEFT:
+        posicao.x -= 5;
+        if (posicao.x < 0) {
+            posicao.x = 0;
+        }
+        break;
+    case SDLK_RIGHT:
+        posicao.x += 5;
+        if (posicao.x + posicao.w > SCREEN_WIDTH) posicao.x = SCREEN_WIDTH - posicao.w;
+        break;
+    default:
+        break;
+    }
 }
 
 #endif // objeto
