@@ -106,7 +106,7 @@ int main(int argc, char *args[]) {
     Objeto *cMosca = new Objeto(SCREEN_WIDTH / 6  , SCREEN_HEIGHT / 6  ,  54,  67, 10);
 
 
-    Objeto *cTiro[LIMITE_TIROS];
+    Objeto *cTiro[50];
     int size = 0;
     int k = 0;
     bool  tirosDisparados = false;
@@ -115,7 +115,7 @@ int main(int argc, char *args[]) {
     cAranha->texture = getTexture("media/spider.bmp");
     cMosca->texture = getTexture("media/fly.bmp");
 
-    for (int i = 0; i < LIMITE_TIROS; i++) {
+    for (int i = 0; i < 50; i++) {
         cTiro[i] = NULL;
     }
 
@@ -126,16 +126,16 @@ int main(int argc, char *args[]) {
 
         if (!listaVazia(cTiro)) {
 
-            for (int j = 0; j < LIMITE_TIROS; j++)
+            for (int j = 0; j < 50; j++)
                 if (cTiro[j] != NULL) {
                     if (cTiro[j]->posicao.y < 0) {
                         delete cTiro[j];
                         cTiro[j] = NULL;
                         j--;
-                        printf("===");
-                        size--;
+                                                printf("===");
                     } else {
                         cTiro[j]->moverY(-20);
+
                     }
                 }
         }
@@ -154,12 +154,9 @@ int main(int argc, char *args[]) {
 
                 case SDLK_SPACE:
                     k = 0;
-                    if(cTiro[k] == NULL) {
-                        k++;
-                    }
-
-                    cTiro[size] = new Objeto(cCanhao->posicao.x , cCanhao->posicao.y - 25, 41, 41, 10);
-                    cTiro[size]->texture = getTexture("media/tiro.bmp");
+                    if(cTiro[k] == NULL) { k++; }
+                    cTiro[k] = new Objeto(cCanhao->posicao.x + ((cCanhao->posicao.w) / 2)  - 20, cCanhao->posicao.y - 25, 41, 41, 10);
+                    cTiro[k]->texture = getTexture("media/tiro.bmp");
                     size++;
                     tirosDisparados = true;
                     break;
@@ -186,8 +183,7 @@ int main(int argc, char *args[]) {
         cAranha->desenha(gRenderer);
 
         if (tirosDisparados) {
-            for (int i = 0; i < LIMITE_TIROS; i++) {
-                if (cTiro[i] != NULL)
+            for (int i = 0; i < size; i++) {
                 cTiro[i]->desenha(gRenderer);
             }
         }
