@@ -341,8 +341,15 @@
 	<iostream>
 	<math.h>
 
-1427324347 source:c:\users\joaoapenas\dropbox\utfpr 2015-1\jogos\test1\sdltest\canhao.cpp
-	"Canhao.h"
+1427298746 source:c:\users\joaoapenas\dropbox\utfpr 2015-1\jogos\test1\sdltest\canhao.cpp
+	<SDL.h>
+	<SDL2/SDL.h>
+	<time.h>
+	<cstdlib>
+	<iostream>
+	<stdio.h>
+	<string>
+	"Objeto.h"
 
 1394937196 c:\users\joaoapenas\dropbox\utfpr 2015-1\jogos\sdl2-2.0.3\include\sdl2\sdl.h
 	"SDL_main.h"
@@ -661,12 +668,10 @@
 	"begin_code.h"
 	"close_code.h"
 
-1427325656 c:\users\joaoapenas\dropbox\utfpr 2015-1\jogos\test1\sdltest\objeto.h
+1427322291 c:\users\joaoapenas\dropbox\utfpr 2015-1\jogos\test1\sdltest\objeto.h
 	"Consts.h"
-	<SDL.h>
-	<SDL2/SDL.h>
 
-1427324670 source:c:\users\joaoapenas\dropbox\utfpr 2015-1\jogos\test1\sdltest\exe3.cpp
+1427323239 source:c:\users\joaoapenas\dropbox\utfpr 2015-1\jogos\test1\sdltest\exe3.cpp
 	<SDL.h>
 	<SDL2/SDL.h>
 	<time.h>
@@ -676,15 +681,10 @@
 	<string>
 	<vector>
 	"Objeto.h"
+	"Canhao.h"
 	"Consts.h"
 
 1427321957 c:\users\joaoapenas\dropbox\utfpr 2015-1\jogos\test1\sdltest\consts.h
 
-1427324467 c:\users\joaoapenas\dropbox\utfpr 2015-1\jogos\test1\sdltest\canhao.h
-	<SDL.h>
-	<SDL2/SDL.h>
-	"Objeto.h"
-
-1427324755 source:c:\users\joaoapenas\dropbox\utfpr 2015-1\jogos\test1\sdltest\objeto.cpp
-	"Objeto.h"
+1427309692 c:\users\joaoapenas\dropbox\utfpr 2015-1\jogos\test1\sdltest\canhao.h
 
