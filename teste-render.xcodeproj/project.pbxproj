@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3220C3F0AF1365936B15D267 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3220C4AD8E087E83EA9DBFCD /* main.cpp */; };
 		3220C60EAED37079E7969292 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3220C5739C4567856FB01162 /* SDL2.framework */; };
+		3220C9A2B5D3315A17C48E12 /* canhao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3220C2D87FDA0C9B308DA4F4 /* canhao.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -24,9 +24,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3220C2D87FDA0C9B308DA4F4 /* canhao.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = canhao.cpp; sourceTree = "<group>"; };
 		3220C2E648AB7641CF27FCCC /* teste-render */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "teste-render"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3220C4AD8E087E83EA9DBFCD /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		3220C5739C4567856FB01162 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = /Library/Frameworks/SDL2.framework; sourceTree = "<absolute>"; };
+		3220C6273F25DA95BF2DAEFB /* Objeto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Objeto.h; sourceTree = "<group>"; };
+		3220C732FD72AF7A4CD76CE7 /* Canhao.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Canhao.h; sourceTree = "<group>"; };
+		3220CBD1D060F7AA972BE985 /* Consts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Consts.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,9 +47,19 @@
 		3220C1CEFF7C2BA8B0266BA7 /* teste-render */ = {
 			isa = PBXGroup;
 			children = (
-				3220C4AD8E087E83EA9DBFCD /* main.cpp */,
 			);
 			path = "teste-render";
+			sourceTree = "<group>";
+		};
+		3220C4E5F4B64284C60E96B3 /* cannon */ = {
+			isa = PBXGroup;
+			children = (
+				3220C2D87FDA0C9B308DA4F4 /* canhao.cpp */,
+				3220C732FD72AF7A4CD76CE7 /* Canhao.h */,
+				3220CBD1D060F7AA972BE985 /* Consts.h */,
+				3220C6273F25DA95BF2DAEFB /* Objeto.h */,
+			);
+			path = cannon;
 			sourceTree = "<group>";
 		};
 		3220C7879653F2E95D0F0231 = {
@@ -55,6 +68,7 @@
 				3220CEB4D4B1A146D69EF4E0 /* Products */,
 				3220C1CEFF7C2BA8B0266BA7 /* teste-render */,
 				3220CA1014A5D4BC3723F8BA /* Frameworks */,
+				3220C4E5F4B64284C60E96B3 /* cannon */,
 			);
 			sourceTree = "<group>";
 		};
@@ -124,7 +138,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3220C3F0AF1365936B15D267 /* main.cpp in Sources */,
+				3220C9A2B5D3315A17C48E12 /* canhao.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

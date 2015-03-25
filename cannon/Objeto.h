@@ -26,7 +26,7 @@ public:
 
     void setTexture(SDL_Texture *tex);
 
-    void desenha(SDL_Renderer *gRenderer);
+    virtual void desenha(SDL_Renderer *gRenderer);
 
     void Update();
 
@@ -42,8 +42,9 @@ Objeto::Objeto(int x, int y, int w, int h) {
     posicao.w = w;
     posicao.h = h;
 
-    velX = 10;
-    velY = 10;
+//    pixels/sec
+    velX = 400;
+    velY = 100;
 
     texture = NULL;
 
@@ -82,7 +83,7 @@ void Objeto::setTexture(SDL_Texture *tex) {
 }
 
 void Objeto::moverX(double x) {
-    posicao.x += (velX * x) / 100;
+    posicao.x += velX * ((float) x / 1000);
 }
 
 void Objeto::moverY(double y) {
@@ -90,13 +91,13 @@ void Objeto::moverY(double y) {
 }
 
 void Objeto::Update() {
-    posicao.x += velX * (currentTime - timeStart) / 1000;
+    posicao.x += velX * (float) (currentTime - timeStart) / 1000;
 }
 
 void Objeto::desenha(SDL_Renderer *gRenderer) {
     currentTime = SDL_GetTicks();
-    Update();
-    if (NULL ==texture) exit(9);
+    //Update();
+    if (NULL == texture) exit(9);
     SDL_RenderCopy(gRenderer, texture, NULL, &posicao);
     timeStart = currentTime;
 }

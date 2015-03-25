@@ -13,9 +13,8 @@
 #include <string>
 
 #include "Objeto.h"
+#include "Canhao.h"
 
-#define SCREEN_WIDTH  800
-#define SCREEN_HEIGHT 600
 #define RECT_WIDTH 35
 #define RECT_HEIGHT 35
 
@@ -44,6 +43,7 @@ bool init() {
 
 SDL_Texture *getTexture(string path) {
     SDL_Surface *surface = SDL_LoadBMP(path.c_str());
+    cout << SDL_GetError();
     SDL_Texture *t = SDL_CreateTextureFromSurface(gRenderer, surface);
 
     if (t == NULL) cout << SDL_GetError();
@@ -79,42 +79,55 @@ int main(int argc, char *args[]) {
         return 0;
     }
 
-    Objeto *canhao = new Objeto(SCREEN_WIDTH / 6, SCREEN_WIDTH / 2, 100, 80, 10);
-    Objeto *aranha = new Objeto(SCREEN_WIDTH - 200, SCREEN_WIDTH / 6, 102, 106, 10);
-    Objeto *mosca = new Objeto(SCREEN_WIDTH / 6, SCREEN_WIDTH / 6, 96, 116, 10);
+    //Objeto *c = new Objeto(SCREEN_WIDTH / 6, SCREEN_WIDTH / 2, 100, 80, 400);
+    Canhao* cannon = new Canhao(SCREEN_WIDTH / 6, SCREEN_WIDTH / 2, 100, 80, 400);
+    Objeto *aranha = new Objeto(SCREEN_WIDTH - 200, SCREEN_WIDTH / 6, 102, 106, 400);
+    Objeto *mosca = new Objeto(SCREEN_WIDTH / 6, SCREEN_WIDTH / 6, 96, 116, 400);
 
-    canhao->texture = getTexture("media/cannon.bmp");
+    cannon->texture = getTexture("media/cannon.bmp");
     aranha->texture = getTexture("media/spider.bmp");
     mosca->texture = getTexture("media/fly.bmp");
+    int startFrameTime;
+    int endFrameTime;
+    bool onetime = true;
 
-    while (!quit) {
+    while (!quit)
+    {
 
-        while (SDL_PollEvent(&e) != 0) {
-            if (e.type == SDL_QUIT) quit = true;
-            else if (e.type == SDL_KEYDOWN) {
-                switch (e.key.keysym.sym) {
-                case SDLK_ESCAPE:
-                    quit = true;
-                    break;
+        while (SDL_PollEvent(&e) != 0)
+        {
+            if(e.type == SDL_QUIT) quit = true;
+            else if(e.type == SDL_KEYDOWN)
+            {
+                switch (e.key.keysym.sym)
+                {
+                    case SDLK_ESCAPE:
+                        quit = true;
+                        break;
                 }
             }
         }
-
+        startFrameTime = SDL_GetTicks();
 //        clear renderer and apply texture to rect
         SDL_RenderClear(gRenderer);
 
-        if (canhao->posicao.x > SCREEN_WIDTH) canhao->posicao.x = 0;
-        else {
-            canhao->moverX(400);
+        if(mosca->posicao.x > SCREEN_WIDTH) mosca->posicao.x = 0;
+        else
+        {
+            mosca->moverX(15);
         }
-
-
-        canhao->desenha(gRenderer);
         mosca->desenha(gRenderer);
-        aranha->desenha(gRenderer);
+
+        cannon->fire();
+        onetime = false;
+
+
+        cannon->desenha(gRenderer);
+
+        endFrameTime = SDL_GetTicks();
 
         SDL_RenderPresent(gRenderer);
-        SDL_Delay(30);
+        SDL_Delay(30 - (endFrameTime - startFrameTime));
     }
     close();
     return 0;
