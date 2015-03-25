@@ -86,7 +86,7 @@ void Objeto::moverX(double x) {
 }
 
 void Objeto::moverY(double y) {
-    posicao.y += velY * y;
+    posicao.y += (velY * y) / 50;
 }
 
 void Objeto::Update() {

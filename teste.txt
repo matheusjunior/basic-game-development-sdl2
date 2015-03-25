@@ -63,22 +63,7 @@ bool isMouseInRect(SDL_Rect rect, int mX, int mY) {
              rect.y + rect.h <= mY + 25 && rect.y + rect.h >= mY - 25)) ? true : false;
 }
 
-void deleteTirosAntigos(Objeto *lista[]) {
-    for (int i = 0; i < 50; i++) {
-        if (lista[i]->posicao.x <= 0)
-            delete lista[i];
-    }
-}
 
-
-bool listaVazia(Objeto *lista[]) {
-    for (int i = 0; i < 50; i++) {
-        if (lista[i] != NULL) {
-            return false;
-        }
-    }
-    return true;
-}
 
 int main(int argc, char *args[]) {
     bool quit = false;
@@ -96,40 +81,19 @@ int main(int argc, char *args[]) {
     Objeto *cAranha = new Objeto(SCREEN_WIDTH - 50,         25         , 100,  80, 10);
     Objeto *cMosca = new Objeto(SCREEN_WIDTH / 6  , SCREEN_HEIGHT / 6  ,  54,  67, 10);
 
+    vector<Objeto*> tirosList;
 
-    Objeto *cTiro[50];
-    int size = 0;
+    int nTiros = 0;
     bool  tirosDisparados = false;
 
     cCanhao->texture = getTexture("media/cannon.bmp");
     cAranha->texture = getTexture("media/spider.bmp");
     cMosca->texture = getTexture("media/fly.bmp");
 
-
-    for (int i = 0; i < 50; i++) {
-        cTiro[i] = NULL;
-    }
-
     while (!quit) {
 
         if (cAranha->posicao.x > SCREEN_WIDTH) cAranha->posicao.x = 0;
         else  cAranha->moverX(28);
-
-        if (!listaVazia(cTiro)) {
-
-            for (int j = 0; j < 50; j++)
-                if (cTiro[j] != NULL) {
-                    if (cTiro[j]->posicao.y < 0) {
-                        delete cTiro[j];
-                        j--;
-                        cTiro[j] = NULL;
-                    }
-                    else {
-                        cTiro[j]->moverY(-20);
-                        printf("x");
-                    }
-                }
-        }
         SDL_Delay(5);
 
 
@@ -144,9 +108,10 @@ int main(int argc, char *args[]) {
                 switch (e.key.keysym.sym) {
 
                 case SDLK_SPACE:
-                    cTiro[size] = new Objeto(cCanhao->posicao.x + ((cCanhao->posicao.w) / 2)  - 20, cCanhao->posicao.y - 25, 41, 41, 10);
-                    cTiro[size]->texture = getTexture("media/tiro.bmp");
-                    size++;
+                    Objeto *tiro = new Objeto(cCanhao->posicao.x + ((cCanhao->posicao.w) / 2)  - 20, cCanhao->posicao.y - 25, 41, 41, 10);
+                    tirosList.push_back(tiro);
+                    tirosList.back()->texture = getTexture("media/tiro.bmp");
+//                    cTiro[nTiros]->texture = getTexture("media/tiro.bmp");
                     tirosDisparados = true;
                     break;
                 case SDLK_RIGHT:
@@ -172,9 +137,8 @@ int main(int argc, char *args[]) {
         cAranha->desenha(gRenderer);
 
         if (tirosDisparados) {
-            for (int i = 0; i < size; i++) {
-                cTiro[i]->desenha(gRenderer);
-            }
+            for (unsigned i=0; i< tirosList.size(); i++)
+                tirosList.at(i).desenha(gRenderer);
         }
 
 
@@ -184,4 +148,5 @@ int main(int argc, char *args[]) {
     close();
     return 0;
 }
+
 
