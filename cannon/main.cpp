@@ -11,6 +11,7 @@
 
 #include "GameObject.h"
 #include "Cannon.h"
+#include <SDL2_ttf/SDL_ttf.h>
 
 SDL_Window *gWindow = NULL;
 SDL_Renderer *gRenderer = NULL;
@@ -18,7 +19,8 @@ SDL_Renderer *gRenderer = NULL;
 using namespace std;
 
 /* Initialize SDL components
-* @return true if video component initialized properly and window succesfully created
+* @return true if: video component initialized properly, window succesfully created,
+* and SDL_Tff is properly initialized
 * false otherwise
 * */
 bool init()
@@ -29,6 +31,11 @@ bool init()
             SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 
     if(gWindow == NULL) return false;
+    if (TTF_Init() == -1)
+    {
+        cout << "Error while initializing SDL_Ttf: %s" << TTF_GetError() << endl;
+        return false;
+    }
     gRenderer = SDL_CreateRenderer(gWindow, -1, 0);
 
     return true;
@@ -55,7 +62,7 @@ void close()
 {
     SDL_DestroyWindow(gWindow);
     gWindow = NULL;
-
+    TTF_Quit();
     SDL_Quit();
 }
 
@@ -65,6 +72,7 @@ void close()
 * */
 int main(int argc, char *args[])
 {
+    SDL_Surface textSurface;
     bool quit = false;
     uint32_t startFrameTime;
     uint32_t endFrameTime;
@@ -83,6 +91,7 @@ int main(int argc, char *args[])
     cannon->texture = getTexture("media/cannon.bmp");
     spider->texture = getTexture("media/spider.bmp");
     fly->texture = getTexture("media/fly.bmp");
+
 
     while (!quit)
     {

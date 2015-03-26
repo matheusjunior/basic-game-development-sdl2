@@ -11,6 +11,7 @@
 		3220C9A2B5D3315A17C48E12 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3220C2D87FDA0C9B308DA4F4 /* main.cpp */; };
 		3220CC398EEBE1CED520A75B /* GameObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3220CFC890B5E36D5C3CB863 /* GameObject.cpp */; };
 		3220CCB32A30928A94568031 /* Cannon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3220C8B478B3E98BD8034E31 /* Cannon.cpp */; };
+		3220CD02A77B5EED43E6A6DE /* SDL2_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3220C7AA248E9D28CD024461 /* SDL2_ttf.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -31,6 +32,7 @@
 		3220C5739C4567856FB01162 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = /Library/Frameworks/SDL2.framework; sourceTree = "<absolute>"; };
 		3220C6273F25DA95BF2DAEFB /* GameObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameObject.h; sourceTree = "<group>"; };
 		3220C732FD72AF7A4CD76CE7 /* Cannon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cannon.h; sourceTree = "<group>"; };
+		3220C7AA248E9D28CD024461 /* SDL2_ttf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_ttf.framework; path = /Library/Frameworks/SDL2_ttf.framework; sourceTree = "<absolute>"; };
 		3220C8B478B3E98BD8034E31 /* Cannon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Cannon.cpp; sourceTree = "<group>"; };
 		3220CBD1D060F7AA972BE985 /* Consts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Consts.h; sourceTree = "<group>"; };
 		3220CFC890B5E36D5C3CB863 /* GameObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameObject.cpp; sourceTree = "<group>"; };
@@ -42,6 +44,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3220C60EAED37079E7969292 /* SDL2.framework in Frameworks */,
+				3220CD02A77B5EED43E6A6DE /* SDL2_ttf.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,6 +85,7 @@
 			isa = PBXGroup;
 			children = (
 				3220C5739C4567856FB01162 /* SDL2.framework */,
+				3220C7AA248E9D28CD024461 /* SDL2_ttf.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -190,7 +194,10 @@
 		3220C47626BAB56AE8CB2F67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"${PROJECT_DIR}/../../../../Library/Frameworks\"/**";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"${PROJECT_DIR}/../../../../Library/Frameworks\"/**",
+					"\"${PROJECT_DIR}/../../../../Library/Frameworks\"/**",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -198,7 +205,10 @@
 		3220C86F497E83477BB7120C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"${PROJECT_DIR}/../../../../Library/Frameworks\"/**";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"${PROJECT_DIR}/../../../../Library/Frameworks\"/**",
+					"\"${PROJECT_DIR}/../../../../Library/Frameworks\"/**",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
