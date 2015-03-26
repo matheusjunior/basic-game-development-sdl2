@@ -13,7 +13,7 @@ public:
     /* Bullets for the cannon
     * TODO Implement bullets as a class
     * */
-    std::vector<SDL_Rect> bullets;
+    std::vector<GameObject> bullets;
 public:
     Cannon(int x, int y, int w, int h, double vel);
 
@@ -39,28 +39,28 @@ void Cannon::draw(SDL_Renderer *gRenderer)
     SDL_RenderCopy(gRenderer, texture, NULL, &position);
 
 //    update bullets positions
-    for (int i = 0; i < bullets.size(); ++i) bullets[i].y -= 10;
+    for (int i = 0; i < bullets.size(); ++i) bullets[i].position.y -= 10;
 
 //    remove off-screen bullets
     for (int i = 0; i < bullets.size(); ++i)
     {
-        if(bullets[i].y < 0) bullets.erase(bullets.begin() + i);
+        if(bullets[i].position.y < 0) bullets.erase(bullets.begin() + i);
     }
 
 //    render bullets
-    for (int i = 0; i < bullets.size(); ++i) SDL_RenderCopy(gRenderer, texture, NULL, &bullets[i]);
+    for (int i = 0; i < bullets.size(); ++i) SDL_RenderCopy(gRenderer, texture, NULL, &bullets[i].position);
 
     timeStart = currentTime;
 }
 
 void Cannon::fire()
 {
-    SDL_Rect rect;
-    rect.x = this->position.x;
-    rect.y = this->position.y - position.h;
-    rect.h = 50;
-    rect.w = 50;
-    this->bullets.push_back(rect);
+    GameObject bullet;
+    bullet.position.x = this->position.x;
+    bullet.position.y = this->position.y - position.h;
+    bullet.position.h = 50;
+    bullet.position.w = 50;
+    this->bullets.push_back(bullet);
 }
 
 #endif // canhao

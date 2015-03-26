@@ -11,7 +11,7 @@
 
 #include "GameObject.h"
 #include "Cannon.h"
-#include <SDL2_ttf/SDL_ttf.h>
+#include "Text.h"
 
 SDL_Window *gWindow = NULL;
 SDL_Renderer *gRenderer = NULL;
@@ -72,7 +72,7 @@ void close()
 * */
 int main(int argc, char *args[])
 {
-    SDL_Surface textSurface;
+    Text text;
     bool quit = false;
     uint32_t startFrameTime;
     uint32_t endFrameTime;
@@ -92,6 +92,19 @@ int main(int argc, char *args[])
     spider->texture = getTexture("media/spider.bmp");
     fly->texture = getTexture("media/fly.bmp");
 
+    text.font = TTF_OpenFont("sample.ttf", 20);
+    if(text.font == NULL)
+    {
+        cout << "Error: " << TTF_GetError() << endl;
+        return -1;
+    }
+    text.surface = TTF_RenderText_Solid(text.font, "Dark Dreams", text.color);
+    if(text.surface == NULL)
+    {
+        cout << "Error:" << TTF_GetError() << endl;
+        return -1;
+    }
+    text.texture = SDL_CreateTextureFromSurface(gRenderer, text.surface);
 
     while (!quit)
     {
@@ -129,6 +142,7 @@ int main(int argc, char *args[])
         fly->draw(gRenderer);
 
         cannon->draw(gRenderer);
+        SDL_RenderCopy(gRenderer, text.texture, NULL, &text.rect);
         endFrameTime = SDL_GetTicks();
 
         SDL_RenderPresent(gRenderer);
