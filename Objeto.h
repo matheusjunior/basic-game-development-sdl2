@@ -2,6 +2,8 @@
 #define objeto
 
 #include "Consts.h"
+#include "string"
+
 
 #ifdef _WIN32
 #include <SDL.h>
@@ -13,7 +15,6 @@
 
 class Objeto {
 public:
-
     SDL_Texture *texture;
     SDL_Rect posicao;
     double velX;
@@ -21,10 +22,12 @@ public:
     double timeStart;
     double currentTime;
     double deltaT;
+    SDL_Renderer *oRenderer;
 
     Objeto () {;}
     Objeto(int x, int y, int w, int h);
     Objeto(int x, int y, int w, int h, double vel);
+    Objeto(int x, int y, int w, int h, double vel, SDL_Renderer *gRend, std::string path);
 
     void moverX(double x);
     void moverY(double y);
@@ -34,9 +37,12 @@ public:
 
     void setTexture(SDL_Texture *tex);
 
-    void desenha(SDL_Renderer *gRenderer);
+    void desenha();
+
+    SDL_Texture *getTexture(std::string path);
 
     void Update();
+
 };
 
 #endif // objeto

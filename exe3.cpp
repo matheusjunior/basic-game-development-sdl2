@@ -37,15 +37,6 @@ bool init() {
     return true;
 }
 
-SDL_Texture *getTexture(string path) {
-    SDL_Surface *surface = SDL_LoadBMP(path.c_str());
-    SDL_Texture *t = SDL_CreateTextureFromSurface(gRenderer, surface);
-
-    if (t == NULL) cout << SDL_GetError();
-
-    return t;
-}
-
 void close() {
     SDL_DestroyWindow(gWindow);
     gWindow = NULL;
@@ -110,18 +101,14 @@ int main(int argc, char *args[]) {
         return 0;
     }
 
-    Objeto *cCanhao = new Objeto((SCREEN_WIDTH / 2) - 150/2, SCREEN_HEIGHT - 180, 150, 165, 10);
-    Objeto *cAranha = new Objeto(SCREEN_WIDTH - 50,         25         , 100,  80, 10);
-    Objeto *cMosca = new Objeto(SCREEN_WIDTH / 6  , SCREEN_HEIGHT / 6  ,  54,  67, 10);
+    Objeto *cCanhao = new Objeto((SCREEN_WIDTH / 2) - 150/2, SCREEN_HEIGHT - 180, 150, 165, 10, gRenderer, "media/cannon.bmp");
+    Objeto *cAranha = new Objeto(SCREEN_WIDTH - 50,         25,              100,  80, 10, gRenderer, "media/spider.bmp");
+    Objeto *cMosca = new Objeto(SCREEN_WIDTH / 6  , SCREEN_HEIGHT / 6,        54,  67, 10, gRenderer, "media/fly.bmp");
     Objeto *cListaDeTiros[LIMITE_TIROS];
 
     int size = 0;
     int k = 1;
     int qtdTiros = 0;
-
-    cCanhao->texture = getTexture("media/cannon.bmp");
-    cAranha->texture = getTexture("media/spider.bmp");
-    cMosca->texture = getTexture("media/fly.bmp");
 
     for (int i = 0; i < LIMITE_TIROS; i++) {
         cListaDeTiros[i] = NULL;
@@ -158,8 +145,7 @@ int main(int argc, char *args[]) {
                 }
 
                 else if (e.key.keysym.sym == SDLK_SPACE) {
-                    cListaDeTiros[size] = new Objeto(cCanhao->posicao.x + 57 , cCanhao->posicao.y - 25, 41, 41, 10);
-                    cListaDeTiros[size]->texture = getTexture("media/tiro.bmp");
+                    cListaDeTiros[size] = new Objeto(cCanhao->posicao.x + 57 , cCanhao->posicao.y - 25, 41, 41, 10, gRenderer, "media/tiro.bmp");
                     size++;
                     qtdTiros++;
 
@@ -195,14 +181,14 @@ int main(int argc, char *args[]) {
 //        clear renderer and apply texture to rect
         SDL_RenderClear(gRenderer);
 
-        cCanhao->desenha(gRenderer);
+        cCanhao->desenha();
         //cMosca->desenha(gRenderer);
-        cAranha->desenha(gRenderer);
+        cAranha->desenha();
 
 
         for (int i = 0; i < LIMITE_TIROS; i++) {
             if (cListaDeTiros[i] != NULL)
-                cListaDeTiros[i]->desenha(gRenderer);
+                cListaDeTiros[i]->desenha();
         }
 
 
