@@ -76,30 +76,3 @@ void GameObject::draw(SDL_Renderer *gRenderer)
     timeStart = currentTime;
 }
 
-void GameObject::handleInput(SDL_Event e)
-{
-    switch (e.key.keysym.sym)
-    {
-        case SDLK_UP:
-            position.y -= 5;
-            if(position.y < 0) position.y = 0;
-            break;
-        case SDLK_DOWN:
-            position.y += 5;
-            if(position.y + position.h > SCREEN_HEIGHT) position.y = SCREEN_HEIGHT - position.h;
-            break;
-        case SDLK_LEFT:
-            position.x -= 5;
-            if(position.x < 0)
-            {
-                position.x = 0;
-            }
-            break;
-        case SDLK_RIGHT:
-            position.x += 5;
-            if(position.x + position.w > SCREEN_WIDTH) position.x = SCREEN_WIDTH - position.w;
-            break;
-        default:
-            break;
-    }
-}

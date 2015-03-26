@@ -17,10 +17,6 @@ public:
 public:
     Cannon(int x, int y, int w, int h, double vel);
 
-    /* See GameObject header for details
-    * */
-    void handleInput(SDL_Event e);
-
     /* Draw GameObject including the bullets shot
     * @param gRenderer SDL_Render to apply the texture
     * */
@@ -55,26 +51,6 @@ void Cannon::draw(SDL_Renderer *gRenderer)
     for (int i = 0; i < bullets.size(); ++i) SDL_RenderCopy(gRenderer, texture, NULL, &bullets[i]);
 
     timeStart = currentTime;
-}
-
-void Cannon::handleInput(SDL_Event e)
-{
-    switch (e.key.keysym.sym)
-    {
-        case SDLK_SPACE:
-            fire();
-            break;
-        case SDLK_RIGHT:
-            position.x += 7;
-            if(position.x + position.w > SCREEN_WIDTH) position.x = SCREEN_WIDTH - position.w;
-            break;
-        case SDLK_LEFT:
-            position.x -= 7;
-            if(position.x + position.w > SCREEN_WIDTH) position.x = SCREEN_WIDTH - position.w;
-            break;
-        default:
-            break;
-    }
 }
 
 void Cannon::fire()

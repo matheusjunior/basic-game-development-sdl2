@@ -24,25 +24,6 @@
 //    timeStart = currentTime;
 //}
 //
-//void Cannon::handleInput(SDL_Event e)
-//{
-//    switch (e.key.keysym.sym)
-//    {
-//
-//        case SDLK_SPACE:
-//            break;
-//        case SDLK_RIGHT:
-//            position.x += 7;
-//            if(position.x + position.w > SCREEN_WIDTH) position.x = SCREEN_WIDTH - position.w;
-//            break;
-//        case SDLK_LEFT:
-//            position.x -= 7;
-//            if(position.x + position.w > SCREEN_WIDTH) position.x = SCREEN_WIDTH - position.w;
-//            break;
-//        default:
-//            break;
-//    }
-//}
 //
 //void Cannon::fire()
 //{

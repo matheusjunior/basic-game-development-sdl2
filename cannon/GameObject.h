@@ -57,11 +57,7 @@ public:
     * */
     void Update();
 
-    /* Handle events for GameObject
-    * @param e event to be handled
-    * */
-    virtual void handleInput(SDL_Event e);
-//private:
+    //private:
     // SDL_Surface surface;
 };
 

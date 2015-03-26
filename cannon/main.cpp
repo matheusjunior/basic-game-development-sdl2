@@ -105,11 +105,21 @@ int main(int argc, char *args[])
                     case SDLK_ESCAPE:
                         quit = true;
                         break;
+                    case SDLK_SPACE:
+                        cannon->fire();
+                        break;
+                    case SDLK_RIGHT:
+                        cannon->position.x += 7;
+                        if(cannon->position.x + cannon->position.w > SCREEN_WIDTH) cannon->position.x = SCREEN_WIDTH - cannon->position.w;
+                        break;
+                    case SDLK_LEFT:
+                        cannon->position.x -= 7;
+                        if(cannon->position.x + cannon->position.w > SCREEN_WIDTH) cannon->position.x = SCREEN_WIDTH - cannon->position.w;
+                        break;
                     default:
                         break;
                 }
             }
-            cannon->handleInput(e);
         }
         startFrameTime = SDL_GetTicks();
         SDL_RenderClear(gRenderer);
