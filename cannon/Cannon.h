@@ -3,19 +3,31 @@
 
 #import <SDL2/SDL_events.h>
 #import "GameObject.h"
+#include "Consts.h"
 #include <list>
 #include <vector>
 
 class Cannon : public GameObject
 {
 public:
+    /* Bullets for the cannon
+    * TODO Implement bullets as a class
+    * */
     std::vector<SDL_Rect> bullets;
 public:
     Cannon(int x, int y, int w, int h, double vel);
 
+    /* See GameObject header for details
+    * */
     void handleInput(SDL_Event e);
 
+    /* Draw GameObject including the bullets shot
+    * @param gRenderer SDL_Render to apply the texture
+    * */
     void draw(SDL_Renderer *gRenderer) override;
+
+    /* Fire bullets (squares for now)
+    * */
     void fire();
 };
 
@@ -49,8 +61,8 @@ void Cannon::handleInput(SDL_Event e)
 {
     switch (e.key.keysym.sym)
     {
-
         case SDLK_SPACE:
+            fire();
             break;
         case SDLK_RIGHT:
             position.x += 7;
