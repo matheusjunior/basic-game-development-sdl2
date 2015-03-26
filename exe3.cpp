@@ -102,8 +102,8 @@ int main(int argc, char *args[]) {
     }
 
     Objeto *cCanhao = new Objeto((SCREEN_WIDTH / 2) - 150/2, SCREEN_HEIGHT - 180, 150, 165, 10, gRenderer, "media/cannon.bmp");
-    Objeto *cAranha = new Objeto(SCREEN_WIDTH - 50,         25,              100,  80, 10, gRenderer, "media/spider.bmp");
-    Objeto *cMosca = new Objeto(SCREEN_WIDTH / 6  , SCREEN_HEIGHT / 6,        54,  67, 10, gRenderer, "media/fly.bmp");
+    Objeto *cAranha = new Objeto(         SCREEN_WIDTH - 50,                  25, 100,  80, 10, gRenderer, "media/spider.bmp");
+//    Objeto *cMosca = new Objeto(           SCREEN_WIDTH / 6,   SCREEN_HEIGHT / 6,  54,  67, 10, gRenderer, "media/fly.bmp");
     Objeto *cListaDeTiros[LIMITE_TIROS];
 
     int size = 0;
@@ -127,13 +127,15 @@ int main(int argc, char *args[]) {
                         delete cListaDeTiros[j];
                         cListaDeTiros[j] = NULL;
                         j = 0;
-                        printf("\n%d objeto(s) destroido(s)", k++);
+                        printf("\nDestroidos: %d", k++);
                         size--;
                     } else {
+
                         cListaDeTiros[j]->moverY(-20);
                     }
                 }
         }
+
         SDL_Delay(5);
 
         while (SDL_PollEvent(&e) != 0) {
@@ -149,7 +151,7 @@ int main(int argc, char *args[]) {
                     size++;
                     qtdTiros++;
 
-                    cout << "\nqtd tiros: " << qtdTiros;
+                    cout << "\nTiros: " << qtdTiros;
                     SDL_Delay(3);
                 }
 
@@ -177,8 +179,6 @@ int main(int argc, char *args[]) {
             }
         }
 
-
-//        clear renderer and apply texture to rect
         SDL_RenderClear(gRenderer);
 
         cCanhao->desenha();
@@ -187,13 +187,14 @@ int main(int argc, char *args[]) {
 
 
         for (int i = 0; i < LIMITE_TIROS; i++) {
-            if (cListaDeTiros[i] != NULL)
+            if (cListaDeTiros[i] != NULL) {
+
                 cListaDeTiros[i]->desenha();
+                if(cListaDeTiros[i]->Collide(cAranha->posicao)) {
+                    cListaDeTiros[i] = new Objeto(cListaDeTiros[i]->posicao.x , cListaDeTiros[i]->posicao.y, 41, 41, 10, gRenderer, "media/tiro2.bmp");
+                }
+            }
         }
-
-
-
-
 
 //        cout << "n. posicoes livre: " << numeroPosicoesLivre(cListaDeTiros) << endl;
 

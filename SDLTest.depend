@@ -661,13 +661,13 @@
 	"begin_code.h"
 	"close_code.h"
 
-1427327690 c:\users\joaoapenas\dropbox\utfpr 2015-1\jogos\test1\sdltest\objeto.h
+1427331088 c:\users\joaoapenas\dropbox\utfpr 2015-1\jogos\test1\sdltest\objeto.h
 	"Consts.h"
 	"string"
 	<SDL.h>
 	<SDL2/SDL.h>
 
-1427327850 source:c:\users\joaoapenas\dropbox\utfpr 2015-1\jogos\test1\sdltest\exe3.cpp
+1427331258 source:c:\users\joaoapenas\dropbox\utfpr 2015-1\jogos\test1\sdltest\exe3.cpp
 	<SDL.h>
 	<SDL2/SDL.h>
 	<time.h>
@@ -686,6 +686,6 @@
 	<SDL2/SDL.h>
 	"Objeto.h"
 
-1427324755 source:c:\users\joaoapenas\dropbox\utfpr 2015-1\jogos\test1\sdltest\objeto.cpp
+1427331638 source:c:\users\joaoapenas\dropbox\utfpr 2015-1\jogos\test1\sdltest\objeto.cpp
 	"Objeto.h"
 

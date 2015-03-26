@@ -24,6 +24,7 @@ public:
     double deltaT;
     SDL_Renderer *oRenderer;
 
+
     Objeto () {;}
     Objeto(int x, int y, int w, int h);
     Objeto(int x, int y, int w, int h, double vel);
@@ -41,8 +42,13 @@ public:
 
     SDL_Texture *getTexture(std::string path);
 
+    void changeTexture(std::string path);
+
     void Update();
 
+    bool Collide(SDL_Rect obj2);
+private:
+    int color;
 };
 
 #endif // objeto
