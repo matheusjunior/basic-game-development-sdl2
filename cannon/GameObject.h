@@ -4,6 +4,8 @@
 #import <SDL2/SDL_render.h>
 #import <SDL2/SDL_events.h>
 
+/* TODO Document class
+* */
 class GameObject
 {
 public:

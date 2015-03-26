@@ -12,6 +12,7 @@
 #include "GameObject.h"
 #include "Cannon.h"
 #include "Text.h"
+#include "Collision.h"
 
 SDL_Window *gWindow = NULL;
 SDL_Renderer *gRenderer = NULL;
@@ -76,6 +77,8 @@ int main(int argc, char *args[])
     bool quit = false;
     uint32_t startFrameTime;
     uint32_t endFrameTime;
+    bool xCollision;
+    bool yCollision;
     SDL_Event e;
 
     if(!init())
@@ -115,7 +118,7 @@ int main(int argc, char *args[])
             {
                 switch (e.key.keysym.sym)
                 {
-                    case SDLK_ESCAPE:
+                    case SDLK_ESCAPE: // TODO Check break usage
                         quit = true;
                         break;
                     case SDLK_SPACE:
@@ -140,8 +143,13 @@ int main(int argc, char *args[])
         if(fly->position.x > SCREEN_WIDTH) fly->position.x = 0;
         else fly->moveX(15);
         fly->draw(gRenderer);
-
         cannon->draw(gRenderer);
+
+        for (int i = 0; i < cannon->bullets.size(); ++i)
+        {
+            if (Collision::AABBCollision(&fly->position, &cannon->bullets[i].position))
+                cout << "col" << endl;
+        }
         SDL_RenderCopy(gRenderer, text.texture, NULL, &text.rect);
         endFrameTime = SDL_GetTicks();
 
@@ -151,4 +159,3 @@ int main(int argc, char *args[])
     close();
     return 0;
 }
-

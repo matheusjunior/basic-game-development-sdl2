@@ -12,6 +12,7 @@
 #include <SDL2_ttf/SDL_ttf.h>
 
 /* TODO Create interface for applying texture
+* TODO Document class
 * */
 class Text
 {

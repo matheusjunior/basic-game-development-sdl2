@@ -7,6 +7,8 @@
 #include <list>
 #include <vector>
 
+/* TODO Document class
+* */
 class Cannon : public GameObject
 {
 public:
