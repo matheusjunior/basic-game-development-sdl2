@@ -1,6 +1,5 @@
 #include <SDL2/SDL_timer.h>
 #include "GameObject.h"
-#include "Consts.h"
 
 GameObject::GameObject(int x, int y, int w, int h)
 {
@@ -54,12 +53,18 @@ void GameObject::setTexture(SDL_Texture *tex)
 
 void GameObject::moveX(double x)
 {
+//    TODO Check boundaries
     position.x += speedX * ((float) x / 1000);
+//    if (position.x > SCREEN_WIDTH) position.x = SCREEN_WIDTH;
+//    if (position.x < 0) position.x = 0;
 }
 
 void GameObject::moveY(double y)
 {
-    position.y += speedY * y;
+//    TODO Check boundaries
+    position.y += speedY * ((float) y / 1000);
+//    if (position.y > SCREEN_HEIGHT) position.y = SCREEN_HEIGHT;
+//    if (position.y < 0) position.y = 0;
 }
 
 void GameObject::Update()

@@ -8,6 +8,7 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <sstream>
 
 #include "GameObject.h"
 #include "Cannon.h"
@@ -77,9 +78,9 @@ int main(int argc, char *args[])
     bool quit = false;
     uint32_t startFrameTime;
     uint32_t endFrameTime;
-    bool xCollision;
-    bool yCollision;
     SDL_Event e;
+    const Uint8 *currKeyStates;
+    int kills = 0;
 
     if(!init())
     {
@@ -101,42 +102,21 @@ int main(int argc, char *args[])
         cout << "Error: " << TTF_GetError() << endl;
         return -1;
     }
-    text.surface = TTF_RenderText_Solid(text.font, "Dark Dreams", text.color);
-    if(text.surface == NULL)
-    {
-        cout << "Error:" << TTF_GetError() << endl;
-        return -1;
-    }
-    text.texture = SDL_CreateTextureFromSurface(gRenderer, text.surface);
 
     while (!quit)
     {
         while (SDL_PollEvent(&e) != 0)
         {
             if(e.type == SDL_QUIT) quit = true;
-            else if(e.type == SDL_KEYDOWN)
-            {
-                switch (e.key.keysym.sym)
-                {
-                    case SDLK_ESCAPE: // TODO Check break usage
-                        quit = true;
-                        break;
-                    case SDLK_SPACE:
-                        cannon->fire();
-                        break;
-                    case SDLK_RIGHT:
-                        cannon->position.x += 7;
-                        if(cannon->position.x + cannon->position.w > SCREEN_WIDTH) cannon->position.x = SCREEN_WIDTH - cannon->position.w;
-                        break;
-                    case SDLK_LEFT:
-                        cannon->position.x -= 7;
-                        if(cannon->position.x + cannon->position.w > SCREEN_WIDTH) cannon->position.x = SCREEN_WIDTH - cannon->position.w;
-                        break;
-                    default:
-                        break;
-                }
-            }
         }
+        currKeyStates = SDL_GetKeyboardState(NULL);
+
+        if(currKeyStates[SDL_SCANCODE_LEFT]) cannon->moveX(-10);
+        if(currKeyStates[SDL_SCANCODE_RIGHT]) cannon->moveX(10);
+        if(currKeyStates[SDL_SCANCODE_UP]) cannon->moveY(-10);
+        if(currKeyStates[SDL_SCANCODE_DOWN]) cannon->moveY(10);
+        if(currKeyStates[SDL_SCANCODE_SPACE]) cannon->fire();
+
         startFrameTime = SDL_GetTicks();
         SDL_RenderClear(gRenderer);
 
@@ -148,9 +128,26 @@ int main(int argc, char *args[])
         for (int i = 0; i < cannon->bullets.size(); ++i)
         {
             if (Collision::AABBCollision(&fly->position, &cannon->bullets[i].position))
-                cout << "col" << endl;
+            {
+                kills++;
+                break; // cannot kill twice in a row
+            }
         }
+        if(kills >= 1000) kills = 0;
+        std::stringstream temp;
+        temp << kills;
+
+//        FIXME Poor performance
+        text.displayText = "Kills: " + temp.str();
+        text.surface = TTF_RenderText_Solid(text.font, text.displayText.c_str(), text.color);
+        if(text.surface == NULL)
+        {
+            cout << "Error:" << TTF_GetError() << endl;
+            return -1;
+        }
+        text.texture = SDL_CreateTextureFromSurface(gRenderer, text.surface);
         SDL_RenderCopy(gRenderer, text.texture, NULL, &text.rect);
+
         endFrameTime = SDL_GetTicks();
 
         SDL_RenderPresent(gRenderer);

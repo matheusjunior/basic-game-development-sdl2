@@ -8,8 +8,9 @@
 Text::Text()
 {
     surface = NULL;
-    rect = {0, 0, 100, 100};
+    rect = {0, 0, 75, 50};
     color = {255, 0, 0};
     font = NULL;
     texture = NULL;
+    displayText = "";
 }
