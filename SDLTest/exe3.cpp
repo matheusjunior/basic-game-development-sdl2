@@ -14,6 +14,7 @@
 #include <vector>
 
 #include "Objeto.h"
+#include "Canhao.h"
 #include "Consts.h"
 
 SDL_Window *gWindow = NULL;
@@ -110,13 +111,14 @@ int main(int argc, char *args[]) {
         return 0;
     }
 
-    Objeto *cCanhao = new Objeto((SCREEN_WIDTH / 2) - 150/2, SCREEN_HEIGHT - 180, 150, 165, 10);
+    Canhao *cCanhao = new Canhao((SCREEN_WIDTH / 2) - 150/2, SCREEN_HEIGHT - 180, 150, 165, 10);
     Objeto *cAranha = new Objeto(SCREEN_WIDTH - 50,         25         , 100,  80, 10);
     Objeto *cMosca = new Objeto(SCREEN_WIDTH / 6  , SCREEN_HEIGHT / 6  ,  54,  67, 10);
     Objeto *cListaDeTiros[LIMITE_TIROS];
 
     int size = 0;
     int k = 1;
+    bool  tirosDisparados = false;
     int qtdTiros = 0;
 
     cCanhao->texture = getTexture("media/cannon.bmp");
@@ -161,6 +163,7 @@ int main(int argc, char *args[]) {
                     cListaDeTiros[size] = new Objeto(cCanhao->posicao.x + 57 , cCanhao->posicao.y - 25, 41, 41, 10);
                     cListaDeTiros[size]->texture = getTexture("media/tiro.bmp");
                     size++;
+                    tirosDisparados = true;
                     qtdTiros++;
 
                     cout << "\nqtd tiros: " << qtdTiros;
