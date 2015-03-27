@@ -3,7 +3,7 @@
 #else
 
 #include <SDL2/SDL.h>
-
+#include <SDL2_mixer/SDL_mixer.h>
 #endif
 
 #include <cstdlib>
@@ -14,9 +14,12 @@
 #include "Cannon.h"
 #include "Text.h"
 #include "Collision.h"
+#include "MusicPlayer.h"
 
 SDL_Window *gWindow = NULL;
 SDL_Renderer *gRenderer = NULL;
+Mix_Music* music = NULL;
+MusicPlayer* musicPlayer = NULL;
 
 using namespace std;
 
@@ -27,7 +30,7 @@ using namespace std;
 * */
 bool init()
 {
-    if(SDL_Init(SDL_INIT_VIDEO) < 0) return false;
+    if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) return false;
 
     gWindow = SDL_CreateWindow("Cannon Game !", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
             SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
@@ -51,11 +54,13 @@ SDL_Texture *getTexture(string path)
 {
     SDL_Surface *surface = SDL_LoadBMP(path.c_str());
     cout << SDL_GetError();
-    SDL_Texture *t = SDL_CreateTextureFromSurface(gRenderer, surface);
+    SDL_Texture *text = SDL_CreateTextureFromSurface(gRenderer, surface);
 
-    if(t == NULL) cout << SDL_GetError();
+    if (text == NULL) cout << SDL_GetError() << endl;
+    if (Mix_OpenAudio(musicPlayer->getFreq(), MIX_DEFAULT_FORMAT,
+            musicPlayer->getQuantChannels(), musicPlayer->getChunksize()) == NULL) cout << Mix_GetError() << endl;
 
-    return t;
+    return text;
 }
 
 /* Close SDL resources in use
@@ -63,7 +68,9 @@ SDL_Texture *getTexture(string path)
 void close()
 {
     SDL_DestroyWindow(gWindow);
+    Mix_FreeMusic(music);
     gWindow = NULL;
+    Mix_Quit();
     TTF_Quit();
     SDL_Quit();
 }
@@ -81,6 +88,8 @@ int main(int argc, char *args[])
     SDL_Event e;
     const Uint8 *currKeyStates;
     int kills = 0;
+    int musicVolume = 70;
+    musicPlayer = new MusicPlayer();
 
     if(!init())
     {
@@ -103,6 +112,12 @@ int main(int argc, char *args[])
         return -1;
     }
 
+//    hope the error is saved
+//    if (musicPlayer->playMusic("media/02-las-vegas.mp3") == -1) cout << Mix_GetError() << endl;
+//    musicPlayer->playMusicFadeInEffect("media/02-las-vegas.mp3");
+    musicPlayer->createPlayList();
+    musicPlayer->playCurrPlaylist();
+
     while (!quit)
     {
         while (SDL_PollEvent(&e) != 0)
@@ -111,11 +126,17 @@ int main(int argc, char *args[])
         }
         currKeyStates = SDL_GetKeyboardState(NULL);
 
-        if(currKeyStates[SDL_SCANCODE_LEFT]) cannon->moveX(-10);
-        if(currKeyStates[SDL_SCANCODE_RIGHT]) cannon->moveX(10);
-        if(currKeyStates[SDL_SCANCODE_UP]) cannon->moveY(-10);
-        if(currKeyStates[SDL_SCANCODE_DOWN]) cannon->moveY(10);
-        if(currKeyStates[SDL_SCANCODE_SPACE]) cannon->fire();
+        if (currKeyStates[SDL_SCANCODE_LEFT]) cannon->moveX(-10);
+        if (currKeyStates[SDL_SCANCODE_RIGHT]) cannon->moveX(10);
+        if (currKeyStates[SDL_SCANCODE_UP]) cannon->moveY(-10);
+        if (currKeyStates[SDL_SCANCODE_DOWN]) cannon->moveY(10);
+        if (currKeyStates[SDL_SCANCODE_SPACE]) cannon->fire();
+
+        if (currKeyStates[SDL_SCANCODE_U]) musicPlayer->decreaseVolume();
+        if (currKeyStates[SDL_SCANCODE_I]) musicPlayer->increaseVolume();
+        if (currKeyStates[SDL_SCANCODE_B]) musicPlayer->previousMusic();
+        if (currKeyStates[SDL_SCANCODE_N]) musicPlayer->nextMusic();
+
 
         startFrameTime = SDL_GetTicks();
         SDL_RenderClear(gRenderer);
@@ -129,6 +150,7 @@ int main(int argc, char *args[])
         {
             if (Collision::AABBCollision(&fly->position, &cannon->bullets[i].position))
             {
+//                TODO Add sound effect
                 kills++;
                 break; // cannot kill twice in a row
             }
