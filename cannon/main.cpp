@@ -3,11 +3,12 @@
 #else
 
 #include <SDL2/SDL.h>
-
+#include <SDL2_mixer/SDL_mixer.h>
 #endif
 
 #include <cstdlib>
 #include <iostream>
+#include <sstream>
 
 #include "GameObject.h"
 #include "Cannon.h"
@@ -16,6 +17,7 @@
 
 SDL_Window *gWindow = NULL;
 SDL_Renderer *gRenderer = NULL;
+Mix_Music* music = NULL;
 
 using namespace std;
 
@@ -26,7 +28,7 @@ using namespace std;
 * */
 bool init()
 {
-    if(SDL_Init(SDL_INIT_VIDEO) < 0) return false;
+    if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) return false;
 
     gWindow = SDL_CreateWindow("Cannon Game !", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
             SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
@@ -50,11 +52,11 @@ SDL_Texture *getTexture(string path)
 {
     SDL_Surface *surface = SDL_LoadBMP(path.c_str());
     cout << SDL_GetError();
-    SDL_Texture *t = SDL_CreateTextureFromSurface(gRenderer, surface);
+    SDL_Texture *text = SDL_CreateTextureFromSurface(gRenderer, surface);
 
-    if(t == NULL) cout << SDL_GetError();
+    if (text == NULL) cout << SDL_GetError() << endl;
 
-    return t;
+    return text;
 }
 
 /* Close SDL resources in use
@@ -63,6 +65,7 @@ void close()
 {
     SDL_DestroyWindow(gWindow);
     gWindow = NULL;
+
     TTF_Quit();
     SDL_Quit();
 }
@@ -75,11 +78,12 @@ int main(int argc, char *args[])
 {
     Text text;
     bool quit = false;
-    uint32_t startFrameTime;
-    uint32_t endFrameTime;
-    bool xCollision;
-    bool yCollision;
+    uint32_t startFrameTime = 0;
+    uint32_t endFrameTime = 0;
+    uint32_t dTime;
     SDL_Event e;
+    const Uint8 *currKeyStates;
+    int kills = 0;
 
     if(!init())
     {
@@ -101,14 +105,8 @@ int main(int argc, char *args[])
         cout << "Error: " << TTF_GetError() << endl;
         return -1;
     }
-    text.surface = TTF_RenderText_Solid(text.font, "Dark Dreams", text.color);
-    if(text.surface == NULL)
-    {
-        cout << "Error:" << TTF_GetError() << endl;
-        return -1;
-    }
-    text.texture = SDL_CreateTextureFromSurface(gRenderer, text.surface);
 
+    int totalFrames = 30;
     while (!quit)
     {
         while (SDL_PollEvent(&e) != 0)
@@ -138,19 +136,42 @@ int main(int argc, char *args[])
             }
         }
         startFrameTime = SDL_GetTicks();
+        totalFrames++;
         SDL_RenderClear(gRenderer);
 
         if(fly->position.x > SCREEN_WIDTH) fly->position.x = 0;
-        else fly->moveX(15);
+        else fly->moveX(15); // TODO Use dTime instead
         fly->draw(gRenderer);
         cannon->draw(gRenderer);
 
         for (int i = 0; i < cannon->bullets.size(); ++i)
         {
             if (Collision::AABBCollision(&fly->position, &cannon->bullets[i].position))
-                cout << "col" << endl;
+            {
+//                TODO Add sound effect
+                if (totalFrames >= 30) // one kill per sec
+                {
+                    kills++;
+                    totalFrames = 0;
+                    break; // cannot kill twice in a row
+                }
+            }
         }
+        if(kills >= 1000) kills = 0;
+        std::stringstream temp;
+        temp << kills;
+
+//        FIXME Poor performance
+        text.displayText = "Kills: " + temp.str();
+        text.surface = TTF_RenderText_Solid(text.font, text.displayText.c_str(), text.color);
+        if(text.surface == NULL)
+        {
+            cout << "Error:" << TTF_GetError() << endl;
+            return -1;
+        }
+        text.texture = SDL_CreateTextureFromSurface(gRenderer, text.surface);
         SDL_RenderCopy(gRenderer, text.texture, NULL, &text.rect);
+
         endFrameTime = SDL_GetTicks();
 
         SDL_RenderPresent(gRenderer);

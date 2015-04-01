@@ -45,6 +45,11 @@ public:
     * */
     void setSpeedY(double v);
 
+    void updateSpeedX(double acceleration, double dTime);
+
+    void updateSpeedY(double acceleration, double dTime);
+
+
     /* Set GameObject texture
     * @param tex texture to be applied
     * */

@@ -10,6 +10,7 @@
 
 #include <SDL2/SDL_render.h>
 #include <SDL2_ttf/SDL_ttf.h>
+#include <string>
 
 /* TODO Create interface for applying texture
 * TODO Document class
@@ -22,6 +23,7 @@ public:
     TTF_Font *font;
     SDL_Color color = {255, 0, 0};
     SDL_Texture *texture;
+    std::string displayText;
 
     Text();
 };

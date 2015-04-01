@@ -12,4 +12,5 @@ Text::Text()
     color = {255, 0, 0};
     font = NULL;
     texture = NULL;
+    displayText = "";
 }

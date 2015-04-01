@@ -76,3 +76,12 @@ void GameObject::draw(SDL_Renderer *gRenderer)
     timeStart = currentTime;
 }
 
+void GameObject::updateSpeedX(double acceleration, double dTime)
+{
+    speedX += acceleration * dTime;
+}
+
+void GameObject::updateSpeedY(double acceleration, double dTime)
+{
+    speedY += acceleration * dTime;
+}
