@@ -8,7 +8,18 @@
 #define __Collision_H_
 
 
+
+#ifdef _WIN32
+
+#include <SDL_rect.h>
+
+#else
+
 #include <SDL2/SDL_rect.h>
+
+#endif
+
+
 
 /*
 * */

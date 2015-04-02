@@ -1,8 +1,21 @@
 #ifndef CANNON_H_
 #define CANNON_H_
 
+
+#ifdef _WIN32
+
+#include <SDL.h>
+#include <SDL_events.h>
+
+#else
+
+#include <SDL2/SDL.h>
 #import <SDL2/SDL_events.h>
-#import "GameObject.h"
+
+#endif
+
+
+#include "GameObject.h"
 #include "Consts.h"
 #include <list>
 #include <vector>

@@ -1,9 +1,13 @@
 #ifdef _WIN32
+
 #include <SDL.h>
+#include <SDL_ttf.h>
+
 #else
 
 #include <SDL2/SDL.h>
 #include <SDL2_mixer/SDL_mixer.h>
+
 #endif
 
 #include <cstdlib>
@@ -17,7 +21,7 @@
 
 SDL_Window *gWindow = NULL;
 SDL_Renderer *gRenderer = NULL;
-Mix_Music* music = NULL;
+//Mix_Music* music = NULL;
 
 using namespace std;
 

@@ -1,8 +1,19 @@
 #ifndef GAME_OBJECT_H_
 #define GAME_OBJECT_H_
 
+#ifdef _WIN32
+
+#include <SDL_render.h>
+#include <SDL_events.h>
+
+#else
+
 #import <SDL2/SDL_render.h>
 #import <SDL2/SDL_events.h>
+
+#endif
+
+
 
 /* TODO Document class
 * */

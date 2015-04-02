@@ -1,4 +1,17 @@
+
+#ifdef _WIN32
+
+#include <SDL_timer.h>
+
+#else
+
 #include <SDL2/SDL_timer.h>
+
+#endif
+
+
+
+
 #include "GameObject.h"
 #include "Consts.h"
 
@@ -71,7 +84,7 @@ void GameObject::draw(SDL_Renderer *gRenderer)
 {
     currentTime = SDL_GetTicks();
     //Update();
-    if(NULL == texture) exit(9);
+    if(NULL == texture) return;
     SDL_RenderCopy(gRenderer, texture, NULL, &position);
     timeStart = currentTime;
 }
