@@ -32,7 +32,7 @@ public:
     SDL_Surface *surface;
     SDL_Rect rect;
     TTF_Font *font;
-    SDL_Color color = {255, 0, 0};
+    SDL_Color color;
     SDL_Texture *texture;
     std::string displayText;
 
