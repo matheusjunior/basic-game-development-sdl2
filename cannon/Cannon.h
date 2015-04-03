@@ -95,8 +95,8 @@ void Cannon::draw(SDL_Renderer *gRenderer)
 void Cannon::fire()
 {
     GameObject bullet;
-    bullet.position.x = this->position.x;
-    bullet.position.y = this->position.y - position.h;
+    bullet.position.x = this->position.x  + 40;
+    bullet.position.y = this->position.y - 20;
     bullet.position.h = 30;
     bullet.position.w = 30;
     this->bullets.push_back(bullet);
