@@ -19,6 +19,9 @@
 #include "Consts.h"
 #include <list>
 #include <vector>
+#include <iostream>
+
+using namespace std;
 
 /* TODO Document class
 * */
@@ -29,13 +32,19 @@ public:
     * TODO Implement bullets as a class
     * */
     std::vector<GameObject> bullets;
+	SDL_Texture *bulletTexture;
+
 public:
     Cannon(int x, int y, int w, int h, double vel);
+
+	Cannon(int x, int y, int w, int h, double vel, std::string path, SDL_Renderer *rend, std::string pathBullet);
 
     /* Draw GameObject including the bullets shot
     * @param gRenderer SDL_Render to apply the texture
     * */
     void draw(SDL_Renderer *gRenderer) override;
+
+	SDL_Texture* getTexture(SDL_Renderer *rend, std::string path);
 
     /* Fire bullets (squares for now)
     * */
@@ -44,6 +53,19 @@ public:
 
 Cannon::Cannon(int x, int y, int w, int h, double vel) : GameObject(x, y, w, h, vel)
 {
+}
+
+Cannon::Cannon(int x, int y, int w, int h, double vel, std::string path, SDL_Renderer *rend, std::string pathBullet) : GameObject(x, y, w, h, vel, path, rend)
+{
+	bulletTexture = getTexture(rend, pathBullet);
+}
+
+SDL_Texture* Cannon::getTexture(SDL_Renderer *rend, std::string path) {
+	SDL_Surface *surface = SDL_LoadBMP(path.c_str());
+
+	SDL_Texture *text = SDL_CreateTextureFromSurface(rend, surface);
+
+	return text;
 }
 
 void Cannon::draw(SDL_Renderer *gRenderer)
@@ -63,7 +85,9 @@ void Cannon::draw(SDL_Renderer *gRenderer)
     }
 
 //    render bullets
-    for (int i = 0; i < bullets.size(); ++i) SDL_RenderCopy(gRenderer, texture, NULL, &bullets[i].position);
+
+	if (bulletTexture == NULL) cout << "null";
+    for (int i = 0; i < bullets.size(); ++i) SDL_RenderCopy(gRenderer, bulletTexture, NULL, &bullets[i].position);
 
     timeStart = currentTime;
 }
@@ -73,8 +97,8 @@ void Cannon::fire()
     GameObject bullet;
     bullet.position.x = this->position.x;
     bullet.position.y = this->position.y - position.h;
-    bullet.position.h = 50;
-    bullet.position.w = 50;
+    bullet.position.h = 30;
+    bullet.position.w = 30;
     this->bullets.push_back(bullet);
 }
 

@@ -2,6 +2,7 @@
 
 #include <SDL.h>
 #include <SDL_ttf.h>
+#include <time.h>
 
 #else
 
@@ -18,6 +19,7 @@
 #include "Cannon.h"
 #include "Text.h"
 #include "Collision.h"
+#include "Util.h"
 
 SDL_Window *gWindow = NULL;
 SDL_Renderer *gRenderer = NULL;
@@ -43,8 +45,10 @@ bool init()
         cout << "Error while initializing SDL_Ttf: %s" << TTF_GetError() << endl;
         return false;
     }
-    gRenderer = SDL_CreateRenderer(gWindow, -1, 0);
 
+
+    gRenderer = SDL_CreateRenderer(gWindow, -1, 0);
+	SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
     return true;
 }
 
@@ -74,6 +78,7 @@ void close()
     SDL_Quit();
 }
 
+
 /* Game main function. All event handling is first processed here
 * and delegated to classes if needed.
 * @return 0 if succeeds, -1 otherwise
@@ -95,15 +100,11 @@ int main(int argc, char *args[])
         return -1;
     }
 
-    Cannon *cannon = new Cannon(SCREEN_WIDTH / 6, SCREEN_WIDTH / 2, 100, 80, 400);
-    GameObject *spider = new GameObject(SCREEN_WIDTH - 200, SCREEN_WIDTH / 6, 102, 106, 400);
-    GameObject *fly = new GameObject(SCREEN_WIDTH / 6, SCREEN_WIDTH / 6, 96, 116, 400);
+    Cannon *cannon = new Cannon(SCREEN_WIDTH / 2 - 50, SCREEN_WIDTH / 2 + 30, 110, 100, 400, "media/cannon.bmp", gRenderer, "media/blue-square.bmp");
+	GameObject *spider = new GameObject(SCREEN_WIDTH - 200, SCREEN_WIDTH / 6, 30, 30, 400, "media/spider.bmp", gRenderer);
+	GameObject *fly = new GameObject(SCREEN_WIDTH / 6, SCREEN_WIDTH / 6, 70, 80, 400, "media/fly.bmp", gRenderer);
 
-    cannon->texture = getTexture("media/cannon.bmp");
-    spider->texture = getTexture("media/spider.bmp");
-    fly->texture = getTexture("media/fly.bmp");
-
-    text.font = TTF_OpenFont("sample.ttf", 20);
+    text.font = TTF_OpenFont("dejavusans.ttf", 20);
     if(text.font == NULL)
     {
         cout << "Error: " << TTF_GetError() << endl;
@@ -143,9 +144,13 @@ int main(int argc, char *args[])
         totalFrames++;
         SDL_RenderClear(gRenderer);
 
-        if(fly->position.x > SCREEN_WIDTH) fly->position.x = 0;
+		if (fly->position.x > SCREEN_WIDTH) {
+			fly->position.x = 0;
+			fly->position.y = Util::GenerateRandom(0, 100);
+			fly->stopFalling();
+		}
         else fly->moveX(15); // TODO Use dTime instead
-        fly->draw(gRenderer);
+        fly->draw();
         cannon->draw(gRenderer);
 
         for (int i = 0; i < cannon->bullets.size(); ++i)
@@ -155,18 +160,21 @@ int main(int argc, char *args[])
 //                TODO Add sound effect
                 if (totalFrames >= 30) // one kill per sec
                 {
+					fly->fall();
                     kills++;
                     totalFrames = 0;
                     break; // cannot kill twice in a row
                 }
             }
         }
+
         if(kills >= 1000) kills = 0;
         std::stringstream temp;
         temp << kills;
 
 //        FIXME Poor performance
         text.displayText = "Kills: " + temp.str();
+		
         text.surface = TTF_RenderText_Solid(text.font, text.displayText.c_str(), text.color);
         if(text.surface == NULL)
         {

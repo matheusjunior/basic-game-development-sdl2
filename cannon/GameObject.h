@@ -13,15 +13,20 @@
 
 #endif
 
+#include <string>
 
 
 /* TODO Document class
 * */
 class GameObject
 {
+private:
+	bool isFalling;
+
 public:
     SDL_Texture *texture; // GameObject Texture
     SDL_Rect position; // GameObject position in space
+	SDL_Renderer *objRend;
     double speedX; // x axis speed in pixels/sec
     double speedY; // y axis speed in pixels/sec
     double timeStart; // TODO Document variable
@@ -35,6 +40,8 @@ public:
     GameObject(int x, int y, int w, int h);
 
     GameObject(int x, int y, int w, int h, double vel);
+
+	GameObject(int x, int y, int w, int h, double vel, std::string path, SDL_Renderer *rend);
 
     /* Move object along x axis
     * @param y represents the elapsed time in ms to move GameObject according to its speed given in pixels/sec
@@ -71,12 +78,20 @@ public:
     * */
     virtual void draw(SDL_Renderer *gRenderer);
 
+	virtual void draw();
+
     /* TODO Document function
     * */
     void Update();
 
     //private:
     // SDL_Surface surface;
+
+	SDL_Texture *getTexture(std::string path);
+
+	void fall();
+
+	void stopFalling();
 };
 
 #endif // objeto
