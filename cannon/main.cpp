@@ -97,7 +97,7 @@ int main(int argc, char *args[])
 
 	float deltaTime;
 	int lastFrameTime = 0, currentFrameTime = 0;
-	int fps = 28;
+	int fps = 48;
 	int fpsMill = 1000 / fps;
 	int totalFrames = fps;
 
@@ -108,8 +108,8 @@ int main(int argc, char *args[])
         return -1;
     }
 
-    Cannon *cannon = new Cannon(SCREEN_WIDTH / 2 - 50, SCREEN_WIDTH / 2 + 30, 110, 100, 400, "media/cannon.bmp", gRenderer, "media/bullet.bmp");
-	GameObject *fly = new GameObject(SCREEN_WIDTH / 6, SCREEN_WIDTH / 6, 55, 65, 400, "media/fly.bmp", gRenderer);
+    Cannon *cannon = new Cannon(SCREEN_WIDTH / 2 - 50, SCREEN_WIDTH / 2 + 30, 110, 100, 450, "media/cannon.bmp", gRenderer, "media/bullet.bmp");
+	GameObject *fly = new GameObject(SCREEN_WIDTH / 6, SCREEN_WIDTH / 6, 55, 65, 300, "media/fly.bmp", gRenderer);
 
     text.font = TTF_OpenFont("emulogic.ttf", 20);
 	textFPS.font = TTF_OpenFont("emulogic.ttf", 20);
@@ -211,8 +211,7 @@ int main(int argc, char *args[])
 		std::stringstream temp4;
 		temp4 << fps;
 
-
-		textFPS.displayText = "Delta: " + temp2.str() + "  Frames (Milisec): " + temp3.str() + "\n  FPS: " + temp4.str();
+		textFPS.displayText = "DELTA: " + temp2.str() + "  WAIT: " + temp3.str() + "\n  FPS: " + temp4.str();
 		
         text.surface = TTF_RenderText_Solid(text.font, text.displayText.c_str(), text.color);
 		textFPS.surface = TTF_RenderText_Solid(textFPS.font, textFPS.displayText.c_str(), textFPS.color);
@@ -230,8 +229,6 @@ int main(int argc, char *args[])
 
         SDL_RenderPresent(gRenderer);
 		
-		
-	    
 		cout << fpsMill << " dt " << deltaTime << endl;
 
 		SDL_Delay(fpsMill - deltaTime);
