@@ -90,9 +90,9 @@ void GameObject::setTexture(SDL_Texture *tex)
     texture = tex;
 }
 
-void GameObject::moveX(double x)
+void GameObject::moveX(double dt)
 {
-    position.x += speedX * ((float) x / 1000);
+    position.x += speedX * dt;
 }
 
 void GameObject::moveY(double y)

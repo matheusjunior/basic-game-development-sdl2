@@ -86,6 +86,7 @@ void close()
 int main(int argc, char *args[])
 {
     Text text;
+	Text textFPS;
     bool quit = false;
     uint32_t startFrameTime = 0;
     uint32_t endFrameTime = 0;
@@ -94,24 +95,39 @@ int main(int argc, char *args[])
     const Uint8 *currKeyStates;
     int kills = 0;
 
+	float deltaTime;
+	int lastFrameTime = 0, currentFrameTime = 0;
+	int fps = 28;
+	int fpsMill = 1000 / fps;
+	int totalFrames = fps;
+
+
     if(!init())
     {
         cout << "Falhou init\n";
         return -1;
     }
 
-    Cannon *cannon = new Cannon(SCREEN_WIDTH / 2 - 50, SCREEN_WIDTH / 2 + 30, 110, 100, 400, "media/cannon.bmp", gRenderer, "media/blue-square.bmp");
-	GameObject *spider = new GameObject(SCREEN_WIDTH - 200, SCREEN_WIDTH / 6, 30, 30, 400, "media/spider.bmp", gRenderer);
-	GameObject *fly = new GameObject(SCREEN_WIDTH / 6, SCREEN_WIDTH / 6, 70, 80, 400, "media/fly.bmp", gRenderer);
+    Cannon *cannon = new Cannon(SCREEN_WIDTH / 2 - 50, SCREEN_WIDTH / 2 + 30, 110, 100, 400, "media/cannon.bmp", gRenderer, "media/bullet.bmp");
+	GameObject *fly = new GameObject(SCREEN_WIDTH / 6, SCREEN_WIDTH / 6, 55, 65, 400, "media/fly.bmp", gRenderer);
 
-    text.font = TTF_OpenFont("dejavusans.ttf", 20);
-    if(text.font == NULL)
+    text.font = TTF_OpenFont("emulogic.ttf", 20);
+	textFPS.font = TTF_OpenFont("emulogic.ttf", 20);
+
+	textFPS.rect.x = 220;
+	textFPS.rect.y = 10;
+	textFPS.rect.w = 600;
+	textFPS.rect.h = 25;
+	
+
+    if(text.font == NULL || textFPS.font == NULL)
     {
         cout << "Error: " << TTF_GetError() << endl;
         return -1;
     }
 
-    int totalFrames = 30;
+	int currentSpeed = fps;
+    
     while (!quit)
     {
         while (SDL_PollEvent(&e) != 0)
@@ -140,17 +156,27 @@ int main(int argc, char *args[])
                 }
             }
         }
-        startFrameTime = SDL_GetTicks();
+        
         totalFrames++;
         SDL_RenderClear(gRenderer);
+
+		currentFrameTime = SDL_GetTicks();
+
+		deltaTime = (float)(currentFrameTime - lastFrameTime) / 1000;
+
+		lastFrameTime = SDL_GetTicks();
 
 		if (fly->position.x > SCREEN_WIDTH) {
 			fly->position.x = 0;
 			fly->position.y = Util::GenerateRandom(0, 100);
 			fly->stopFalling();
 		}
-        else fly->moveX(15); // TODO Use dTime instead
-        fly->draw();
+
+        else fly->moveX(deltaTime); // TODO Use dTime instead
+        
+		cout << deltaTime << endl;
+
+		fly->draw();
         cannon->draw(gRenderer);
 
         for (int i = 0; i < cannon->bullets.size(); ++i)
@@ -163,7 +189,7 @@ int main(int argc, char *args[])
 					fly->fall();
                     kills++;
                     totalFrames = 0;
-                    break; // cannot kill twice in a row
+
                 }
             }
         }
@@ -172,22 +198,43 @@ int main(int argc, char *args[])
         std::stringstream temp;
         temp << kills;
 
+		
 //        FIXME Poor performance
         text.displayText = "Kills: " + temp.str();
+
+		std::stringstream temp2;
+		temp2 << deltaTime;
+
+		std::stringstream temp3;
+		temp3 << fpsMill;
+
+		std::stringstream temp4;
+		temp4 << fps;
+
+
+		textFPS.displayText = "Delta: " + temp2.str() + "  Frames (Milisec): " + temp3.str() + "\n  FPS: " + temp4.str();
 		
         text.surface = TTF_RenderText_Solid(text.font, text.displayText.c_str(), text.color);
-        if(text.surface == NULL)
+		textFPS.surface = TTF_RenderText_Solid(textFPS.font, textFPS.displayText.c_str(), textFPS.color);
+        
+		if(text.surface == NULL || textFPS.surface == NULL)
         {
             cout << "Error:" << TTF_GetError() << endl;
             return -1;
         }
         text.texture = SDL_CreateTextureFromSurface(gRenderer, text.surface);
-        SDL_RenderCopy(gRenderer, text.texture, NULL, &text.rect);
-
-        endFrameTime = SDL_GetTicks();
+		textFPS.texture = SDL_CreateTextureFromSurface(gRenderer, textFPS.surface);
+        
+		SDL_RenderCopy(gRenderer, text.texture, NULL, &text.rect);
+		SDL_RenderCopy(gRenderer, textFPS.texture, NULL, &textFPS.rect);
 
         SDL_RenderPresent(gRenderer);
-        SDL_Delay(30 - (endFrameTime - startFrameTime));
+		
+		
+	    
+		cout << fpsMill << " dt " << deltaTime << endl;
+
+		SDL_Delay(fpsMill - deltaTime);
     }
     close();
     return 0;

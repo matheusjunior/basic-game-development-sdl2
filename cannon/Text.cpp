@@ -8,7 +8,7 @@
 Text::Text()
 {
     surface = NULL;
-    rect = {10, 10, 80, 40};
+    rect = {10, 10, 150, 25};
     color = {0, 0, 0};
     font = NULL;
     texture = NULL;

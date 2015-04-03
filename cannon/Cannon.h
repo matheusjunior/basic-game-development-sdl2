@@ -97,8 +97,8 @@ void Cannon::fire()
     GameObject bullet;
     bullet.position.x = this->position.x  + 40;
     bullet.position.y = this->position.y - 20;
-    bullet.position.h = 30;
-    bullet.position.w = 30;
+    bullet.position.h = 37;
+    bullet.position.w = 37;
     this->bullets.push_back(bullet);
 }
 
