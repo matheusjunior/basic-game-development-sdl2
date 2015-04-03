@@ -19,9 +19,7 @@
 #include "Consts.h"
 #include <list>
 #include <vector>
-#include <iostream>
 
-using namespace std;
 
 /* TODO Document class
 * */
@@ -70,7 +68,7 @@ SDL_Texture* Cannon::getTexture(SDL_Renderer *rend, std::string path) {
 
 void Cannon::draw(SDL_Renderer *gRenderer)
 {
-    currentTime = SDL_GetTicks();
+    
     //Update();
     if(texture == NULL) exit(9);
     SDL_RenderCopy(gRenderer, texture, NULL, &position);
@@ -86,20 +84,19 @@ void Cannon::draw(SDL_Renderer *gRenderer)
 
 //    render bullets
 
-	if (bulletTexture == NULL) cout << "null";
     for (int i = 0; i < bullets.size(); ++i) SDL_RenderCopy(gRenderer, bulletTexture, NULL, &bullets[i].position);
 
-    timeStart = currentTime;
+
 }
 
 void Cannon::fire()
 {
     GameObject bullet;
-    bullet.position.x = this->position.x  + 40;
-    bullet.position.y = this->position.y - 20;
-    bullet.position.h = 37;
-    bullet.position.w = 37;
+    bullet.position.x = this->position.x + 15;
+    bullet.position.y = this->position.y ;
+    bullet.position.h = 10;
+    bullet.position.w = 10;
     this->bullets.push_back(bullet);
 }
 
-#endif // canhao
+#endif 

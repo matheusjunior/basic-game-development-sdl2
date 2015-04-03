@@ -22,7 +22,7 @@
 class Util
 {
 public:    
-    double static GenerateRandom(int l, int u);
+    int static GenerateRandom(int l, int u);
 
 };
 

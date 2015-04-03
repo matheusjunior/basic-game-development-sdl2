@@ -10,6 +10,7 @@
 
 #include <time.h>
 #include <Windows.h>
+#include <SDL.h>
 
 #else
 
@@ -17,12 +18,12 @@
 
 #endif
 
-double Util::GenerateRandom(int l, int u)
+int Util::GenerateRandom(int l, int u)
 {
     srand(time(NULL));
 
     double r = rand() % ((u - l) + 1);
     r = l + r;
 
-    return r;
+	return (int) r;
 }

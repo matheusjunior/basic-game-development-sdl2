@@ -20,6 +20,7 @@
 #include "Text.h"
 #include "Collision.h"
 #include "Util.h"
+#include "FlyingObject.h"
 
 SDL_Window *gWindow = NULL;
 SDL_Renderer *gRenderer = NULL;
@@ -42,7 +43,7 @@ bool init()
     if(gWindow == NULL) return false;
     if (TTF_Init() == -1)
     {
-        cout << "Error while initializing SDL_Ttf: %s" << TTF_GetError() << endl;
+        std::cout << "Error while initializing SDL_Ttf: %s" << TTF_GetError() << endl;
         return false;
     }
 
@@ -50,21 +51,6 @@ bool init()
     gRenderer = SDL_CreateRenderer(gWindow, -1, 0);
 	SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
     return true;
-}
-
-/* Load a bmp image into a SDL_Surface and create a SDL_Texture from it
-* @param path image path
-* @return SDL_Texture containing the image in path if succeeds, NULL otherwise
-* */
-SDL_Texture *getTexture(string path)
-{
-    SDL_Surface *surface = SDL_LoadBMP(path.c_str());
-    cout << SDL_GetError();
-    SDL_Texture *text = SDL_CreateTextureFromSurface(gRenderer, surface);
-
-    if (text == NULL) cout << SDL_GetError() << endl;
-
-    return text;
 }
 
 /* Close SDL resources in use
@@ -79,37 +65,68 @@ void close()
 }
 
 
+
 /* Game main function. All event handling is first processed here
 * and delegated to classes if needed.
 * @return 0 if succeeds, -1 otherwise
 * */
+
+
 int main(int argc, char *args[])
 {
+	srand(time(NULL));
+
     Text text;
 	Text textFPS;
     bool quit = false;
-    uint32_t startFrameTime = 0;
-    uint32_t endFrameTime = 0;
-    uint32_t dTime;
+    
     SDL_Event e;
     const Uint8 *currKeyStates;
     int kills = 0;
 
 	float deltaTime;
 	int lastFrameTime = 0, currentFrameTime = 0;
-	int fps = 48;
+	int fps = 38;
 	int fpsMill = 1000 / fps;
 	int totalFrames = fps;
 
 
     if(!init())
     {
-        cout << "Falhou init\n";
+        std::cout << "Falhou init\n";
         return -1;
     }
 
-    Cannon *cannon = new Cannon(SCREEN_WIDTH / 2 - 50, SCREEN_WIDTH / 2 + 30, 110, 100, 450, "media/cannon.bmp", gRenderer, "media/bullet.bmp");
-	GameObject *fly = new GameObject(SCREEN_WIDTH / 6, SCREEN_WIDTH / 6, 55, 65, 300, "media/fly.bmp", gRenderer);
+	std::vector<FlyingObject> ovnis;
+
+	int px = -25 +  Util::GenerateRandom(0, 60);
+	int py = Util::GenerateRandom(0, 70);
+	int speed = Util::GenerateRandom(150, 500);
+	FlyingObject fly1(px, py, 25, 25, speed, "media/purple-square.bmp", gRenderer, "media/red-square.bmp");
+
+
+	px = -25 + Util::GenerateRandom(1, 61);
+	py = Util::GenerateRandom(60, 140);
+	speed = Util::GenerateRandom(150, 500);
+	FlyingObject fly2(px, py, 25, 25, speed, "media/purple-square.bmp", gRenderer, "media/red-square.bmp");
+
+	px = -25 + Util::GenerateRandom(2, 62);
+	py = Util::GenerateRandom(120, 210);
+	speed = Util::GenerateRandom(150, 500);
+	FlyingObject fly3(px, py, 25, 25, speed, "media/purple-square.bmp", gRenderer, "media/red-square.bmp");
+
+	px = -55 + Util::GenerateRandom(0, 60);
+	py = Util::GenerateRandom(200, 280);
+	speed = Util::GenerateRandom(350, 500);
+	FlyingObject fly4(px, py, 25, 25, speed, "media/purple-square.bmp", gRenderer, "media/red-square.bmp");
+
+	ovnis.push_back(fly1);
+	ovnis.push_back(fly2);
+	ovnis.push_back(fly3);
+	ovnis.push_back(fly4);
+
+    Cannon *cannon = new Cannon(SCREEN_WIDTH / 2 - 25, SCREEN_WIDTH / 2 + 90, 40, 40, 400, "media/green1-square.bmp", gRenderer, "media/red-square.bmp");
+	
 
     text.font = TTF_OpenFont("emulogic.ttf", 20);
 	textFPS.font = TTF_OpenFont("emulogic.ttf", 20);
@@ -122,7 +139,7 @@ int main(int argc, char *args[])
 
     if(text.font == NULL || textFPS.font == NULL)
     {
-        cout << "Error: " << TTF_GetError() << endl;
+        std::cout << "Error: " << TTF_GetError() << endl;
         return -1;
     }
 
@@ -166,30 +183,39 @@ int main(int argc, char *args[])
 
 		lastFrameTime = SDL_GetTicks();
 
-		if (fly->position.x > SCREEN_WIDTH) {
-			fly->position.x = 0;
-			fly->position.y = Util::GenerateRandom(0, 100);
-			fly->stopFalling();
+
+		for (int i = 0; i <ovnis.size(); i++) {
+			bool singleShot = true;
+
+			if (ovnis[i].position.x > SCREEN_WIDTH) {
+				ovnis[i].position.x = 0;
+				ovnis[i].speedX = Util::GenerateRandom(350, 450);
+				ovnis[i].position.y = Util::GenerateRandom(0, 400);
+				ovnis[i].stopFalling();
+			}
+			else {
+				ovnis[i].moveX(deltaTime);
+			}
+			ovnis[i].draw();
 		}
 
-        else fly->moveX(deltaTime); // TODO Use dTime instead
-        
-		cout << deltaTime << endl;
+		
+		std::cout << deltaTime << endl;
 
-		fly->draw();
         cannon->draw(gRenderer);
 
         for (int i = 0; i < cannon->bullets.size(); ++i)
         {
-            if (Collision::AABBCollision(&fly->position, &cannon->bullets[i].position))
-            {
-//                TODO Add sound effect
-                if (totalFrames >= 30) // one kill per sec
-                {
-					fly->fall();
-                    kills++;
-                    totalFrames = 0;
+			for (int j = 0; j < ovnis.size(); j++) {
 
+				if (Collision::AABBCollision(&ovnis[j].position, &cannon->bullets[i].position)) {
+//                TODO Add sound effect
+					if (totalFrames >= 30) // one kill per sec
+					{
+						ovnis[j].fall();
+						kills++;
+						totalFrames = 0;
+					}
                 }
             }
         }
@@ -218,7 +244,7 @@ int main(int argc, char *args[])
         
 		if(text.surface == NULL || textFPS.surface == NULL)
         {
-            cout << "Error:" << TTF_GetError() << endl;
+            std::cout << "Error:" << TTF_GetError() << endl;
             return -1;
         }
         text.texture = SDL_CreateTextureFromSurface(gRenderer, text.surface);
@@ -229,7 +255,7 @@ int main(int argc, char *args[])
 
         SDL_RenderPresent(gRenderer);
 		
-		cout << fpsMill << " dt " << deltaTime << endl;
+		std::cout << fpsMill << " dt " << deltaTime << endl;
 
 		SDL_Delay(fpsMill - deltaTime);
     }

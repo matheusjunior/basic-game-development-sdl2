@@ -27,10 +27,6 @@ GameObject::GameObject(int x, int y, int w, int h)
     speedY = 100;
 
     texture = NULL;
-
-    timeStart = 0;
-    currentTime = 0;
-    deltaT = 0;
 }
 
 GameObject::GameObject(int x, int y, int w, int h, double vel)
@@ -44,10 +40,6 @@ GameObject::GameObject(int x, int y, int w, int h, double vel)
     speedY = vel;
 
     texture = NULL;
-
-    timeStart = 0;
-    currentTime = 0;
-    deltaT = 0;
 }
 
 GameObject::GameObject(int x, int y, int w, int h, double vel, std::string path, SDL_Renderer *rend)
@@ -63,10 +55,6 @@ GameObject::GameObject(int x, int y, int w, int h, double vel, std::string path,
 	objRend = rend;
 
 	texture = getTexture(path);
-
-	timeStart = 0;
-	currentTime = 0;
-	deltaT = 0;
 
 	isFalling = false;
 
@@ -102,28 +90,26 @@ void GameObject::moveY(double y)
 
 void GameObject::Update()
 {
-    position.x += speedX * (float) (currentTime - timeStart) / 1000;
+    
 }
 
 void GameObject::draw(SDL_Renderer *gRenderer)
 {
-    currentTime = SDL_GetTicks();
+    
     //Update();
     if(NULL == texture) return;
     SDL_RenderCopy(gRenderer, texture, NULL, &position);
-    timeStart = currentTime;
+    
 }
 
 void GameObject::draw()
 {
-	currentTime = SDL_GetTicks();
 	//Update();
 	if (NULL == texture) return;
 
 	if (isFalling == true) fall();
 
 	SDL_RenderCopy(objRend, texture, NULL, &position);
-	timeStart = currentTime;
 }
 
 void GameObject::updateSpeedX(double acceleration, double dTime)

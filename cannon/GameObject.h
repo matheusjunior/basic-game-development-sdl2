@@ -29,13 +29,8 @@ public:
 	SDL_Renderer *objRend;
     double speedX; // x axis speed in pixels/sec
     double speedY; // y axis speed in pixels/sec
-    double timeStart; // TODO Document variable
-    double currentTime; // TODO Document variable
-    double deltaT; // TODO Document Variable
-
-    GameObject()
-    {
-    }
+ 
+    GameObject() {}
 
     GameObject(int x, int y, int w, int h);
 
