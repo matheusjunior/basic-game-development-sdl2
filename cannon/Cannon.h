@@ -74,17 +74,17 @@ void Cannon::draw(SDL_Renderer *gRenderer)
     SDL_RenderCopy(gRenderer, texture, NULL, &position);
 
 //    update bullets positions
-    for (int i = 0; i < bullets.size(); ++i) bullets[i].position.y -= 10;
+	for (size_t i = 0; i < bullets.size(); i++) bullets[i].position.y -= 10;
 
 //    remove off-screen bullets
-    for (int i = 0; i < bullets.size(); ++i)
+	for (size_t i = 0; i < bullets.size(); i++)
     {
         if(bullets[i].position.y < 0) bullets.erase(bullets.begin() + i);
     }
 
 //    render bullets
 
-    for (int i = 0; i < bullets.size(); ++i) SDL_RenderCopy(gRenderer, bulletTexture, NULL, &bullets[i].position);
+	for (size_t i = 0; i < bullets.size(); i++) SDL_RenderCopy(gRenderer, bulletTexture, NULL, &bullets[i].position);
 
 
 }

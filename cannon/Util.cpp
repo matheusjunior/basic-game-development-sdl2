@@ -20,8 +20,6 @@
 
 int Util::GenerateRandom(int l, int u)
 {
-    srand(time(NULL));
-
     double r = rand() % ((u - l) + 1);
     r = l + r;
 

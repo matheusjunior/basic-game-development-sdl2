@@ -37,6 +37,8 @@ public:
     *   a and b overlaps
     * */
     bool static AABBCollision(SDL_Rect *a, SDL_Rect *b);
+
+	bool static CircleCollision(SDL_Rect c1, SDL_Rect c2);
 };
 
 #endif //__Collision_H_

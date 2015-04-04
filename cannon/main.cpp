@@ -101,23 +101,23 @@ int main(int argc, char *args[])
 
 	int px = -25 +  Util::GenerateRandom(0, 60);
 	int py = Util::GenerateRandom(0, 70);
-	int speed = Util::GenerateRandom(150, 500);
+	int speed = 250;
 	FlyingObject fly1(px, py, 25, 25, speed, "media/purple-square.bmp", gRenderer, "media/red-square.bmp");
 
 
 	px = -25 + Util::GenerateRandom(1, 61);
 	py = Util::GenerateRandom(60, 140);
-	speed = Util::GenerateRandom(150, 500);
+	speed = 300;
 	FlyingObject fly2(px, py, 25, 25, speed, "media/purple-square.bmp", gRenderer, "media/red-square.bmp");
 
 	px = -25 + Util::GenerateRandom(2, 62);
 	py = Util::GenerateRandom(120, 210);
-	speed = Util::GenerateRandom(150, 500);
+	speed = 320;
 	FlyingObject fly3(px, py, 25, 25, speed, "media/purple-square.bmp", gRenderer, "media/red-square.bmp");
 
 	px = -55 + Util::GenerateRandom(0, 60);
 	py = Util::GenerateRandom(200, 280);
-	speed = Util::GenerateRandom(350, 500);
+	speed = 250;
 	FlyingObject fly4(px, py, 25, 25, speed, "media/purple-square.bmp", gRenderer, "media/red-square.bmp");
 
 	ovnis.push_back(fly1);
@@ -125,9 +125,8 @@ int main(int argc, char *args[])
 	ovnis.push_back(fly3);
 	ovnis.push_back(fly4);
 
-    Cannon *cannon = new Cannon(SCREEN_WIDTH / 2 - 25, SCREEN_WIDTH / 2 + 90, 40, 40, 400, "media/green1-square.bmp", gRenderer, "media/red-square.bmp");
+    Cannon *cannon = new Cannon(SCREEN_WIDTH / 2 - 25, SCREEN_WIDTH / 2 + 108, 40, 40, 400, "media/green1-square.bmp", gRenderer, "media/red-square.bmp");
 	
-
     text.font = TTF_OpenFont("emulogic.ttf", 20);
 	textFPS.font = TTF_OpenFont("emulogic.ttf", 20);
 
@@ -166,7 +165,7 @@ int main(int argc, char *args[])
                         break;
                     case SDLK_LEFT:
                         cannon->position.x -= 7;
-                        if(cannon->position.x + cannon->position.w > SCREEN_WIDTH) cannon->position.x = SCREEN_WIDTH - cannon->position.w;
+                        if(cannon->position.x < 0) cannon->position.x = 0;
                         break;
                     default:
                         break;
@@ -184,13 +183,12 @@ int main(int argc, char *args[])
 		lastFrameTime = SDL_GetTicks();
 
 
-		for (int i = 0; i <ovnis.size(); i++) {
+		for (size_t i = 0; i <ovnis.size(); i++) {
 			bool singleShot = true;
 
 			if (ovnis[i].position.x > SCREEN_WIDTH) {
 				ovnis[i].position.x = 0;
-				ovnis[i].speedX = Util::GenerateRandom(350, 450);
-				ovnis[i].position.y = Util::GenerateRandom(0, 400);
+				ovnis[i].position.y = Util::GenerateRandom(0, SCREEN_HEIGHT / 4) + Util::GenerateRandom(0, SCREEN_HEIGHT / 4);
 				ovnis[i].stopFalling();
 			}
 			else {
@@ -200,22 +198,24 @@ int main(int argc, char *args[])
 		}
 
 		
-		std::cout << deltaTime << endl;
+		//std::cout << deltaTime << endl;
 
         cannon->draw(gRenderer);
 
-        for (int i = 0; i < cannon->bullets.size(); ++i)
+		
+		for (size_t i = 0; i < cannon->bullets.size(); i++)
         {
-			for (int j = 0; j < ovnis.size(); j++) {
+			for (size_t j = 0; j < ovnis.size(); j++) {
+				
+				
+				if (Collision::CircleCollision(ovnis[j].position, cannon->bullets[i].position)) {					
+					
+					ovnis[j].fall();
+					kills++;
+					cannon->bullets.at(i).position.y = 0;
+					
+					//isEmpty = cannon->bullets.empty();
 
-				if (Collision::AABBCollision(&ovnis[j].position, &cannon->bullets[i].position)) {
-//                TODO Add sound effect
-					if (totalFrames >= 30) // one kill per sec
-					{
-						ovnis[j].fall();
-						kills++;
-						totalFrames = 0;
-					}
                 }
             }
         }
@@ -255,7 +255,7 @@ int main(int argc, char *args[])
 
         SDL_RenderPresent(gRenderer);
 		
-		std::cout << fpsMill << " dt " << deltaTime << endl;
+		//std::cout << fpsMill << " dt " << deltaTime << endl;
 
 		SDL_Delay(fpsMill - deltaTime);
     }
