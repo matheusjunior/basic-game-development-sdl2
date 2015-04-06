@@ -82,10 +82,9 @@ int main(int argc, char *args[])
 
 	float deltaTime;
 	int lastFrameTime = 0, currentFrameTime = 0;
-	int fps = 38;
+	int fps = 30;
 	int fpsMill = 1000 / fps;
 	int totalFrames = fps;
-
 
     if(!init())
     {
@@ -93,46 +92,44 @@ int main(int argc, char *args[])
         return -1;
     }
 
-    Cannon *cannon = new Cannon(SCREEN_WIDTH / 6, SCREEN_WIDTH / 2, 100, 80, 400);
     GameObject *spider = new GameObject(SCREEN_WIDTH - 200, SCREEN_WIDTH / 6, 102, 106, 400);
     GameObject *fly = new GameObject(SCREEN_WIDTH / 6, SCREEN_WIDTH / 6, 96, 116, 400);
+    Cannon* cannon = new Cannon(SCREEN_WIDTH / 2 - 25, SCREEN_WIDTH / 2 + 108, 40, 40, 400,
+            "media/green1-square.bmp", gRenderer, "media/red-square.bmp");
 
 	int px = -25 +  Util::GenerateRandom(0, 60);
 	int py = Util::GenerateRandom(0, 70);
-	int speed = 250;
+	int speed = Util::GenerateRandom(100, 200);
 	FlyingObject fly1(px, py, 25, 25, speed, "media/purple-square.bmp", gRenderer, "media/red-square.bmp");
-
 
 	px = -25 + Util::GenerateRandom(1, 61);
 	py = Util::GenerateRandom(60, 140);
-	speed = 300;
+	speed = Util::GenerateRandom(100, 200);
 	FlyingObject fly2(px, py, 25, 25, speed, "media/purple-square.bmp", gRenderer, "media/red-square.bmp");
 
 	px = -25 + Util::GenerateRandom(2, 62);
 	py = Util::GenerateRandom(120, 210);
-	speed = 320;
+    speed = Util::GenerateRandom(100, 200);
 	FlyingObject fly3(px, py, 25, 25, speed, "media/purple-square.bmp", gRenderer, "media/red-square.bmp");
 
 	px = -55 + Util::GenerateRandom(0, 60);
 	py = Util::GenerateRandom(200, 280);
-	speed = 250;
+    speed = Util::GenerateRandom(100, 00);
 	FlyingObject fly4(px, py, 25, 25, speed, "media/purple-square.bmp", gRenderer, "media/red-square.bmp");
 
+    std::vector<FlyingObject> ovnis;
 	ovnis.push_back(fly1);
 	ovnis.push_back(fly2);
 	ovnis.push_back(fly3);
 	ovnis.push_back(fly4);
 
-    Cannon *cannon = new Cannon(SCREEN_WIDTH / 2 - 25, SCREEN_WIDTH / 2 + 108, 40, 40, 400, "media/green1-square.bmp", gRenderer, "media/red-square.bmp");
-	
-    text.font = TTF_OpenFont("emulogic.ttf", 20);
-	textFPS.font = TTF_OpenFont("emulogic.ttf", 20);
+    text.font = TTF_OpenFont("sample.ttf", 20);
+	textFPS.font = TTF_OpenFont("sample.ttf", 20);
 
 	textFPS.rect.x = 220;
 	textFPS.rect.y = 10;
 	textFPS.rect.w = 600;
 	textFPS.rect.h = 25;
-	
 
     if(text.font == NULL || textFPS.font == NULL)
     {
@@ -141,7 +138,7 @@ int main(int argc, char *args[])
     }
 
 	int currentSpeed = fps;
-    
+
     while (!quit)
     {
         while (SDL_PollEvent(&e) != 0)
@@ -175,13 +172,10 @@ int main(int argc, char *args[])
         SDL_RenderClear(gRenderer);
 
 		currentFrameTime = SDL_GetTicks();
-
 		deltaTime = (float)(currentFrameTime - lastFrameTime) / 1000;
-
 		lastFrameTime = SDL_GetTicks();
 
-
-		for (size_t i = 0; i <ovnis.size(); i++) {
+		for (size_t i = 0; i < ovnis.size(); i++) {
 			bool singleShot = true;
 
 			if (ovnis[i].position.x > SCREEN_WIDTH) {
@@ -189,31 +183,28 @@ int main(int argc, char *args[])
 				ovnis[i].position.y = Util::GenerateRandom(0, SCREEN_HEIGHT / 4) + Util::GenerateRandom(0, SCREEN_HEIGHT / 4);
 				ovnis[i].stopFalling();
 			}
-			else {
+			else if (ovnis[i].isIsFalling())
+            {
+                ovnis[i].updateSpeedX(0, deltaTime);
+                ovnis[i].updateSpeedY(9.8f, deltaTime);
+                ovnis[i].moveX(deltaTime);
+                ovnis[i].moveY(deltaTime);
+            }
+            else {
 				ovnis[i].moveX(deltaTime);
 			}
 			ovnis[i].draw();
 		}
-
-		
 		//std::cout << deltaTime << endl;
-
         cannon->draw(gRenderer);
-
-		
 		for (size_t i = 0; i < cannon->bullets.size(); i++)
         {
 			for (size_t j = 0; j < ovnis.size(); j++) {
-				
-				
-				if (Collision::CircleCollision(ovnis[j].position, cannon->bullets[i].position)) {					
-					
+				if (Collision::CircleCollision(ovnis[j].position, cannon->bullets[i].position)) {
 					ovnis[j].fall();
 					kills++;
 					cannon->bullets.at(i).position.y = 0;
-					
-					//isEmpty = cannon->bullets.empty();
-
+					//isEmpty = c annon->bullets.empty();
                 }
             }
         }
@@ -224,20 +215,20 @@ int main(int argc, char *args[])
 //        FIXME Poor performance
         text.displayText = "Kills: " + temp.str();
 
-		std::stringstream temp2;
-		temp2 << deltaTime;
+		std::stringstream deltaString;
+		deltaString << deltaTime;
 
-		std::stringstream temp3;
-		temp3 << fpsMill;
+		std::stringstream waitTime;
+		waitTime << fpsMill;
 
-		std::stringstream temp4;
-		temp4 << fps;
+		std::stringstream fspString;
+		fspString << fps;
 
-		textFPS.displayText = "DELTA: " + temp2.str() + "  WAIT: " + temp3.str() + "\n  FPS: " + temp4.str();
-		
+		textFPS.displayText = "DELTA: " + deltaString.str() + "  WAIT: " + waitTime.str() + "\n  FPS: " + fspString.str();
+
         text.surface = TTF_RenderText_Solid(text.font, text.displayText.c_str(), text.color);
 		textFPS.surface = TTF_RenderText_Solid(textFPS.font, textFPS.displayText.c_str(), textFPS.color);
-        
+
 		if(text.surface == NULL || textFPS.surface == NULL)
         {
             std::cout << "Error:" << TTF_GetError() << endl;
@@ -245,12 +236,11 @@ int main(int argc, char *args[])
         }
         text.texture = SDL_CreateTextureFromSurface(gRenderer, text.surface);
 		textFPS.texture = SDL_CreateTextureFromSurface(gRenderer, textFPS.surface);
-        
+
 		SDL_RenderCopy(gRenderer, text.texture, NULL, &text.rect);
 		SDL_RenderCopy(gRenderer, textFPS.texture, NULL, &textFPS.rect);
 
         SDL_RenderPresent(gRenderer);
-		
 		//std::cout << fpsMill << " dt " << deltaTime << endl;
 
 		SDL_Delay(fpsMill - deltaTime);

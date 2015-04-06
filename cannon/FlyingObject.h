@@ -26,17 +26,26 @@
 * */
 class FlyingObject : public GameObject
 {
-
 private:
-	bool isFalling;
+    bool isFalling;
+
 public:
+    bool isIsFalling() const
+    {
+        return isFalling;
+    }
+
+    void setIsFalling(bool isFalling)
+    {
+        FlyingObject::isFalling = isFalling;
+    }
+
     /* Bullets for the cannon
     * TODO Implement bullets as a class
     * */
     std::vector<GameObject> bullets;
 	SDL_Texture *bulletTexture;
 
-public:
     FlyingObject(int x, int y, int w, int h, double vel);
 
 	FlyingObject(int x, int y, int w, int h, double vel, std::string path, SDL_Renderer *rend, std::string pathBullet);
@@ -149,8 +158,8 @@ void FlyingObject::stopFalling() {
 }
 
 void FlyingObject::fall() {
-	position.y += Util::GenerateRandom(2, 5);
-	position.x += Util::GenerateRandom(0, 1);
+//	position.y += Util::GenerateRandom(2, 5);
+//	position.x += Util::GenerateRandom(0, 1);
 	isFalling = true;
 }
 

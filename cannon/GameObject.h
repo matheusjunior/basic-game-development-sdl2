@@ -29,7 +29,10 @@ public:
 	SDL_Renderer *objRend;
     double speedX; // x axis speed in pixels/sec
     double speedY; // y axis speed in pixels/sec
- 
+    uint32_t timeStart;
+    uint32_t deltaT;
+    uint32_t currentTime;
+
     GameObject() {}
 
     GameObject(int x, int y, int w, int h);

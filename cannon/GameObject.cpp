@@ -108,7 +108,7 @@ void GameObject::draw()
 	//Update();
 	if (NULL == texture) return;
 
-	if (isFalling == true) fall();
+	if (isFalling) fall();
 
 	SDL_RenderCopy(objRend, texture, NULL, &position);
 }
