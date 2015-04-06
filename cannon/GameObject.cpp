@@ -81,12 +81,12 @@ void GameObject::setTexture(SDL_Texture *tex)
 
 void GameObject::moveX(double dTime)
 {
-    position.x += speedX * dTime;
+    position.x += (int) speedX * dTime;
 }
 
 void GameObject::moveY(double dTime)
 {
-    position.y += speedY * dTime;
+    position.y += (int) speedY * dTime;
 }
 
 void GameObject::Update()

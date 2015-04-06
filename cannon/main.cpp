@@ -123,8 +123,8 @@ int main(int argc, char *args[])
 	ovnis.push_back(fly3);
 	ovnis.push_back(fly4);
 
-    text.font = TTF_OpenFont("sample.ttf", 20);
-	textFPS.font = TTF_OpenFont("sample.ttf", 20);
+    text.font = TTF_OpenFont("media/emulogic.ttf", 20);
+	textFPS.font = TTF_OpenFont("media/emulogic.ttf", 20);
 
 	textFPS.rect.x = 220;
 	textFPS.rect.y = 10;
@@ -174,7 +174,7 @@ int main(int argc, char *args[])
 		currentFrameTime = SDL_GetTicks();
 		deltaTime = (float)(currentFrameTime - lastFrameTime) / 1000;
 		lastFrameTime = SDL_GetTicks();
-
+			int randomShot;
 		for (size_t i = 0; i < ovnis.size(); i++) {
 			bool singleShot = true;
 
@@ -191,7 +191,11 @@ int main(int argc, char *args[])
                 ovnis[i].moveY(deltaTime);
             }
             else {
+				randomShot = Util::GenerateRandom(0, 100);
 				ovnis[i].moveX(deltaTime);
+				if (randomShot > 99) { // 1% de chance de atirar
+					ovnis[i].fire();
+				}
 			}
 			ovnis[i].draw();
 		}
