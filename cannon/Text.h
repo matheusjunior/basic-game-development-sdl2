@@ -8,8 +8,19 @@
 #define __Text_H_
 
 
+#ifdef _WIN32
+
+#include <SDL_render.h>
+#include <SDL_ttf.h>
+
+#else
+
 #include <SDL2/SDL_render.h>
 #include <SDL2_ttf/SDL_ttf.h>
+
+#endif
+
+
 #include <string>
 
 /* TODO Create interface for applying texture
@@ -21,7 +32,7 @@ public:
     SDL_Surface *surface;
     SDL_Rect rect;
     TTF_Font *font;
-    SDL_Color color = {255, 0, 0};
+    SDL_Color color;
     SDL_Texture *texture;
     std::string displayText;
 
