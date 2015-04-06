@@ -31,6 +31,7 @@ crashlytics-build.properties
 
 # Ignore project properties
 teste-render.xcodeproj/
+teste-render.xcodeproj/project.pbxproj
 
 # Ignore .DS AppCode files
 .DS*
