@@ -23,17 +23,17 @@ public:
 
     GameObject(int x, int y, int w, int h);
 
-    GameObject(int x, int y, int w, int h, double vel);
+    GameObject(int x, int y, int w, int h, double speed);
 
     /* Move object along x axis
     * @param y represents the elapsed time in ms to move GameObject according to its speed given in pixels/sec
     * */
-    void moveX(double x);
+    void moveX(double dTime);
 
     /* Move object along y axis
     * @param y represents the elapsed time in ms to move GameObject according to its speed given in pixels/sec
     * */
-    void moveY(double y);
+    void moveY(double dTime);
 
     /* Change GameObject axis x speed
     * @param v new speed in pixels/sec

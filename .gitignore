@@ -34,3 +34,7 @@ teste-render.xcodeproj/
 
 # Ignore .DS AppCode files
 .DS*
+media/.DS*
+
+# Ignore .gitignore backup
+.gitignore~

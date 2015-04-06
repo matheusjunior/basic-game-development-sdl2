@@ -17,7 +17,6 @@
 
 SDL_Window *gWindow = NULL;
 SDL_Renderer *gRenderer = NULL;
-Mix_Music* music = NULL;
 
 using namespace std;
 
@@ -80,7 +79,9 @@ int main(int argc, char *args[])
     bool quit = false;
     uint32_t startFrameTime = 0;
     uint32_t endFrameTime = 0;
-    uint32_t dTime;
+    float startMoveTime = 0; // Define the move time step in sec to move the obj
+    float endMoveTime = 0;
+    float dMoveTime = 0;
     SDL_Event e;
     const Uint8 *currKeyStates;
     int kills = 0;
@@ -91,12 +92,10 @@ int main(int argc, char *args[])
         return -1;
     }
 
-    Cannon *cannon = new Cannon(SCREEN_WIDTH / 6, SCREEN_WIDTH / 2, 100, 80, 400);
-    GameObject *spider = new GameObject(SCREEN_WIDTH - 200, SCREEN_WIDTH / 6, 102, 106, 400);
-    GameObject *fly = new GameObject(SCREEN_WIDTH / 6, SCREEN_WIDTH / 6, 96, 116, 400);
+    Cannon *cannon = new Cannon(400, 400, 100, 80, 400);
+    GameObject *fly = new GameObject(35, 0, 20, 20, 40);
 
     cannon->texture = getTexture("media/cannon.bmp");
-    spider->texture = getTexture("media/spider.bmp");
     fly->texture = getTexture("media/fly.bmp");
 
     text.font = TTF_OpenFont("sample.ttf", 20);
@@ -107,6 +106,9 @@ int main(int argc, char *args[])
     }
 
     int totalFrames = 30;
+    fly->speedY = 0;
+
+    srand(time(NULL));
     while (!quit)
     {
         while (SDL_PollEvent(&e) != 0)
@@ -140,7 +142,25 @@ int main(int argc, char *args[])
         SDL_RenderClear(gRenderer);
 
         if(fly->position.x > SCREEN_WIDTH) fly->position.x = 0;
-        else fly->moveX(15); // TODO Use dTime instead
+        if(fly->position.y > SCREEN_HEIGHT) // TODO Reset y speed here
+        {
+            cout << fly->position.x << endl;
+            fly->position.y = 0;
+            fly->position.x = rand() % SCREEN_WIDTH;
+            fly->speedY = 40; // TODO Implement method to reset y speed
+        }
+
+        startMoveTime = SDL_GetTicks() / 1000.0f;
+        dMoveTime = startMoveTime - endMoveTime;
+
+        fly->updateSpeedX(0, dMoveTime);
+        fly->updateSpeedY(9.8f, dMoveTime);
+        fly->moveX(dMoveTime);
+        fly->moveY(dMoveTime);
+//        cout << "y s: " << fly->speedY << endl;
+
+        endMoveTime = SDL_GetTicks() / 1000.0f;
+
         fly->draw(gRenderer);
         cannon->draw(gRenderer);
 

@@ -9,8 +9,8 @@ GameObject::GameObject(int x, int y, int w, int h)
     position.w = w;
     position.h = h;
 
-    speedX = 400;
-    speedY = 100;
+    speedX = 20;
+    speedY = 10;
 
     texture = NULL;
 
@@ -19,15 +19,15 @@ GameObject::GameObject(int x, int y, int w, int h)
     deltaT = 0;
 }
 
-GameObject::GameObject(int x, int y, int w, int h, double vel)
+GameObject::GameObject(int x, int y, int w, int h, double speed)
 {
     position.x = x;
     position.y = y;
     position.w = w;
     position.h = h;
-
-    speedX = vel;
-    speedY = vel;
+//    FIXME Lowest moving speed is 25p/s
+    speedX = speed;
+    speedY = speed;
 
     texture = NULL;
 
@@ -52,14 +52,14 @@ void GameObject::setTexture(SDL_Texture *tex)
     texture = tex;
 }
 
-void GameObject::moveX(double x)
+void GameObject::moveX(double dTime)
 {
-    position.x += speedX * ((float) x / 1000);
+    position.x += speedX * dTime;
 }
 
-void GameObject::moveY(double y)
+void GameObject::moveY(double dTime)
 {
-    position.y += speedY * y;
+    position.y += speedY * dTime;
 }
 
 void GameObject::Update()
