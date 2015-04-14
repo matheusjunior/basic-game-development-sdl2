@@ -137,10 +137,10 @@ void FlyingObject::draw()
 void FlyingObject::fire()
 {
     GameObject bullet;
-	bullet.position.x = this->position.x + 15;
-	bullet.position.y = this->position.y;
-    bullet.position.h = 15;
-    bullet.position.w = 15;
+	bullet.position.x = this->position.x;
+	bullet.position.y = this->position.y + 5;
+    bullet.position.h = 10;
+    bullet.position.w = 10;
     this->bullets.push_back(bullet);
 }
 
