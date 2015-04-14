@@ -53,7 +53,7 @@ GameObject::GameObject(int x, int y, int w, int h, double vel, std::string path,
 	position.h = h;
 
 	speedX = vel;
-	speedY = vel;
+	speedY = vel /3;
 
 	objRend = rend;
 

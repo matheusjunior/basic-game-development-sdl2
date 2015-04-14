@@ -73,7 +73,7 @@ int main(int argc, char *args[])
     bool quit = false;
     uint32_t startFrameTime = 0;
     uint32_t endFrameTime = 0;
-    float startMoveTime = 0; // Define the move time step in sec to move the obj
+    float startMoveTime = 0; 
     float endMoveTime = 0;
     float dMoveTime = 0;
     SDL_Event e;
@@ -178,10 +178,9 @@ int main(int argc, char *args[])
 		currentFrameTime = SDL_GetTicks();
 		deltaTime = (float)(currentFrameTime - lastFrameTime) / 1000;
 		lastFrameTime = SDL_GetTicks();
-			int randomShot;
-		for (size_t i = 0; i < ovnis.size(); i++) {
-			bool singleShot = true;
 
+		for (size_t i = 0; i < ovnis.size(); i++) {
+			int randomShot;
 			if (ovnis[i].position.x > SCREEN_WIDTH) {
 				ovnis[i].position.x = 0;
 				ovnis[i].position.y = Util::GenerateRandom(0, SCREEN_HEIGHT / 4) + Util::GenerateRandom(0, SCREEN_HEIGHT / 4);
@@ -198,6 +197,7 @@ int main(int argc, char *args[])
             }
             else {
 				randomShot = Util::GenerateRandom(0, 100);
+				//cout << randomShot << endl;
 				ovnis[i].moveX(deltaTime);
 				if (randomShot > 99) { // 1% de chance de atirar
 					ovnis[i].fire();
@@ -214,7 +214,6 @@ int main(int argc, char *args[])
 					ovnis[j].fall();
 					kills++;
 					cannon->bullets.at(i).position.y = 0;
-					//isEmpty = c annon->bullets.empty();
                 }
             }
         }

@@ -1,0 +1,92 @@
+\hypertarget{class_game_object}{}\section{Game\+Object Class Reference}
+\label{class_game_object}\index{Game\+Object@{Game\+Object}}
+Inheritance diagram for Game\+Object\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_game_object}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_game_object_ad5223d5e6c6bc39529c85dceb1d50930}{}{\bfseries Game\+Object} (int x, int y, int w, int h)\label{class_game_object_ad5223d5e6c6bc39529c85dceb1d50930}
+
+\item 
+\hypertarget{class_game_object_a3a91505bf2480eab8333df4c9c6b5a7e}{}{\bfseries Game\+Object} (int x, int y, int w, int h, double speed)\label{class_game_object_a3a91505bf2480eab8333df4c9c6b5a7e}
+
+\item 
+\hypertarget{class_game_object_a36a5f15c226732b4ecea0cd01d6c0c37}{}{\bfseries Game\+Object} (int x, int y, int w, int h, double vel, std\+::string path, S\+D\+L\+\_\+\+Renderer $\ast$rend)\label{class_game_object_a36a5f15c226732b4ecea0cd01d6c0c37}
+
+\item 
+\hypertarget{class_game_object_a508ffb146e68ae0699c16e7e0be395cf}{}void {\bfseries move\+X} (double d\+Time)\label{class_game_object_a508ffb146e68ae0699c16e7e0be395cf}
+
+\item 
+\hypertarget{class_game_object_a8c98efc0e75c4df16d6d065dbf119f4a}{}void {\bfseries move\+Y} (double d\+Time)\label{class_game_object_a8c98efc0e75c4df16d6d065dbf119f4a}
+
+\item 
+\hypertarget{class_game_object_a29a1e18b85acfbdccca5388b6b11d6e6}{}void {\bfseries set\+Speed\+X} (double v)\label{class_game_object_a29a1e18b85acfbdccca5388b6b11d6e6}
+
+\item 
+\hypertarget{class_game_object_a11263a87aad0ff22157eaf48d9e603e3}{}void {\bfseries set\+Speed\+Y} (double v)\label{class_game_object_a11263a87aad0ff22157eaf48d9e603e3}
+
+\item 
+\hypertarget{class_game_object_ac3c1034c2b4645b10a57198516f0c66e}{}void {\bfseries update\+Speed\+X} (double acceleration, double d\+Time)\label{class_game_object_ac3c1034c2b4645b10a57198516f0c66e}
+
+\item 
+\hypertarget{class_game_object_a76a96005333af8f0b2d7c6dbe1ecbeaf}{}void {\bfseries update\+Speed\+Y} (double acceleration, double d\+Time)\label{class_game_object_a76a96005333af8f0b2d7c6dbe1ecbeaf}
+
+\item 
+\hypertarget{class_game_object_a0872c027418d59fa7cb3385c0157331c}{}void {\bfseries set\+Texture} (S\+D\+L\+\_\+\+Texture $\ast$tex)\label{class_game_object_a0872c027418d59fa7cb3385c0157331c}
+
+\item 
+\hypertarget{class_game_object_a149810a726d5f0f0928e3cc1e2f35caa}{}virtual void {\bfseries draw} (S\+D\+L\+\_\+\+Renderer $\ast$g\+Renderer)\label{class_game_object_a149810a726d5f0f0928e3cc1e2f35caa}
+
+\item 
+\hypertarget{class_game_object_abb64143e72358beb808db22182517802}{}virtual void {\bfseries draw} ()\label{class_game_object_abb64143e72358beb808db22182517802}
+
+\item 
+\hypertarget{class_game_object_a1bd14aa169f501f94f1721943d716535}{}void {\bfseries Update} ()\label{class_game_object_a1bd14aa169f501f94f1721943d716535}
+
+\item 
+\hypertarget{class_game_object_a02f615d4d777a5542f7bcb757462d212}{}S\+D\+L\+\_\+\+Texture $\ast$ {\bfseries get\+Texture} (std\+::string path)\label{class_game_object_a02f615d4d777a5542f7bcb757462d212}
+
+\item 
+\hypertarget{class_game_object_ae726f13a135d68908628299d702c88f4}{}void {\bfseries fall} ()\label{class_game_object_ae726f13a135d68908628299d702c88f4}
+
+\item 
+\hypertarget{class_game_object_a759f927dbbb6e388acb332bbe76ded59}{}void {\bfseries stop\+Falling} ()\label{class_game_object_a759f927dbbb6e388acb332bbe76ded59}
+
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_game_object_a01accf16dabf8b1006e3df597dc1728a}{}S\+D\+L\+\_\+\+Texture $\ast$ {\bfseries texture}\label{class_game_object_a01accf16dabf8b1006e3df597dc1728a}
+
+\item 
+\hypertarget{class_game_object_af6009d73be98a4bd54272d06b50f2eac}{}S\+D\+L\+\_\+\+Rect {\bfseries position}\label{class_game_object_af6009d73be98a4bd54272d06b50f2eac}
+
+\item 
+\hypertarget{class_game_object_aca8078da92a2d34889e428708d501246}{}S\+D\+L\+\_\+\+Renderer $\ast$ {\bfseries obj\+Rend}\label{class_game_object_aca8078da92a2d34889e428708d501246}
+
+\item 
+\hypertarget{class_game_object_a71fe4978f8508ada95019f5fc77fd8c6}{}double {\bfseries speed\+X}\label{class_game_object_a71fe4978f8508ada95019f5fc77fd8c6}
+
+\item 
+\hypertarget{class_game_object_a09a14839f77f2eded95fbf82204e1f1c}{}double {\bfseries speed\+Y}\label{class_game_object_a09a14839f77f2eded95fbf82204e1f1c}
+
+\item 
+\hypertarget{class_game_object_a127eb9388ff0cdbbd20f000b24420564}{}uint32\+\_\+t {\bfseries time\+Start}\label{class_game_object_a127eb9388ff0cdbbd20f000b24420564}
+
+\item 
+\hypertarget{class_game_object_af52441e1d468ad926cfe265afc6734de}{}uint32\+\_\+t {\bfseries delta\+T}\label{class_game_object_af52441e1d468ad926cfe265afc6734de}
+
+\item 
+\hypertarget{class_game_object_a0ee7d3e2f3cfdeba9d924abe12d6739a}{}uint32\+\_\+t {\bfseries current\+Time}\label{class_game_object_a0ee7d3e2f3cfdeba9d924abe12d6739a}
+
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Game\+Object.\+h\item 
+Game\+Object.\+cpp\end{DoxyCompactItemize}
