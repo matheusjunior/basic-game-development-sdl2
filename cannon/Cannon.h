@@ -67,6 +67,7 @@ SDL_Texture* Cannon::getTexture(SDL_Renderer *rend, std::string path) {
 void Cannon::draw(SDL_Renderer *gRenderer)
 {
     if(currTexture == NULL) exit(9);
+//    SDL_RenderCopy(gRenderer, currTexture, NULL, &position);
     SDL_RenderCopy(gRenderer, currTexture, NULL, &position);
 
 //    update bullets positions

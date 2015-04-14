@@ -15,6 +15,7 @@
 
 #include <string>
 #include <vector>
+#include "Stopwatch.h"
 
 /*! \brief Represents all possible movable objects
 *
@@ -24,9 +25,21 @@ class GameObject
 {
 private:
 	bool isFalling;
+    int imageIndex;
+    Stopwatch *stopwatch;
 
 public:
-    /// GameObject Texture
+    Stopwatch *getStopwatch() const
+    {
+        return stopwatch;
+    }
+
+    void setStopwatch(Stopwatch *stopwatch)
+    {
+        GameObject::stopwatch = stopwatch;
+    }
+
+/// GameObject Texture
     SDL_Texture *currTexture;
     /// Sprite sheet
     std::vector<SDL_Texture*> sprites;
@@ -78,6 +91,7 @@ public:
 
     int loadSpriteSheet(std::string path);
 
+    void show(float dTime);
 
     /** Set GameObject currTexture
     * \param tex currTexture to be applied

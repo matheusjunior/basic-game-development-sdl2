@@ -30,6 +30,8 @@ GameObject::GameObject(int x, int y, int w, int h)
     timeStart = 0;
     currentTime = 0;
     deltaT = 0;
+    imageIndex = 0;
+    stopwatch = new Stopwatch();
 }
 
 GameObject::GameObject(int x, int y, int w, int h, double speed) : GameObject(x, y, w, h)
@@ -45,9 +47,7 @@ GameObject::GameObject(int x, int y, int w, int h, double vel, std::string path,
 {
 	objRend = rend;
 	currTexture = getTexture(path);
-
 	isFalling = false;
-
 }
 
 
@@ -84,17 +84,14 @@ void GameObject::Update()
 void GameObject::draw(SDL_Renderer *gRenderer)
 {
     currentTime = SDL_GetTicks();
-    //Update();
-    if(NULL == currTexture) exit(9);
+    if(currTexture == NULL) exit(9);
     SDL_RenderCopy(gRenderer, currTexture, NULL, &position);
     timeStart = currentTime;
 }
 
 void GameObject::draw()
 {
-	//Update();
-	if (NULL == currTexture) return;
-
+	if (currTexture == NULL) return;
 	if (isFalling) fall();
 
 	SDL_RenderCopy(objRend, currTexture, NULL, &position);
@@ -113,7 +110,6 @@ void GameObject::updateSpeedY(double acceleration, double dTime)
 SDL_Texture* GameObject::getTexture(std::string path)
 {
 	SDL_Surface *surface = SDL_LoadBMP(path.c_str());
-	
 	SDL_Texture *text = SDL_CreateTextureFromSurface(objRend, surface);
 
 	return text;
@@ -143,4 +139,19 @@ int GameObject::loadSpriteSheet(std::string path)
     }
     sprites.push_back(texture);
     return 0;
+}
+
+void GameObject::show(float dTime)
+{
+//    FPS / # of sprites to get an appropriate time for each sprite
+    if ((stopwatch->getCurrTime() - stopwatch->getStartTime()) > (float) 30 / sprites.size())
+    {
+        stopwatch->stop();
+        stopwatch->start();
+        currTexture = sprites[++imageIndex % sprites.size()];
+        if (imageIndex > 1000)
+        {
+            imageIndex = 0;
+        }
+    }
 }

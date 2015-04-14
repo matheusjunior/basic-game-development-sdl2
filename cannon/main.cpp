@@ -91,9 +91,14 @@ int main(int argc, char *args[])
         std::cout << "Falhou init\n";
         return -1;
     }
-    
+
     Cannon* cannon = new Cannon(SCREEN_WIDTH / 2 - 25, SCREEN_WIDTH / 2 + 108, 40, 40, 400,
             "media/green1-square.bmp", gRenderer, "media/red-square.bmp");
+    cannon->loadSpriteSheet("media/01.bmp");
+    cannon->loadSpriteSheet("media/02.bmp");
+    cannon->loadSpriteSheet("media/03.bmp");
+    cannon->loadSpriteSheet("media/04.bmp");
+    cannon->getStopwatch()->start();
 
 	int px = -25 +  Util::GenerateRandom(0, 60);
 	int py = Util::GenerateRandom(0, 70);
@@ -204,6 +209,7 @@ int main(int argc, char *args[])
 			ovnis[i].draw();
 		}
 		//std::cout << deltaTime << endl;
+        cannon->show(0.0f);
         cannon->draw(gRenderer);
 		for (size_t i = 0; i < cannon->bullets.size(); i++)
         {
