@@ -15,20 +15,25 @@
 
 #include <string>
 
-
-/* TODO Document class
-* */
+/*! \brief Represents all possible movable objects
+*
+* \todo Document functions
+* */;
 class GameObject
 {
 private:
 	bool isFalling;
 
 public:
-    SDL_Texture *texture; // GameObject Texture
-    SDL_Rect position; // GameObject position in space
+    /// GameObject Texture
+    SDL_Texture *texture;
+    /// GameObject position in space
+    SDL_Rect position;
 	SDL_Renderer *objRend;
-    double speedX; // x axis speed in pixels/sec
-    double speedY; // y axis speed in pixels/sec
+    /// x axis speed in pixels/sec
+    double speedX;
+    /// y axis speed in pixels/sec
+    double speedY;
     uint32_t timeStart;
     uint32_t deltaT;
     uint32_t currentTime;
@@ -41,23 +46,26 @@ public:
 
 	GameObject(int x, int y, int w, int h, double vel, std::string path, SDL_Renderer *rend);
 
-    /* Move object along x axis
-    * @param y represents the elapsed time in ms to move GameObject according to its speed given in pixels/sec
+    /**
+    * Move object along x axis
+    * \param y represents the elapsed time in ms to move GameObject according to its speed given in pixels/sec
     * */
     void moveX(double dTime);
 
-    /* Move object along y axis
-    * @param y represents the elapsed time in ms to move GameObject according to its speed given in pixels/sec
+    /**
+    * Move object along y axis
+    * \param y represents the elapsed time in ms to move GameObject according to its speed given in pixels/sec
     * */
     void moveY(double dTime);
 
-    /* Change GameObject axis x speed
-    * @param v new speed in pixels/sec
+    /**
+    * Change GameObject axis x speed
+    * \param v new speed in pixels/sec
     * */
     void setSpeedX(double v);
 
-    /* Change GameObject axis x speed
-    * @param v new speed in pixels/sec
+    /** Change GameObject axis x speed
+    * \param v new speed in pixels/sec
     * */
     void setSpeedY(double v);
 
@@ -66,13 +74,13 @@ public:
     void updateSpeedY(double acceleration, double dTime);
 
 
-    /* Set GameObject texture
-    * @param tex texture to be applied
+    /** Set GameObject texture
+    * \param tex texture to be applied
     * */
     void setTexture(SDL_Texture *tex);
 
-    /* Draw GameObject using its own texture
-    * @param gRenderer SDL_Render to apply the texture
+    /** Draw GameObject using its own texture
+    * \param gRenderer SDL_Render to apply the texture
     * */
     virtual void draw(SDL_Renderer *gRenderer);
 

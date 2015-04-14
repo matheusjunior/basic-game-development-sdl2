@@ -6,17 +6,11 @@
 #include <stdlib.h>
 #include "Util.h"
 
-
 #ifdef _WIN32
-
 #include <time.h>
 #include <Windows.h>
 #include <SDL.h>
-
 #else
-
-
-
 #endif
 
 int Util::GenerateRandom(int l, int u)

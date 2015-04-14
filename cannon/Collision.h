@@ -21,14 +21,14 @@
 
 
 
-/*
+/** Implements collision algorithms
 * */
 class Collision
 {
 public:
-    /* AABB-AABB intersection test. Algorithm from http://goanna.cs.rmit.edu.au
-    * @param a, b SDL_Rect objects to detect collision
-    * @return true if a collided with b, false otherwise
+    /** AABB-AABB intersection test. Algorithm from http://goanna.cs.rmit.edu.au
+    * \param a, b SDL_Rect objects to detect collision
+    * \return true if a collided with b, false otherwise
     *
     * Check segment intersections
     * if (a_min_x > b_max_x || b_min_x > a_max_x)

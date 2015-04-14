@@ -21,14 +21,12 @@
 #include <vector>
 
 
-/* TODO Document class
+/** Represents a cannon object in the game
 * */
 class Cannon : public GameObject
 {
 public:
-    /* Bullets for the cannon
-    * TODO Implement bullets as a class
-    * */
+    /// Bullets for the cannon
     std::vector<GameObject> bullets;
 	SDL_Texture *bulletTexture;
 
@@ -37,14 +35,14 @@ public:
 
 	Cannon(int x, int y, int w, int h, double vel, std::string path, SDL_Renderer *rend, std::string pathBullet);
 
-    /* Draw GameObject including the bullets shot
-    * @param gRenderer SDL_Render to apply the texture
+    /** Draw GameObject including the bullets shot
+    * \param gRenderer SDL_Render to apply the texture
     * */
     void draw(SDL_Renderer *gRenderer) override;
 
 	SDL_Texture* getTexture(SDL_Renderer *rend, std::string path);
 
-    /* Fire bullets (squares for now)
+    /** Fire bullets (squares for now)
     * */
     void fire();
 };
@@ -68,8 +66,6 @@ SDL_Texture* Cannon::getTexture(SDL_Renderer *rend, std::string path) {
 
 void Cannon::draw(SDL_Renderer *gRenderer)
 {
-    
-    //Update();
     if(texture == NULL) exit(9);
     SDL_RenderCopy(gRenderer, texture, NULL, &position);
 
@@ -83,10 +79,7 @@ void Cannon::draw(SDL_Renderer *gRenderer)
     }
 
 //    render bullets
-
 	for (size_t i = 0; i < bullets.size(); i++) SDL_RenderCopy(gRenderer, bulletTexture, NULL, &bullets[i].position);
-
-
 }
 
 void Cannon::fire()

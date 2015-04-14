@@ -26,8 +26,8 @@ SDL_Renderer *gRenderer = NULL;
 
 using namespace std;
 
-/* Initialize SDL components
-* @return true if: video component initialized properly, window succesfully created,
+/** Initialize SDL components
+* \return true if: video component initialized properly, window succesfully created,
 * and SDL_Tff is properly initialized
 * false otherwise
 * */
@@ -49,7 +49,7 @@ bool init()
     return true;
 }
 
-/* Close SDL resources in use
+/** Close SDL resources in use
 * */
 void close()
 {
@@ -60,9 +60,9 @@ void close()
     SDL_Quit();
 }
 
-/* Game main function. All event handling is first processed here
+/** Game main function. All event handling is first processed here
 * and delegated to classes if needed.
-* @return 0 if succeeds, -1 otherwise
+* \return 0 if succeeds, -1 otherwise
 * */
 int main(int argc, char *args[])
 {
@@ -118,6 +118,10 @@ int main(int argc, char *args[])
 	FlyingObject fly4(px, py, 25, 25, speed, "media/purple-square.bmp", gRenderer, "media/red-square.bmp");
 
     std::vector<FlyingObject> ovnis;
+    fly1.speedY = 0;
+    fly2.speedY = 0;
+    fly3.speedY = 0;
+    fly4.speedY = 0;
 	ovnis.push_back(fly1);
 	ovnis.push_back(fly2);
 	ovnis.push_back(fly3);
@@ -185,10 +189,12 @@ int main(int argc, char *args[])
 			}
 			else if (ovnis[i].isIsFalling())
             {
+//                FIXME check why 99 works and 9.8 doesn't
                 ovnis[i].updateSpeedX(0, deltaTime);
-                ovnis[i].updateSpeedY(9.8f, deltaTime);
+                ovnis[i].updateSpeedY(99, deltaTime);
                 ovnis[i].moveX(deltaTime);
                 ovnis[i].moveY(deltaTime);
+                cout << "y speed:"  << ovnis[i].speedY << endl;
             }
             else {
 				ovnis[i].moveX(deltaTime);
