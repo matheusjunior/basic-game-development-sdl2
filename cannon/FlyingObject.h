@@ -92,8 +92,8 @@ SDL_Texture* FlyingObject::getTexture(SDL_Renderer *rend, std::string path) {
 void FlyingObject::draw(SDL_Renderer *gRenderer)
 {
     //Update();
-    if(texture == NULL) exit(9);
-    SDL_RenderCopy(gRenderer, texture, NULL, &position);
+    if(currTexture == NULL) exit(9);
+    SDL_RenderCopy(gRenderer, currTexture, NULL, &position);
 
 //    update bullets positions
 	for (size_t i = 0; i < bullets.size(); i++) bullets[i].position.y -= 10;
@@ -113,8 +113,8 @@ void FlyingObject::draw(SDL_Renderer *gRenderer)
 void FlyingObject::draw()
 {
 	//Update();
-	if (texture == NULL) exit(9);
-	SDL_RenderCopy(objRend, texture, NULL, &position);
+	if (currTexture == NULL) exit(9);
+	SDL_RenderCopy(objRend, currTexture, NULL, &position);
 
 	//    update bullets positions
 	for (size_t i = 0; i < bullets.size(); i++) bullets[i].position.y += 7;
@@ -146,7 +146,7 @@ void FlyingObject::fire()
 
 
 void FlyingObject::setTextureBody(SDL_Texture *t){
-	texture = t;
+	currTexture = t;
 }
 
 void FlyingObject::setTextureBullet(SDL_Texture *t) {

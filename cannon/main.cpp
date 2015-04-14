@@ -91,9 +91,7 @@ int main(int argc, char *args[])
         std::cout << "Falhou init\n";
         return -1;
     }
-
-    GameObject *spider = new GameObject(SCREEN_WIDTH - 200, SCREEN_WIDTH / 6, 102, 106, 400);
-    GameObject *fly = new GameObject(SCREEN_WIDTH / 6, SCREEN_WIDTH / 6, 96, 116, 400);
+    
     Cannon* cannon = new Cannon(SCREEN_WIDTH / 2 - 25, SCREEN_WIDTH / 2 + 108, 40, 40, 400,
             "media/green1-square.bmp", gRenderer, "media/red-square.bmp");
 

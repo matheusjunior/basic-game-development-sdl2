@@ -25,39 +25,26 @@ GameObject::GameObject(int x, int y, int w, int h)
     speedX = 20;
     speedY = 10;
 
-    texture = NULL;
+    currTexture = NULL;
 
     timeStart = 0;
     currentTime = 0;
     deltaT = 0;
 }
 
-GameObject::GameObject(int x, int y, int w, int h, double speed)
+GameObject::GameObject(int x, int y, int w, int h, double speed) : GameObject(x, y, w, h)
 {
-    position.x = x;
-    position.y = y;
-    position.w = w;
-    position.h = h;
 //    FIXME Lowest moving speed is 25p/s
     speedX = speed;
     speedY = speed;
 
-    texture = NULL;
+    currTexture = NULL;
 }
 
-GameObject::GameObject(int x, int y, int w, int h, double vel, std::string path, SDL_Renderer *rend)
+GameObject::GameObject(int x, int y, int w, int h, double vel, std::string path, SDL_Renderer *rend) : GameObject(x, y, w, h, vel)
 {
-	position.x = x;
-	position.y = y;
-	position.w = w;
-	position.h = h;
-
-	speedX = vel;
-	speedY = vel;
-
 	objRend = rend;
-
-	texture = getTexture(path);
+	currTexture = getTexture(path);
 
 	isFalling = false;
 
@@ -76,7 +63,7 @@ void GameObject::setSpeedY(double v)
 
 void GameObject::setTexture(SDL_Texture *tex)
 {
-    texture = tex;
+    currTexture = tex;
 }
 
 void GameObject::moveX(double dTime)
@@ -98,19 +85,19 @@ void GameObject::draw(SDL_Renderer *gRenderer)
 {
     currentTime = SDL_GetTicks();
     //Update();
-    if(NULL == texture) exit(9);
-    SDL_RenderCopy(gRenderer, texture, NULL, &position);
+    if(NULL == currTexture) exit(9);
+    SDL_RenderCopy(gRenderer, currTexture, NULL, &position);
     timeStart = currentTime;
 }
 
 void GameObject::draw()
 {
 	//Update();
-	if (NULL == texture) return;
+	if (NULL == currTexture) return;
 
 	if (isFalling) fall();
 
-	SDL_RenderCopy(objRend, texture, NULL, &position);
+	SDL_RenderCopy(objRend, currTexture, NULL, &position);
 }
 
 void GameObject::updateSpeedX(double acceleration, double dTime)
@@ -140,4 +127,20 @@ void GameObject::fall() {
 	position.y += Util::GenerateRandom(2,5);
 	position.x += Util::GenerateRandom(0, 1);
 	isFalling = true;
+}
+
+int GameObject::loadSpriteSheet(std::string path)
+{
+    SDL_Surface *rect = SDL_LoadBMP(path.c_str());
+    if (rect == NULL)
+    {
+         return -1;
+    }
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(objRend, rect);
+    if (texture == NULL)
+    {
+         return -1;
+    }
+    sprites.push_back(texture);
+    return 0;
 }

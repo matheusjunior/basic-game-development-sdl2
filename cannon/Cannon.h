@@ -36,7 +36,7 @@ public:
 	Cannon(int x, int y, int w, int h, double vel, std::string path, SDL_Renderer *rend, std::string pathBullet);
 
     /** Draw GameObject including the bullets shot
-    * \param gRenderer SDL_Render to apply the texture
+    * \param gRenderer SDL_Render to apply the currTexture
     * */
     void draw(SDL_Renderer *gRenderer) override;
 
@@ -66,8 +66,8 @@ SDL_Texture* Cannon::getTexture(SDL_Renderer *rend, std::string path) {
 
 void Cannon::draw(SDL_Renderer *gRenderer)
 {
-    if(texture == NULL) exit(9);
-    SDL_RenderCopy(gRenderer, texture, NULL, &position);
+    if(currTexture == NULL) exit(9);
+    SDL_RenderCopy(gRenderer, currTexture, NULL, &position);
 
 //    update bullets positions
 	for (size_t i = 0; i < bullets.size(); i++) bullets[i].position.y -= 10;

@@ -6,8 +6,8 @@
 //{
 //    currentTime = SDL_GetTicks();
 //    //Update();
-//    if(texture == NULL) exit(9);
-//    SDL_RenderCopy(gRenderer, texture, NULL, &position);
+//    if(currTexture == NULL) exit(9);
+//    SDL_RenderCopy(gRenderer, currTexture, NULL, &position);
 //
 ////    update bullets positions
 //    for (int i = 0; i < bullets.size(); ++i) bullets[i].y -= 10;
@@ -19,7 +19,7 @@
 //    }
 //
 ////    render bullets
-//    for (int i = 0; i < bullets.size(); ++i) SDL_RenderCopy(gRenderer, texture, NULL, &bullets[i]);
+//    for (int i = 0; i < bullets.size(); ++i) SDL_RenderCopy(gRenderer, currTexture, NULL, &bullets[i]);
 //
 //    timeStart = currentTime;
 //}

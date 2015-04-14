@@ -23,7 +23,7 @@
 
 #include <string>
 
-/* \todo Create interface for applying texture
+/* \todo Create interface for applying currTexture
 * \todo Document class
 * */
 class Text

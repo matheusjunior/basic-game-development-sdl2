@@ -14,6 +14,7 @@
 #endif
 
 #include <string>
+#include <vector>
 
 /*! \brief Represents all possible movable objects
 *
@@ -26,7 +27,9 @@ private:
 
 public:
     /// GameObject Texture
-    SDL_Texture *texture;
+    SDL_Texture *currTexture;
+    /// Sprite sheet
+    std::vector<SDL_Texture*> sprites;
     /// GameObject position in space
     SDL_Rect position;
 	SDL_Renderer *objRend;
@@ -73,14 +76,16 @@ public:
 
     void updateSpeedY(double acceleration, double dTime);
 
+    int loadSpriteSheet(std::string path);
 
-    /** Set GameObject texture
-    * \param tex texture to be applied
+
+    /** Set GameObject currTexture
+    * \param tex currTexture to be applied
     * */
     void setTexture(SDL_Texture *tex);
 
-    /** Draw GameObject using its own texture
-    * \param gRenderer SDL_Render to apply the texture
+    /** Draw GameObject using its own currTexture
+    * \param gRenderer SDL_Render to apply the currTexture
     * */
     virtual void draw(SDL_Renderer *gRenderer);
 
