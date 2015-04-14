@@ -28,6 +28,7 @@ class FlyingObject : public GameObject
 {
 private:
     bool isFalling;
+	double deltaTime;
 
 public:
     bool isIsFalling() const
@@ -70,6 +71,10 @@ public:
 	void stopFalling();
 
 	void fall();
+
+	void updateSpeedX(double acceleration, double dTime);
+
+	void updateSpeedY(double acceleration, double dTime);
 };
 
 FlyingObject::FlyingObject(int x, int y, int w, int h, double vel) : GameObject(x, y, w, h, vel)
@@ -117,7 +122,13 @@ void FlyingObject::draw()
 	SDL_RenderCopy(objRend, currTexture, NULL, &position);
 
 	//    update bullets positions
-	for (size_t i = 0; i < bullets.size(); i++) bullets[i].position.y += 7;
+	for (size_t i = 0; i < bullets.size(); i++) {
+		//bullets[i].position.y += 7;
+		bullets[i].updateSpeedX(0, deltaTime);
+		bullets[i].updateSpeedY(9.8f, deltaTime);
+		bullets[i].moveX(deltaTime);
+		bullets[i].moveY(deltaTime);
+	}
 
 	//    remove off-screen bullets
 	for (size_t i = 0; i < bullets.size(); i++)
@@ -162,5 +173,18 @@ void FlyingObject::fall() {
 //	position.x += Util::GenerateRandom(0, 1);
 	isFalling = true;
 }
+
+void FlyingObject::updateSpeedX(double acceleration, double dTime)
+{
+	deltaT = dTime;
+	speedX += acceleration * dTime;
+}
+
+void FlyingObject::updateSpeedY(double acceleration, double dTime)
+{
+	deltaT = dTime;
+	speedY += acceleration * dTime;
+}
+
 
 #endif
