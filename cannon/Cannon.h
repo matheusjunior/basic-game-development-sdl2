@@ -91,6 +91,9 @@ void Cannon::fire()
     bullet.position.h = 10;
     bullet.position.w = 10;
     this->bullets.push_back(bullet);
+    
+    //nao tenho certeza se compila, mas sei que tem que executar essa linha
+    bullet.speedX = speedX;
 }
 
 #endif 
