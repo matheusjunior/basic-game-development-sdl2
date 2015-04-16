@@ -35,6 +35,8 @@ private:
 
 
 public:
+	void setDeltaTime(double dt);
+
     bool isIsFalling() const
     {
         return isFalling;
@@ -96,6 +98,9 @@ SDL_Texture* FlyingObject::getTexture(SDL_Renderer *rend, std::string path) {
 	return text;
 }
 
+void FlyingObject::setDeltaTime(double dt) {
+	deltaTime = dt;
+}
 
 void FlyingObject::draw()
 {
@@ -105,7 +110,6 @@ void FlyingObject::draw()
 
 	//    update bullets positions
 	for (size_t i = 0; i < bullets.size(); i++) {
-		std::cout << speedX;
 		bullets[i].updateSpeedX(0, deltaTime);
 		bullets[i].updateSpeedY(75, deltaTime);
 		bullets[i].moveX(deltaTime);
@@ -131,9 +135,12 @@ void FlyingObject::fire()
 {
     GameObject bullet;
 	bullet.position.x = this->position.x;
-	bullet.position.y = this->position.y + 5;
+	bullet.position.y = this->position.y + 15;
     bullet.position.h = 10;
     bullet.position.w = 10;
+
+	bullet.speedX = speedX;
+
     this->bullets.push_back(bullet);
 
 	bullet.speedX = this->speedX;

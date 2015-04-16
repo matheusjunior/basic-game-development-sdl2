@@ -120,8 +120,6 @@ void GameObject::stopFalling() {
 }
 
 void GameObject::fall() {
-	position.y += Util::GenerateRandom(2,5);
-	position.x += Util::GenerateRandom(0, 1);
 	isFalling = true;
 }
 

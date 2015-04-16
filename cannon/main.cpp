@@ -82,7 +82,7 @@ int main(int argc, char *args[])
 
 	float deltaTime;
 	int lastFrameTime = 0, currentFrameTime = 0;
-	int fps = 30;
+	int fps = 40;
 	int fpsMill = 1000 / fps;
 	int totalFrames = fps;
 
@@ -184,6 +184,7 @@ int main(int argc, char *args[])
 
 		for (size_t i = 0; i < ovnis.size(); i++) {
 			int randomShot;
+
 			if (ovnis[i].position.x > SCREEN_WIDTH) {
 				ovnis[i].position.x = 0;
 				ovnis[i].position.y = Util::GenerateRandom(0, SCREEN_HEIGHT / 4) + Util::GenerateRandom(0, SCREEN_HEIGHT / 4);
@@ -192,6 +193,8 @@ int main(int argc, char *args[])
 			else if (ovnis[i].isIsFalling())
             {
 //                FIXME check why 99 works and 9.8 doesn't
+
+				
                 ovnis[i].updateSpeedX(0, deltaTime);
                 ovnis[i].updateSpeedY(99, deltaTime);
                 ovnis[i].moveX(deltaTime);
@@ -203,6 +206,8 @@ int main(int argc, char *args[])
 				//cout << randomShot << endl;
 				ovnis[i].moveX(deltaTime);
 				if (randomShot > 99) { // 1% de chance de atirar
+					ovnis[i].setDeltaTime(deltaTime);
+
 					ovnis[i].fire();
 				}
 			}
