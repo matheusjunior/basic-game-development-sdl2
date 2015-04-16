@@ -7,6 +7,7 @@
 MusicPlayer::MusicPlayer()
 {
     playingMusic = NULL;
+    soundEffect = NULL;
     freq = 44100;
     quantChannels = 2;
     chunksize = 2048;
@@ -17,8 +18,14 @@ MusicPlayer::MusicPlayer()
 
 int MusicPlayer::playMusic(char const* path)
 {
-    playingMusic = Mix_LoadMUS(path);
-    if (playingMusic == NULL) return -1;
+    if (playingMusic == NULL)
+    {
+        if (loadMusic(path) != 0)
+        {
+            return -1;
+        };
+    }
+
     if (Mix_PlayMusic(playingMusic, -1) == -1) return -1;
     return 0;
 }
@@ -94,4 +101,28 @@ void MusicPlayer::playCurrPlaylist()
     if (Mix_PlayingMusic() == 0) Mix_PauseMusic();
     playingMusic = playlist[0];
     Mix_PlayMusic(playingMusic, -1);
+}
+
+int MusicPlayer::playSoundEffect(const char *soundEffectPath)
+{
+    if (soundEffect == NULL)
+    {
+        if (loadSoundEffect(soundEffectPath) != 0)
+        {
+            return -1;
+        };
+    }
+
+    Mix_PlayChannel(-1, soundEffect, 0);
+    return 0;
+}
+
+int MusicPlayer::loadSoundEffect(const char *soundEffectPath)
+{
+    soundEffect = Mix_LoadWAV(soundEffectPath);
+    if (soundEffect == NULL)
+    {
+        return -1;
+    }
+    return 0;
 }

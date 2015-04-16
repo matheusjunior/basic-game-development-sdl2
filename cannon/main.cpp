@@ -150,8 +150,8 @@ int main(int argc, char *args[])
         {
             if (Collision::AABBCollision(&fly->position, &cannon->bullets[i].position))
             {
-//                TODO Add sound effect
                 kills++;
+                musicPlayer->playSoundEffect("media/effect.wav");
                 break; // cannot kill twice in a row
             }
         }

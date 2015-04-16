@@ -22,9 +22,21 @@ private:
     short musicIndex;
     Mix_Music* playingMusic;
     std::vector<Mix_Music*> playlist;
+    Mix_Chunk* soundEffect; /// SDL type for audio chunk
 
 public:
     MusicPlayer();
+
+
+    Mix_Chunk *getSoundEffect() const
+    {
+        return soundEffect;
+    }
+
+    void setSoundEffect(Mix_Chunk *soundEffect)
+    {
+        MusicPlayer::soundEffect = soundEffect;
+    }
 
     short getVolume() const
     {
@@ -95,9 +107,10 @@ public:
         MusicPlayer::playlist = playlist;
     }
 
-public:
     int playMusic(const char* musicPath);
     int loadMusic(const char* musicPath);
+    int playSoundEffect(const char* soundEffectPath);
+    int loadSoundEffect(const char* soundEffectPath);
 //    TODO Playlist with name
     int createPlayList();
     void playCurrPlaylist();
