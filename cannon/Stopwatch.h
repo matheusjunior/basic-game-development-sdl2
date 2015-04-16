@@ -7,8 +7,15 @@
 #ifndef __Timer_H_
 #define __Timer_H_
 
+#ifdef _WIN32
+
+#include <stdint.h>
+
+#else
 
 #include <_types/_uint32_t.h>
+
+#endif
 
 class Stopwatch
 {

@@ -22,6 +22,9 @@
 #include <vector>
 
 
+#include <iostream>
+
+
 /* TODO Document class
 * */
 class FlyingObject : public GameObject
@@ -29,6 +32,7 @@ class FlyingObject : public GameObject
 private:
     bool isFalling;
 	double deltaTime;
+
 
 public:
     bool isIsFalling() const
@@ -51,10 +55,9 @@ public:
 
 	FlyingObject(int x, int y, int w, int h, double vel, std::string path, SDL_Renderer *rend, std::string pathBullet);
 
-    /* Draw GameObject including the bullets shot
-    * @param gRenderer SDL_Render to apply the texture
-    * */
-    void draw(SDL_Renderer *gRenderer) override;
+	void updateSpeedX(double acceleration, double dTime);
+
+	void updateSpeedY(double acceleration, double dTime);
 
 	void draw() override;
 
@@ -72,9 +75,8 @@ public:
 
 	void fall();
 
-	void updateSpeedX(double acceleration, double dTime);
+	void setDT(double dt) { deltaTime = dt; }
 
-	void updateSpeedY(double acceleration, double dTime);
 };
 
 FlyingObject::FlyingObject(int x, int y, int w, int h, double vel) : GameObject(x, y, w, h, vel)
@@ -94,26 +96,6 @@ SDL_Texture* FlyingObject::getTexture(SDL_Renderer *rend, std::string path) {
 	return text;
 }
 
-void FlyingObject::draw(SDL_Renderer *gRenderer)
-{
-    //Update();
-    if(currTexture == NULL) exit(9);
-    SDL_RenderCopy(gRenderer, currTexture, NULL, &position);
-
-//    update bullets positions
-	for (size_t i = 0; i < bullets.size(); i++) bullets[i].position.y -= 10;
-
-//    remove off-screen bullets
-	for (size_t i = 0; i < bullets.size(); i++)
-    {
-        if(bullets[i].position.y < 0) bullets.erase(bullets.begin() + i);
-    }
-
-//    render bullets
-	for (size_t i = 0; i < bullets.size(); i++) SDL_RenderCopy(gRenderer, bulletTexture, NULL, &bullets[i].position);
-
- 
-}
 
 void FlyingObject::draw()
 {
@@ -123,9 +105,9 @@ void FlyingObject::draw()
 
 	//    update bullets positions
 	for (size_t i = 0; i < bullets.size(); i++) {
-		//bullets[i].position.y += 7;
+		std::cout << speedX;
 		bullets[i].updateSpeedX(0, deltaTime);
-		bullets[i].updateSpeedY(9.8f, deltaTime);
+		bullets[i].updateSpeedY(75, deltaTime);
 		bullets[i].moveX(deltaTime);
 		bullets[i].moveY(deltaTime);
 	}
@@ -153,6 +135,8 @@ void FlyingObject::fire()
     bullet.position.h = 10;
     bullet.position.w = 10;
     this->bullets.push_back(bullet);
+
+	bullet.speedX = this->speedX;
 }
 
 
@@ -169,8 +153,6 @@ void FlyingObject::stopFalling() {
 }
 
 void FlyingObject::fall() {
-//	position.y += Util::GenerateRandom(2, 5);
-//	position.x += Util::GenerateRandom(0, 1);
 	isFalling = true;
 }
 
@@ -185,6 +167,7 @@ void FlyingObject::updateSpeedY(double acceleration, double dTime)
 	deltaT = dTime;
 	speedY += acceleration * dTime;
 }
+
 
 
 #endif

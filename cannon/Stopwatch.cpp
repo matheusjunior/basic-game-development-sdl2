@@ -3,8 +3,20 @@
 // Copyright (c) 2015 ___FULLUSERNAME___. All rights reserved.
 //
 
-#include <SDL2/SDL_timer.h>
-#include "Stopwatch.h"
+#ifdef _WIN32
+
+#include <SDL_timer.h>
+
+
+#else
+
+#import <SDL2/SDL_timer.h>
+
+
+#endif
+
+
+#include "stopwatch.h"
 
 void Stopwatch::start()
 {

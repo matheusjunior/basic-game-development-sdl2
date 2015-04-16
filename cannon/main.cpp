@@ -196,7 +196,7 @@ int main(int argc, char *args[])
                 ovnis[i].updateSpeedY(99, deltaTime);
                 ovnis[i].moveX(deltaTime);
                 ovnis[i].moveY(deltaTime);
-                cout << "y speed:"  << ovnis[i].speedY << endl;
+                
             }
             else {
 				randomShot = Util::GenerateRandom(0, 100);
@@ -206,6 +206,7 @@ int main(int argc, char *args[])
 					ovnis[i].fire();
 				}
 			}
+			ovnis[i].setDT(deltaTime);
 			ovnis[i].draw();
 		}
 		//std::cout << deltaTime << endl;
