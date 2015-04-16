@@ -45,6 +45,8 @@ public:
     /** Fire bullets (squares for now)
     * */
     void fire();
+
+    void drawBullets(SDL_Renderer *pRenderer);
 };
 
 Cannon::Cannon(int x, int y, int w, int h, double vel) : GameObject(x, y, w, h, vel)
@@ -67,20 +69,24 @@ SDL_Texture* Cannon::getTexture(SDL_Renderer *rend, std::string path) {
 void Cannon::draw(SDL_Renderer *gRenderer)
 {
     if(currTexture == NULL) exit(9);
-//    SDL_RenderCopy(gRenderer, currTexture, NULL, &position);
     SDL_RenderCopy(gRenderer, currTexture, NULL, &position);
 
-//    update bullets positions
-	for (size_t i = 0; i < bullets.size(); i++) bullets[i].position.y -= 10;
+    drawBullets(gRenderer);
+}
+
+void Cannon::drawBullets(SDL_Renderer *renderer)
+{
+    //    update bullets positions
+    for (size_t i = 0; i < bullets.size(); i++) bullets[i].position.y -= 10;
 
 //    remove off-screen bullets
-	for (size_t i = 0; i < bullets.size(); i++)
+    for (size_t i = 0; i < bullets.size(); i++)
     {
         if(bullets[i].position.y < 0) bullets.erase(bullets.begin() + i);
     }
 
 //    render bullets
-	for (size_t i = 0; i < bullets.size(); i++) SDL_RenderCopy(gRenderer, bulletTexture, NULL, &bullets[i].position);
+    for (size_t i = 0; i < bullets.size(); i++) SDL_RenderCopy(renderer, bulletTexture, NULL, &bullets[i].position);
 }
 
 void Cannon::fire()

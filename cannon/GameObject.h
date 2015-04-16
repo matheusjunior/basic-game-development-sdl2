@@ -28,7 +28,19 @@ private:
     int imageIndex;
     Stopwatch *stopwatch;
 
+
 public:
+    double degree;
+    double getDegree() const
+    {
+        return degree;
+    }
+
+    void setDegree(double degree)
+    {
+        GameObject::degree = degree;
+    }
+
     Stopwatch *getStopwatch() const
     {
         return stopwatch;
@@ -117,6 +129,18 @@ public:
 	void fall();
 
 	void stopFalling();
+
+    /** Rotate right and paint object on screen
+    * \param gRenderer Render object
+    */
+    void rotateRight(SDL_Renderer *gRenderer);
+
+    /** Rotate left and paint object on screen
+    * \param gRenderer Render object
+    * \fixme Not really neeed. SDL_RenderCopyEx takes cares of checking the angle, so we just need to increase/decrease the angle
+    *
+    */
+    void rotateLeft(SDL_Renderer *gRenderer);
 };
 
 #endif // objeto

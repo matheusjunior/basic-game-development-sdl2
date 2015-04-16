@@ -7,6 +7,7 @@
 #else
 
 #include <SDL2/SDL_timer.h>
+#include <iostream>
 
 #endif
 
@@ -21,7 +22,7 @@ GameObject::GameObject(int x, int y, int w, int h)
     position.y = y;
     position.w = w;
     position.h = h;
-
+    degree = 0.0f;
     speedX = 20;
     speedY = 10;
 
@@ -152,4 +153,14 @@ void GameObject::show(float dTime)
             imageIndex = 0;
         }
     }
+}
+
+void GameObject::rotateRight(SDL_Renderer *gRenderer)
+{
+    SDL_RenderCopyEx(gRenderer, currTexture, NULL, &position, degree, NULL, SDL_FLIP_NONE);
+}
+
+void GameObject::rotateLeft(SDL_Renderer *gRenderer)
+{
+    SDL_RenderCopyEx(gRenderer, currTexture, NULL, &position, degree, NULL, SDL_FLIP_NONE);
 }

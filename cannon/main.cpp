@@ -145,6 +145,8 @@ int main(int argc, char *args[])
     }
 
 	int currentSpeed = fps;
+    enum Rotation {ROTATE_LEFT, ROTATE_RIGHT, NO_ROTATION};
+    Rotation rotation = NO_ROTATION;
 
     while (!quit)
     {
@@ -168,6 +170,14 @@ int main(int argc, char *args[])
                     case SDLK_LEFT:
                         cannon->position.x -= 7;
                         if(cannon->position.x + cannon->position.w > SCREEN_WIDTH) cannon->position.x = SCREEN_WIDTH - cannon->position.w;
+                        break;
+                    case SDLK_r:
+                        cannon->setDegree(cannon->getDegree() + 5);
+                        rotation = ROTATE_RIGHT;
+                        break;
+                    case SDLK_e:
+                        cannon->setDegree(cannon->getDegree() - 5);
+                        rotation = ROTATE_LEFT;
                         break;
                     default:
                         break;
@@ -193,13 +203,10 @@ int main(int argc, char *args[])
 			else if (ovnis[i].isIsFalling())
             {
 //                FIXME check why 99 works and 9.8 doesn't
-
-				
                 ovnis[i].updateSpeedX(0, deltaTime);
                 ovnis[i].updateSpeedY(99, deltaTime);
                 ovnis[i].moveX(deltaTime);
                 ovnis[i].moveY(deltaTime);
-                
             }
             else {
 				randomShot = Util::GenerateRandom(0, 100);
@@ -214,9 +221,13 @@ int main(int argc, char *args[])
 			ovnis[i].setDT(deltaTime);
 			ovnis[i].draw();
 		}
-		//std::cout << deltaTime << endl;
         cannon->show(0.0f);
-        cannon->draw(gRenderer);
+
+        if (rotation == ROTATE_LEFT) cannon->rotateLeft(gRenderer);
+        else if (rotation == ROTATE_RIGHT) cannon->rotateRight(gRenderer);
+        else cannon->draw(gRenderer);
+
+        cannon->drawBullets(gRenderer);
 		for (size_t i = 0; i < cannon->bullets.size(); i++)
         {
 			for (size_t j = 0; j < ovnis.size(); j++) {
