@@ -8,6 +8,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2_mixer/SDL_mixer.h>
+#include <SDL2_image/SDL_image.h>
 #endif
 
 #include <cstdlib>
@@ -44,6 +45,12 @@ bool init()
         std::cout << "Error while initializing SDL_Ttf: %s" << TTF_GetError() << endl;
         return false;
     }
+
+    if (IMG_Init(IMG_INIT_JPG) == 0)
+    {
+        std::cout << "Error while initializing SDL_Ttf: %s" << IMG_GetError() << endl;
+        return false;
+    }
     gRenderer = SDL_CreateRenderer(gWindow, -1, 0);
 	SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
     return true;
@@ -68,23 +75,30 @@ int main(int argc, char *args[])
 {
 	srand(time(NULL));
 
+    const Uint8 *currKeyStates;
+    SDL_Event e;
+    SDL_Surface *backgroundSurf = NULL;
+    SDL_Texture *backgroudText = NULL;
     Text text;
 	Text textFPS;
-    bool quit = false;
     uint32_t startFrameTime = 0;
     uint32_t endFrameTime = 0;
+    bool quit = false;
+
     float startMoveTime = 0; 
     float endMoveTime = 0;
     float dMoveTime = 0;
-    SDL_Event e;
-    const Uint8 *currKeyStates;
-    int kills = 0;
+    float deltaTime;
 
-	float deltaTime;
-	int lastFrameTime = 0, currentFrameTime = 0;
-	int fps = 40;
-	int fpsMill = 1000 / fps;
-	int totalFrames = fps;
+    int lastFrameTime = 0, currentFrameTime = 0;
+    int fps = 40;
+    int fpsMill = 1000 / fps;
+    int totalFrames = fps;
+    int kills = 0;
+    int currentSpeed = fps;
+
+    enum Rotation {ROTATE_LEFT, ROTATE_RIGHT, NO_ROTATION};
+    Rotation rotation = NO_ROTATION;
 
     if(!init())
     {
@@ -144,9 +158,8 @@ int main(int argc, char *args[])
         return -1;
     }
 
-	int currentSpeed = fps;
-    enum Rotation {ROTATE_LEFT, ROTATE_RIGHT, NO_ROTATION};
-    Rotation rotation = NO_ROTATION;
+    backgroundSurf = IMG_Load("media/desert.jpg");
+    backgroudText = SDL_CreateTextureFromSurface(gRenderer, backgroundSurf);
 
     while (!quit)
     {
@@ -187,6 +200,8 @@ int main(int argc, char *args[])
         startFrameTime = SDL_GetTicks();
         totalFrames++;
         SDL_RenderClear(gRenderer);
+//        Background image should be the first one to be rendered, otherwise overwrites renders
+        SDL_RenderCopy(gRenderer, backgroudText, NULL, NULL);
 
 		currentFrameTime = SDL_GetTicks();
 		deltaTime = (float)(currentFrameTime - lastFrameTime) / 1000;
@@ -221,13 +236,7 @@ int main(int argc, char *args[])
 			ovnis[i].setDT(deltaTime);
 			ovnis[i].draw();
 		}
-        cannon->show(0.0f);
 
-        if (rotation == ROTATE_LEFT) cannon->rotateLeft(gRenderer);
-        else if (rotation == ROTATE_RIGHT) cannon->rotateRight(gRenderer);
-        else cannon->draw(gRenderer);
-
-        cannon->drawBullets(gRenderer);
 		for (size_t i = 0; i < cannon->bullets.size(); i++)
         {
 			for (size_t j = 0; j < ovnis.size(); j++) {
@@ -266,6 +275,13 @@ int main(int argc, char *args[])
         }
         text.texture = SDL_CreateTextureFromSurface(gRenderer, text.surface);
 		textFPS.texture = SDL_CreateTextureFromSurface(gRenderer, textFPS.surface);
+
+
+        cannon->show(0.0f);
+
+        if (rotation == ROTATE_LEFT) cannon->rotateLeft(gRenderer);
+        else if (rotation == ROTATE_RIGHT) cannon->rotateRight(gRenderer);
+        else cannon->draw(gRenderer);
 
 		SDL_RenderCopy(gRenderer, text.texture, NULL, &text.rect);
 		SDL_RenderCopy(gRenderer, textFPS.texture, NULL, &textFPS.rect);
