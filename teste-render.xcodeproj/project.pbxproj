@@ -17,6 +17,7 @@
 		3220CCB32A30928A94568031 /* Cannon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3220C8B478B3E98BD8034E31 /* Cannon.cpp */; };
 		3220CCE7D69B9F7B3A9BDE79 /* Util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3220CC0B99E3A4922CB1F725 /* Util.cpp */; };
 		3220CD02A77B5EED43E6A6DE /* SDL2_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3220C7AA248E9D28CD024461 /* SDL2_ttf.framework */; };
+		3220CD220B4FBA5F57B4599A /* MusicPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3220CF01C0AC18FF3CFDC1C3 /* MusicPlayer.cpp */; };
 		3220CDBC1C273C4BD96B6E52 /* SDL2_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3220CEE55CEFFDA958767C20 /* SDL2_image.framework */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +41,7 @@
 		3220C5ADD20F418ECBFF6973 /* Text.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Text.h; sourceTree = "<group>"; };
 		3220C5EDA6A40C18629E0924 /* Collision.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Collision.cpp; sourceTree = "<group>"; };
 		3220C6273F25DA95BF2DAEFB /* GameObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameObject.h; sourceTree = "<group>"; };
+		3220C652886E30DF654E5657 /* MusicPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MusicPlayer.h; sourceTree = "<group>"; };
 		3220C732FD72AF7A4CD76CE7 /* Cannon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cannon.h; sourceTree = "<group>"; };
 		3220C7AA248E9D28CD024461 /* SDL2_ttf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_ttf.framework; path = /Library/Frameworks/SDL2_ttf.framework; sourceTree = "<absolute>"; };
 		3220C83C2EC936C98FE8A57E /* Collision.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Collision.h; sourceTree = "<group>"; };
@@ -51,6 +53,7 @@
 		3220CC0B99E3A4922CB1F725 /* Util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Util.cpp; sourceTree = "<group>"; };
 		3220CEE55CEFFDA958767C20 /* SDL2_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_image.framework; path = /Library/Frameworks/SDL2_image.framework; sourceTree = "<absolute>"; };
 		3220CEF7B20FCDB4D4FC256F /* SDL2_mixer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_mixer.framework; path = /Library/Frameworks/SDL2_mixer.framework; sourceTree = "<absolute>"; };
+		3220CF01C0AC18FF3CFDC1C3 /* MusicPlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MusicPlayer.cpp; sourceTree = "<group>"; };
 		3220CFC890B5E36D5C3CB863 /* GameObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameObject.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -93,6 +96,8 @@
 				3220C98BA1500B8A2849FD3A /* Stopwatch.h */,
 				3220CC0B99E3A4922CB1F725 /* Util.cpp */,
 				3220C5343CCAD753C995A96A /* Util.h */,
+				3220CF01C0AC18FF3CFDC1C3 /* MusicPlayer.cpp */,
+				3220C652886E30DF654E5657 /* MusicPlayer.h */,
 			);
 			path = cannon;
 			sourceTree = "<group>";
@@ -183,6 +188,7 @@
 				3220C854B7E3D8B39D839AB0 /* Collision.cpp in Sources */,
 				3220C210B5ED8BAE8BFD305D /* Stopwatch.cpp in Sources */,
 				3220CCE7D69B9F7B3A9BDE79 /* Util.cpp in Sources */,
+				3220CD220B4FBA5F57B4599A /* MusicPlayer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

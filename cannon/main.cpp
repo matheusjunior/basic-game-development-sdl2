@@ -212,9 +212,10 @@ int main(int argc, char *args[])
                 }
             }
         }
+//        \todo Keyboard states read not working
 //        currKeyStates = SDL_GetKeyboardState(NULL);
-//
-//        if (currKeyStates[SDL_SCANCODE_LEFT]) cannon->moveX(-10);
+
+//        if (currKeyStates[SDL_SCANCODE_LEFT]) cannon->position.x += 7;
 //        if (currKeyStates[SDL_SCANCODE_RIGHT]) cannon->moveX(10);
 //        if (currKeyStates[SDL_SCANCODE_UP]) cannon->moveY(-10);
 //        if (currKeyStates[SDL_SCANCODE_DOWN]) cannon->moveY(10);
@@ -273,13 +274,14 @@ int main(int argc, char *args[])
 					ovnis[j].fall();
 					kills++;
 					cannon->bullets.at(i).position.y = 0;
+                    musicPlayer->playSoundEffect("media/effect.wav");
                 }
-            }
-            if (Collision::AABBCollision(&ovnis[i].position, &cannon->bullets[i].position))
-            {
-                kills++;
-                musicPlayer->playSoundEffect("media/effect.wav");
-                break; // cannot kill twice in a row
+                if (Collision::AABBCollision(&ovnis[i].position, &cannon->bullets[i].position))
+                {
+                    kills++;
+                    musicPlayer->playSoundEffect("media/effect.wav");
+                    break; // cannot kill twice in a row
+                }
             }
         }
         if(kills >= 1000) kills = 0;
