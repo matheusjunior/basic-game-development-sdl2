@@ -21,9 +21,12 @@
 #include "Collision.h"
 #include "Util.h"
 #include "FlyingObject.h"
+#include "MusicPlayer.h"
 
 SDL_Window *gWindow = NULL;
 SDL_Renderer *gRenderer = NULL;
+Mix_Music* music = NULL;
+MusicPlayer* musicPlayer = NULL;
 
 using namespace std;
 
@@ -51,18 +54,24 @@ bool init()
         std::cout << "Error while initializing SDL_Ttf: %s" << IMG_GetError() << endl;
         return false;
     }
+
+    if (Mix_OpenAudio(musicPlayer->getFreq(), MIX_DEFAULT_FORMAT,
+            musicPlayer->getQuantChannels(), musicPlayer->getChunksize()) == NULL) cout << Mix_GetError() << endl;
+
     gRenderer = SDL_CreateRenderer(gWindow, -1, 0);
 	SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
     return true;
 }
 
-/** Close SDL resources in use
+/* Close SDL resources in use
 * */
 void close()
 {
     SDL_DestroyWindow(gWindow);
+    Mix_FreeMusic(music);
     gWindow = NULL;
 
+    Mix_Quit();
     TTF_Quit();
     SDL_Quit();
 }
@@ -99,6 +108,8 @@ int main(int argc, char *args[])
 
     enum Rotation {ROTATE_LEFT, ROTATE_RIGHT, NO_ROTATION};
     Rotation rotation = NO_ROTATION;
+
+    musicPlayer = new MusicPlayer();
 
     if(!init())
     {
@@ -161,6 +172,10 @@ int main(int argc, char *args[])
     backgroundSurf = IMG_Load("media/desert.jpg");
     backgroudText = SDL_CreateTextureFromSurface(gRenderer, backgroundSurf);
 
+//    hope the error is saved
+    musicPlayer->createPlayList();
+    musicPlayer->playCurrPlaylist();
+
     while (!quit)
     {
         while (SDL_PollEvent(&e) != 0)
@@ -197,6 +212,20 @@ int main(int argc, char *args[])
                 }
             }
         }
+//        currKeyStates = SDL_GetKeyboardState(NULL);
+//
+//        if (currKeyStates[SDL_SCANCODE_LEFT]) cannon->moveX(-10);
+//        if (currKeyStates[SDL_SCANCODE_RIGHT]) cannon->moveX(10);
+//        if (currKeyStates[SDL_SCANCODE_UP]) cannon->moveY(-10);
+//        if (currKeyStates[SDL_SCANCODE_DOWN]) cannon->moveY(10);
+//        if (currKeyStates[SDL_SCANCODE_SPACE]) cannon->fire();
+//
+//        if (currKeyStates[SDL_SCANCODE_U]) musicPlayer->decreaseVolume();
+//        if (currKeyStates[SDL_SCANCODE_I]) musicPlayer->increaseVolume();
+//        if (currKeyStates[SDL_SCANCODE_B]) musicPlayer->previousMusic();
+//        if (currKeyStates[SDL_SCANCODE_N]) musicPlayer->nextMusic();
+
+
         startFrameTime = SDL_GetTicks();
         totalFrames++;
         SDL_RenderClear(gRenderer);
@@ -245,6 +274,12 @@ int main(int argc, char *args[])
 					kills++;
 					cannon->bullets.at(i).position.y = 0;
                 }
+            }
+            if (Collision::AABBCollision(&ovnis[i].position, &cannon->bullets[i].position))
+            {
+                kills++;
+                musicPlayer->playSoundEffect("media/effect.wav");
+                break; // cannot kill twice in a row
             }
         }
         if(kills >= 1000) kills = 0;
