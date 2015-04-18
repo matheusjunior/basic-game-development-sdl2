@@ -7,3 +7,6 @@
 #define RECT_HEIGHT		35
 
 #endif // consts
+
+
+//C:\Users\joaoapenas\Dropbox\UTFPR 2015-1\Jogos\Studio\SDL\Project1\Project1\media

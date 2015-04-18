@@ -63,7 +63,7 @@ bool init()
     return true;
 }
 
-/* Close SDL resources in use
+/** Close SDL resources in use
 * */
 void close()
 {
@@ -118,11 +118,13 @@ int main(int argc, char *args[])
     }
 
     Cannon* cannon = new Cannon(SCREEN_WIDTH / 2 - 25, SCREEN_WIDTH / 2 + 108, 40, 40, 400,
-            "media/green1-square.bmp", gRenderer, "media/red-square.bmp");
-    cannon->loadSpriteSheet("media/01.bmp");
-    cannon->loadSpriteSheet("media/02.bmp");
-    cannon->loadSpriteSheet("media/03.bmp");
-    cannon->loadSpriteSheet("media/04.bmp");
+            "media/c1.bmp", gRenderer, "media/red-square.bmp");
+    cannon->loadSpriteSheet("media/c1.bmp");
+    cannon->loadSpriteSheet("media/c2.bmp");
+    cannon->loadSpriteSheet("media/c3.bmp");
+    cannon->loadSpriteSheet("media/c4.bmp");
+	cannon->loadSpriteSheet("media/c5.bmp");
+	cannon->loadSpriteSheet("media/c6.bmp");
     cannon->getStopwatch()->start();
 
 	int px = -25 +  Util::GenerateRandom(0, 60);
@@ -169,7 +171,7 @@ int main(int argc, char *args[])
         return -1;
     }
 
-    backgroundSurf = IMG_Load("media/desert.jpg");
+	backgroundSurf = IMG_Load("media/desert.jpg");
     backgroudText = SDL_CreateTextureFromSurface(gRenderer, backgroundSurf);
 
 //    hope the error is saved
@@ -266,7 +268,13 @@ int main(int argc, char *args[])
 			ovnis[i].setDT(deltaTime);
 			ovnis[i].draw();
 		}
+        cannon->show(0.0f);
 
+        if (rotation == ROTATE_LEFT) cannon->rotateLeft(gRenderer);
+        else if (rotation == ROTATE_RIGHT) cannon->rotateRight(gRenderer);
+        else cannon->draw(gRenderer);
+
+        cannon->drawBullets(gRenderer);
 		for (size_t i = 0; i < cannon->bullets.size(); i++)
         {
 			for (size_t j = 0; j < ovnis.size(); j++) {
