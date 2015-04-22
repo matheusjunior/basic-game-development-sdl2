@@ -8,6 +8,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2_mixer/SDL_mixer.h>
+#include <SDL2_image/SDL_image.h>
 #endif
 
 #include <cstdlib>
@@ -20,9 +21,12 @@
 #include "Collision.h"
 #include "Util.h"
 #include "FlyingObject.h"
+#include "MusicPlayer.h"
 
 SDL_Window *gWindow = NULL;
 SDL_Renderer *gRenderer = NULL;
+Mix_Music* music = NULL;
+MusicPlayer* musicPlayer = NULL;
 
 using namespace std;
 
@@ -44,6 +48,16 @@ bool init()
         std::cout << "Error while initializing SDL_Ttf: %s" << TTF_GetError() << endl;
         return false;
     }
+
+    if (IMG_Init(IMG_INIT_JPG) == 0)
+    {
+        std::cout << "Error while initializing SDL_Ttf: %s" << IMG_GetError() << endl;
+        return false;
+    }
+
+    if (Mix_OpenAudio(musicPlayer->getFreq(), MIX_DEFAULT_FORMAT,
+            musicPlayer->getQuantChannels(), musicPlayer->getChunksize()) == NULL) cout << Mix_GetError() << endl;
+
     gRenderer = SDL_CreateRenderer(gWindow, -1, 0);
 	SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
     return true;
@@ -54,8 +68,10 @@ bool init()
 void close()
 {
     SDL_DestroyWindow(gWindow);
+    Mix_FreeMusic(music);
     gWindow = NULL;
 
+    Mix_Quit();
     TTF_Quit();
     SDL_Quit();
 }
@@ -68,23 +84,40 @@ int main(int argc, char *args[])
 {
 	srand(time(NULL));
 
+    const Uint8 *currKeyStates;
+    SDL_Event e;
+    SDL_Surface *backgroundSurf = NULL;
+    SDL_Texture *backgroudText = NULL;
     Text text;
 	Text textFPS;
-    bool quit = false;
     uint32_t startFrameTime = 0;
     uint32_t endFrameTime = 0;
+    bool quit = false;
+
     float startMoveTime = 0; 
     float endMoveTime = 0;
     float dMoveTime = 0;
-    SDL_Event e;
-    const Uint8 *currKeyStates;
-    int kills = 0;
+    float deltaTime;
 
+    int lastFrameTime = 0, currentFrameTime = 0;
+    int fps = 40;
+    int fpsMill = 1000 / fps;
+    int totalFrames = fps;
+    int kills = 0;
+    int currentSpeed = fps;
+
+    enum Rotation {ROTATE_LEFT, ROTATE_RIGHT, NO_ROTATION};
+    Rotation rotation = NO_ROTATION;
+
+<<<<<<< HEAD
 	float deltaTime;
 	int lastFrameTime = 0, currentFrameTime = 0;
 	int fps = 40;
 	int fpsMill = 1000 / fps;
 	int totalFrames = fps;
+=======
+    musicPlayer = new MusicPlayer();
+>>>>>>> origin/master
 
     if(!init())
     {
@@ -146,9 +179,12 @@ int main(int argc, char *args[])
         return -1;
     }
 
-	int currentSpeed = fps;
-    enum Rotation {ROTATE_LEFT, ROTATE_RIGHT, NO_ROTATION};
-    Rotation rotation = NO_ROTATION;
+	backgroundSurf = IMG_Load("media/desert.jpg");
+    backgroudText = SDL_CreateTextureFromSurface(gRenderer, backgroundSurf);
+
+//    hope the error is saved
+    musicPlayer->createPlayList();
+    musicPlayer->playCurrPlaylist();
 
     while (!quit)
     {
@@ -186,9 +222,26 @@ int main(int argc, char *args[])
                 }
             }
         }
+//        \todo Keyboard states read not working
+//        currKeyStates = SDL_GetKeyboardState(NULL);
+
+//        if (currKeyStates[SDL_SCANCODE_LEFT]) cannon->position.x += 7;
+//        if (currKeyStates[SDL_SCANCODE_RIGHT]) cannon->moveX(10);
+//        if (currKeyStates[SDL_SCANCODE_UP]) cannon->moveY(-10);
+//        if (currKeyStates[SDL_SCANCODE_DOWN]) cannon->moveY(10);
+//        if (currKeyStates[SDL_SCANCODE_SPACE]) cannon->fire();
+//
+//        if (currKeyStates[SDL_SCANCODE_U]) musicPlayer->decreaseVolume();
+//        if (currKeyStates[SDL_SCANCODE_I]) musicPlayer->increaseVolume();
+//        if (currKeyStates[SDL_SCANCODE_B]) musicPlayer->previousMusic();
+//        if (currKeyStates[SDL_SCANCODE_N]) musicPlayer->nextMusic();
+
+
         startFrameTime = SDL_GetTicks();
         totalFrames++;
         SDL_RenderClear(gRenderer);
+//        Background image should be the first one to be rendered, otherwise overwrites renders
+        SDL_RenderCopy(gRenderer, backgroudText, NULL, NULL);
 
 		currentFrameTime = SDL_GetTicks();
 		deltaTime = (float)(currentFrameTime - lastFrameTime) / 1000;
@@ -237,6 +290,13 @@ int main(int argc, char *args[])
 					ovnis[j].fall();
 					kills++;
 					cannon->bullets.at(i).position.y = 0;
+                    musicPlayer->playSoundEffect("media/effect.wav");
+                }
+                if (Collision::AABBCollision(&ovnis[i].position, &cannon->bullets[i].position))
+                {
+                    kills++;
+                    musicPlayer->playSoundEffect("media/effect.wav");
+                    break; // cannot kill twice in a row
                 }
             }
         }
@@ -268,6 +328,13 @@ int main(int argc, char *args[])
         }
         text.texture = SDL_CreateTextureFromSurface(gRenderer, text.surface);
 		textFPS.texture = SDL_CreateTextureFromSurface(gRenderer, textFPS.surface);
+
+
+        cannon->show(0.0f);
+
+        if (rotation == ROTATE_LEFT) cannon->rotateLeft(gRenderer);
+        else if (rotation == ROTATE_RIGHT) cannon->rotateRight(gRenderer);
+        else cannon->draw(gRenderer);
 
 		SDL_RenderCopy(gRenderer, text.texture, NULL, &text.rect);
 		SDL_RenderCopy(gRenderer, textFPS.texture, NULL, &textFPS.rect);

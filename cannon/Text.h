@@ -17,6 +17,7 @@
 
 #include <SDL2/SDL_render.h>
 #include <SDL2_ttf/SDL_ttf.h>
+#include <string>
 
 #endif
 
