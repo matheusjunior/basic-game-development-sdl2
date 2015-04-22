@@ -82,7 +82,7 @@ int main(int argc, char *args[])
 
 	float deltaTime;
 	int lastFrameTime = 0, currentFrameTime = 0;
-	int fps = 60;
+	int fps = 40;
 	int fpsMill = 1000 / fps;
 	int totalFrames = fps;
 
@@ -93,7 +93,7 @@ int main(int argc, char *args[])
     }
 
     Cannon* cannon = new Cannon(SCREEN_WIDTH / 2 - 25, SCREEN_WIDTH / 2 + 108, 40, 40, 400,
-            "media/c1.bmp", gRenderer, "media/red-square.bmp");
+            "media/green1-square.bmp", gRenderer, "media/red-square.bmp");
     cannon->loadSpriteSheet("media/c1.bmp");
     cannon->loadSpriteSheet("media/c2.bmp");
     cannon->loadSpriteSheet("media/c3.bmp");

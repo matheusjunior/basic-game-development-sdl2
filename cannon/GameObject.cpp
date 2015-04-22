@@ -140,8 +140,7 @@ int GameObject::loadSpriteSheet(std::string path)
     return 0;
 }
 
-void GameObject::show(float dTime)
-{
+void GameObject::show(float dTime) {
 //    FPS / # of sprites to get an appropriate time for each sprite
     if ((stopwatch->getCurrTime() - stopwatch->getStartTime()) > (float) 30 / sprites.size())
     {
@@ -155,12 +154,10 @@ void GameObject::show(float dTime)
     }
 }
 
-void GameObject::rotateRight(SDL_Renderer *gRenderer)
-{
+void GameObject::rotateRight(SDL_Renderer *gRenderer) {
     SDL_RenderCopyEx(gRenderer, currTexture, NULL, &position, degree, NULL, SDL_FLIP_NONE);
 }
 
-void GameObject::rotateLeft(SDL_Renderer *gRenderer)
-{
+void GameObject::rotateLeft(SDL_Renderer *gRenderer) {
     SDL_RenderCopyEx(gRenderer, currTexture, NULL, &position, degree, NULL, SDL_FLIP_NONE);
 }
