@@ -10,18 +10,20 @@
 #ifdef _WIN32
 
 #include <time.h>
+#include <SDL.h>
+
 
 #else
 
 #endif
 
-/*
-* */
+#include "Vector2d.h"
+
 class Util
 {
 public:    
     int static GenerateRandom(int l, int u);
-
+	Vector2d static getDistance(Vector2d r1, Vector2d r2);
 };
 
 #endif

@@ -18,6 +18,8 @@
 #include "GameObject.h"
 #include "Consts.h"
 #include "Util.h"
+#include "Vector2d.h"
+
 #include <list>
 #include <vector>
 
@@ -32,6 +34,7 @@ class FlyingObject : public GameObject
 private:
     bool isFalling;
 	double deltaTime;
+	Vector2d vecDir;
 
 
 public:
@@ -68,6 +71,8 @@ public:
     /* Fire bullets (squares for now)
     * */
     void fire();
+
+	void fire(SDL_Rect rect);
 
 	void setTextureBody(SDL_Texture *t);
 
@@ -110,8 +115,8 @@ void FlyingObject::draw()
 
 	//    update bullets positions
 	for (size_t i = 0; i < bullets.size(); i++) {
-		bullets[i].updateSpeedX(0, deltaTime);
-		bullets[i].updateSpeedY(75, deltaTime);
+ 		bullets[i].updateSpeedX(0 + (100*vecDir.x), deltaTime);
+		bullets[i].updateSpeedY(75 + vecDir.y, deltaTime);
 		bullets[i].moveX(deltaTime);
 		bullets[i].moveY(deltaTime);
 	}
@@ -131,9 +136,48 @@ void FlyingObject::draw()
 }
 
 
+
+void FlyingObject::fire(SDL_Rect cannon) {
+	
+	Vector2d vFlying;
+	Vector2d vCannon;
+
+	vFlying.x = position.x + position.w / 2;
+	vFlying.y = position.y + position.h / 2;
+
+	vCannon.x = cannon.x + cannon.w / 2;
+	vCannon.y = cannon.y + cannon.h / 2;
+
+	vecDir = Util::getDistance(vFlying, vCannon);
+
+	double length = sqrt(vecDir.x*vecDir.x + vecDir.y*vecDir.y);
+
+	//normalize
+
+	//vecDir.x = vecDir.x / length;
+	//vecDir.y = vecDir.y / length;
+
+	int teste = 0;
+
+	if (vFlying.x > vCannon.x) {
+		vecDir.x = -vecDir.x;
+	}
+
+	GameObject bullet;
+	bullet.position.x = this->position.x + this->position.w / 2;
+	bullet.position.y = this->position.y + 15;
+	bullet.position.h = 10;
+	bullet.position.w = 10;
+
+	bullet.speedX = vecDir.x;
+	bullet.speedY = vecDir.y;
+
+	this->bullets.push_back(bullet);
+}
+
 void FlyingObject::fire()
 {
-    GameObject bullet;
+/*    GameObject bullet;
 	bullet.position.x = this->position.x;
 	bullet.position.y = this->position.y + 15;
     bullet.position.h = 10;
@@ -144,6 +188,7 @@ void FlyingObject::fire()
     this->bullets.push_back(bullet);
 
 	bullet.speedX = this->speedX;
+	*/
 }
 
 

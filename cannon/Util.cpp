@@ -7,11 +7,17 @@
 #include "Util.h"
 
 #ifdef _WIN32
+
 #include <time.h>
 #include <Windows.h>
 #include <SDL.h>
+
 #else
+
 #endif
+
+#include "Vector2d.h"
+#include <math.h>
 
 int Util::GenerateRandom(int l, int u)
 {
@@ -19,4 +25,18 @@ int Util::GenerateRandom(int l, int u)
     r = l + r;
 
 	return (int) r;
+}
+
+Vector2d Util::getDistance(Vector2d r1, Vector2d r2) {
+
+	Vector2d temp;
+
+	double x = r1.x - r2.x;
+	double y = r1.y - r2.y;
+
+	temp.x = sqrt(x*x);
+	temp.y = sqrt(y*y);
+	
+
+	return temp;
 }

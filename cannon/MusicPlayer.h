@@ -8,7 +8,17 @@
 #define __MusicPlayer_H_
 
 
+#ifdef _WIN32
+
+#include <SDL_mixer.h>
+
+#else
+
 #include <SDL2_mixer/SDL_mixer.h>
+
+#endif
+
+
 #include <vector>
 
 class MusicPlayer

@@ -47,6 +47,8 @@ public:
     void fire();
 
     void drawBullets(SDL_Renderer *pRenderer);
+
+	void loadBaseImage();
 };
 
 Cannon::Cannon(int x, int y, int w, int h, double vel) : GameObject(x, y, w, h, vel)
@@ -56,10 +58,12 @@ Cannon::Cannon(int x, int y, int w, int h, double vel) : GameObject(x, y, w, h, 
 Cannon::Cannon(int x, int y, int w, int h, double vel, std::string path, SDL_Renderer *rend, std::string pathBullet) : GameObject(x, y, w, h, vel, path, rend)
 {
 	bulletTexture = getTexture(rend, pathBullet);
+	currTexture = getTexture(rend, path);
+	currTexture = currTexture;
 }
 
 SDL_Texture* Cannon::getTexture(SDL_Renderer *rend, std::string path) {
-	SDL_Surface *surface = SDL_LoadBMP(path.c_str());
+	SDL_Surface *surface = IMG_Load(path.c_str());
 
 	SDL_Texture *text = SDL_CreateTextureFromSurface(rend, surface);
 
@@ -72,6 +76,11 @@ void Cannon::draw(SDL_Renderer *gRenderer)
     SDL_RenderCopy(gRenderer, currTexture, NULL, &position);
 
     drawBullets(gRenderer);
+}
+
+void Cannon::loadBaseImage(){	
+
+	SDL_RenderCopy(objRend, currTexture, NULL, &position);
 }
 
 void Cannon::drawBullets(SDL_Renderer *renderer)

@@ -3,6 +3,7 @@
 
 #include <SDL_timer.h>
 #include <SDL_render.h>
+#include <SDL_image.h>
 
 #else
 
@@ -126,7 +127,9 @@ void GameObject::fall() {
 
 int GameObject::loadSpriteSheet(std::string path)
 {
-    SDL_Surface *rect = SDL_LoadBMP(path.c_str());
+	SDL_Surface *rect = IMG_Load(path.c_str());
+
+    //SDL_Surface *rect = SDL_LoadBMP(path.c_str());
     if (rect == NULL)
     {
          return -1;
@@ -155,9 +158,24 @@ void GameObject::show(float dTime) {
 }
 
 void GameObject::rotateRight(SDL_Renderer *gRenderer) {
-    SDL_RenderCopyEx(gRenderer, currTexture, NULL, &position, degree, NULL, SDL_FLIP_NONE);
+    
+	SDL_Point* pointOfRotation = new SDL_Point();
+
+	pointOfRotation->x = position.w / 2;
+	pointOfRotation->y = (position.h / 3) + (position.h / 2);
+	
+	SDL_RenderCopyEx(gRenderer, currTexture, NULL, &position, degree, pointOfRotation, SDL_FLIP_NONE);
 }
 
 void GameObject::rotateLeft(SDL_Renderer *gRenderer) {
-    SDL_RenderCopyEx(gRenderer, currTexture, NULL, &position, degree, NULL, SDL_FLIP_NONE);
+	
+	SDL_Point* pointOfRotation = new SDL_Point();
+	
+	pointOfRotation->x = position.w / 2;
+	pointOfRotation->y = (position.h / 3) + (position.h / 2);
+
+
+
+
+    SDL_RenderCopyEx(gRenderer, currTexture, NULL, &position, degree, pointOfRotation, SDL_FLIP_NONE);
 }
