@@ -164,6 +164,8 @@ int main(int argc, char *args[])
 	ovnis.push_back(fly3);
 	ovnis.push_back(fly4);
 
+	FlyingObject point(px, py, 25, 25, 0, "media/green1-square.bmp", gRenderer, "media/red-square.bmp");
+
 	text.font = TTF_OpenFont("media/emulogic.ttf", 20);
 	textFPS.font = TTF_OpenFont("media/emulogic.ttf", 20);
 
@@ -326,6 +328,7 @@ int main(int argc, char *args[])
 			std::cout << "Error:" << TTF_GetError() << endl;
 			return -1;
 		}
+
 		text.texture = SDL_CreateTextureFromSurface(gRenderer, text.surface);
 		textFPS.texture = SDL_CreateTextureFromSurface(gRenderer, textFPS.surface);
 
@@ -338,6 +341,15 @@ int main(int argc, char *args[])
 
 		SDL_RenderCopy(gRenderer, text.texture, NULL, &text.rect);
 		SDL_RenderCopy(gRenderer, textFPS.texture, NULL, &textFPS.rect);
+
+		point.position.h = 3;
+		point.position.w = 3;
+		point.position.x = cannon->position.x + cannon->position.w / 2;
+		point.position.y = cannon->position.y + cannon->position.h / 2;
+
+		point.draw();
+		
+		
 
 		SDL_RenderPresent(gRenderer);
 		//std::cout << fpsMill << " dt " << deltaTime << endl;

@@ -115,8 +115,8 @@ void FlyingObject::draw()
 
 	//    update bullets positions
 	for (size_t i = 0; i < bullets.size(); i++) {
- 		bullets[i].updateSpeedX(0 + (100*vecDir.x), deltaTime);
-		bullets[i].updateSpeedY(75 + vecDir.y, deltaTime);
+ 		bullets[i].updateSpeedX(18*vecDir.x);
+		bullets[i].updateSpeedY(18*vecDir.y);
 		bullets[i].moveX(deltaTime);
 		bullets[i].moveY(deltaTime);
 	}
@@ -154,23 +154,22 @@ void FlyingObject::fire(SDL_Rect cannon) {
 
 	//normalize
 
-	//vecDir.x = vecDir.x / length;
-	//vecDir.y = vecDir.y / length;
+	vecDir.x = vecDir.x / length;
+	vecDir.y = vecDir.y / length;
 
 	int teste = 0;
 
-	if (vFlying.x > vCannon.x) {
+	if ((vFlying.x + position.w/2)> vCannon.x) {
 		vecDir.x = -vecDir.x;
 	}
 
 	GameObject bullet;
-	bullet.position.x = this->position.x + this->position.w / 2;
-	bullet.position.y = this->position.y + 15;
+	bullet.position.x = position.x + position.w / 2;
+	bullet.position.y = position.y + 15;
 	bullet.position.h = 10;
 	bullet.position.w = 10;
-
-	bullet.speedX = vecDir.x;
-	bullet.speedY = vecDir.y;
+	bullet.speedX = 0;
+	bullet.speedY = 0;
 
 	this->bullets.push_back(bullet);
 }

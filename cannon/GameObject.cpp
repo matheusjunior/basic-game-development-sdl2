@@ -99,14 +99,25 @@ void GameObject::draw()
 	SDL_RenderCopy(objRend, currTexture, NULL, &position);
 }
 
+void GameObject::updateSpeedX(double acceleration)
+{
+	speedX += acceleration;
+}
+
+void GameObject::updateSpeedY(double acceleration)
+{
+	speedY += acceleration;
+}
+
+
 void GameObject::updateSpeedX(double acceleration, double dTime)
 {
-    speedX += acceleration * dTime;
+	speedX += acceleration * dTime;
 }
 
 void GameObject::updateSpeedY(double acceleration, double dTime)
 {
-    speedY += acceleration * dTime;
+	speedY += acceleration * dTime;
 }
 
 SDL_Texture* GameObject::getTexture(std::string path)
