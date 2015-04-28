@@ -1,3 +1,4 @@
+#include <math.h>
 #include "Vector2d.h"
 
 #ifdef _WIN32

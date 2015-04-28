@@ -59,7 +59,7 @@ Cannon::Cannon(int x, int y, int w, int h, double vel, std::string path, SDL_Ren
 {
 	bulletTexture = getTexture(rend, pathBullet);
 	currTexture = getTexture(rend, path);
-	currTexture = currTexture;
+//	currTexture = currTexture;
 }
 
 SDL_Texture* Cannon::getTexture(SDL_Renderer *rend, std::string path) {

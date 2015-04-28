@@ -121,7 +121,7 @@ int main(int argc, char *args[])
 	}
 
 	Cannon* cannon = new Cannon(SCREEN_WIDTH / 2 - 40 , SCREEN_WIDTH / 2 + 30 , 80, 105, 400,
-		"media/baseCannon.png", gRenderer, "media/red-square.bmp");
+		"media/cannon.bmp", gRenderer, "media/red-square.bmp");
 	cannon->loadSpriteSheet("media/c1.png");
 	cannon->loadSpriteSheet("media/c2.png");
 	cannon->loadSpriteSheet("media/c3.png");

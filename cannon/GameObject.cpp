@@ -9,6 +9,7 @@
 
 #include <SDL2/SDL_timer.h>
 #include <iostream>
+#include <SDL2_image/SDL_image.h>
 
 #endif
 

@@ -23,13 +23,13 @@ struct Vector2d {
 
 	void Normalize();
 	 
-	double Vector2d::Dot(const Vector2d &v2) const;
+	double Dot(const Vector2d &v2) const;
 	
 	Vector2d Perp() const;
 
 	Vector2d GetReverse() const;
 	
-	void Vector2d::Reflect(const Vector2d& norm);
+	void Reflect(const Vector2d& norm);
 
 
 	/********************************************/
