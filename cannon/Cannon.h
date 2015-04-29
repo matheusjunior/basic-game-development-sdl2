@@ -26,16 +26,46 @@
 class Cannon : public GameObject
 {
 public:
+    enum LIFE_STATE {STRONG, WEAK, DEAD};
+
+private:
+    int lifes;
+    LIFE_STATE lifeState;
+
+public:
     /// Bullets for the cannon
     std::vector<GameObject> bullets;
 	SDL_Texture *bulletTexture;
 
-public:
     Cannon(int x, int y, int w, int h, double vel);
 
 	Cannon(int x, int y, int w, int h, double vel, std::string path, SDL_Renderer *rend, std::string pathBullet);
 
-    /** Draw GameObject including the bullets shot
+
+    LIFE_STATE const &getLifeState() const
+    {
+        return lifeState;
+    }
+
+    void setLifeState(LIFE_STATE const &lifeState)
+    {
+        Cannon::lifeState = lifeState;
+    }
+
+    int getLifes() const
+    {
+        return lifes;
+    }
+
+    void setLifes(int lifes)
+    {
+        Cannon::lifes = lifes;
+//        Very simple state machine. It changes cannon shooting behavior
+        if (this->lifes == 1) lifeState = WEAK;
+        else if (this->lifes == 0) lifeState = DEAD;
+    }
+
+/** Draw GameObject including the bullets shot
     * \param gRenderer SDL_Render to apply the currTexture
     * */
     void draw(SDL_Renderer *gRenderer) override;
@@ -59,6 +89,8 @@ Cannon::Cannon(int x, int y, int w, int h, double vel, std::string path, SDL_Ren
 {
 	bulletTexture = getTexture(rend, pathBullet);
 	currTexture = getTexture(rend, path);
+    lifes = 2;
+    lifeState = STRONG;
 //	currTexture = currTexture;
 }
 
@@ -102,9 +134,20 @@ void Cannon::fire()
 {
     GameObject bullet;
     bullet.position.x = this->position.x + 15;
-    bullet.position.y = this->position.y ;
-    bullet.position.h = 10;
-    bullet.position.w = 10;
+    bullet.position.y = this->position.y;
+
+//    Change shooting behavior
+    if (lifeState == STRONG)
+    {
+        bullet.position.h = 10;
+        bullet.position.w = 10;
+    }
+    else if (lifeState == WEAK || lifeState == DEAD)
+    {
+        bullet.position.h = 5;
+        bullet.position.w = 5;
+    }
+
     this->bullets.push_back(bullet);
     
     //nao tenho certeza se compila, mas sei que tem que executar essa linha
