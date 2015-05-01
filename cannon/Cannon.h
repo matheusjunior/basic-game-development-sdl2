@@ -20,20 +20,17 @@
 #include <list>
 #include <vector>
 
+enum LIFE_STATE { STRONG, WEAK, DEAD };
 
 /** Represents a cannon object in the game
 * */
 class Cannon : public GameObject
-{
-public:
-    enum LIFE_STATE {STRONG, WEAK, DEAD};
-
+{    
 private:
     int lifes;
     LIFE_STATE lifeState;
 
 public:
-    /// Bullets for the cannon
     std::vector<GameObject> bullets;
 	SDL_Texture *bulletTexture;
 
@@ -150,7 +147,6 @@ void Cannon::fire()
 
     this->bullets.push_back(bullet);
     
-    //nao tenho certeza se compila, mas sei que tem que executar essa linha
     bullet.speedX = speedX;
 }
 

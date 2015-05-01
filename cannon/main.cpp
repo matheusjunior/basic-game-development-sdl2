@@ -62,7 +62,7 @@ bool init()
 		musicPlayer->getQuantChannels(), musicPlayer->getChunksize()) == NULL) cout << Mix_GetError() << endl;
 
 	gRenderer = SDL_CreateRenderer(gWindow, -1, 0);
-	SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
+	SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
 	return true;
 }
 
@@ -77,6 +77,20 @@ void close()
 	Mix_Quit();
 	TTF_Quit();
 	SDL_Quit();
+}
+
+
+Text loadFontAndSetPosition(int px, int py, int w, int h) {
+	
+	Text text;
+	text.font = TTF_OpenFont("media/emulogic.ttf", 20);
+
+	text.rect.x = px;
+	text.rect.y = py;
+	text.rect.w = w;
+	text.rect.h = h;
+	text.displayText = "Test";
+	return text;
 }
 
 /** Game main function. All event handling is first processed here
@@ -94,9 +108,17 @@ int main(int argc, char *args[])
     SDL_Rect duplicatedBackgroundRect = {0, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT + 10};
 	Text score;
 	Text realTimeGameInfo;
+	Text gamePausedInfo;
+	Text gameMainMenuOpt1;
+	Text gameMainMenuOpt2;
+	Text gameMainMenuOpt3;
 	uint32_t startFrameTime = 0;
 	uint32_t endFrameTime = 0;
+	int saveY = 0;
 
+	double slide = 0;
+	double slide2 = 0;
+	bool firstExec = true;
 	bool quit = false;
     bool loopBreak = false;
     bool gamePaused = false;
@@ -183,7 +205,7 @@ int main(int argc, char *args[])
 
 	if (score.font == NULL || realTimeGameInfo.font == NULL)
 	{
-		std::cout << "Error: " << TTF_GetError() << endl;
+		std::cout << "Error: font " << TTF_GetError() << endl;
 		return -1;
 	}
 
@@ -198,22 +220,16 @@ int main(int argc, char *args[])
 	{
 		while (SDL_PollEvent(&e) != 0)
 		{
-			if (e.type == SDL_QUIT) quit = true;
+			if (e.type == SDL_QUIT) 
+				quit = true;
 			else if (e.type == SDL_KEYDOWN)
 			{
-                if (gamePaused)
-                {
-                    switch (e.key.keysym.sym)
+                
+                   switch (e.key.keysym.sym)
                     {
-                        case SDLK_p:
-                            gamePaused = !gamePaused;
-                            break;
-                    }
-                }
-				else
-                {
-                    switch (e.key.keysym.sym)
-                    {
+						case SDLK_p:
+							gamePaused = !gamePaused;
+							break;
                         case SDLK_ESCAPE:
                             quit = true;
                             break;
@@ -236,33 +252,17 @@ int main(int argc, char *args[])
                             cannon->setDegree(cannon->getDegree() - 5);
                             rotation = ROTATE_LEFT;
                             break;
-                        case SDLK_p:
-                            gamePaused = !gamePaused;
-                            break;
                         default:
                             break;
-                    }
                 }
 			}
 		}
-		//        \todo Keyboard states read not working
-		//        currKeyStates = SDL_GetKeyboardState(NULL);
-
-		//        if (currKeyStates[SDL_SCANCODE_LEFT]) cannon->position.x += 7;
-		//        if (currKeyStates[SDL_SCANCODE_RIGHT]) cannon->moveX(10);
-		//        if (currKeyStates[SDL_SCANCODE_UP]) cannon->moveY(-10);
-		//        if (currKeyStates[SDL_SCANCODE_DOWN]) cannon->moveY(10);
-		//        if (currKeyStates[SDL_SCANCODE_SPACE]) cannon->fire();
-		//
-		//        if (currKeyStates[SDL_SCANCODE_U]) musicPlayer->decreaseVolume();
-		//        if (currKeyStates[SDL_SCANCODE_I]) musicPlayer->increaseVolume();
-		//        if (currKeyStates[SDL_SCANCODE_B]) musicPlayer->previousMusic();
-		//        if (currKeyStates[SDL_SCANCODE_N]) musicPlayer->nextMusic();
-
+		
         if (gamePaused)
         {
             startFrameTime = SDL_GetTicks();
             totalFrames++;
+			firstExec = false;
             SDL_RenderClear(gRenderer);
 
 //        Scrolling background implementation
@@ -279,6 +279,8 @@ int main(int argc, char *args[])
             currentFrameTime = SDL_GetTicks();
             deltaTime = (float) (currentFrameTime - lastFrameTime) / 1000;
             lastFrameTime = SDL_GetTicks();
+
+
 
             for (size_t i = 0; i < ovnis.size(); i++)
             {
@@ -321,38 +323,37 @@ int main(int argc, char *args[])
 
             // \todo Implement a way of preventing same event processing in different frames
             /** Draw bullets
-        * Detect collision between cannon bullets and ovnis (and play sound effect if any)
-        * Increase score
-        */
+			* Detect collision between cannon bullets and ovnis (and play sound effect if any)
+			* Increase score
+			*/
             loopBreak = false;
-		cannon->
-                drawBullets(gRenderer);
-		for (
-                size_t i = 0; i < cannon->bullets.size() && !loopBreak; i++)
-		{
-            for (size_t j = 0; j < ovnis.size() && !loopBreak; j++) {
-				if (Collision::CircleCollision(ovnis[j].position, cannon->bullets[i].position)) {
-                    ovnis[j].fall();
-                    kills++;
-                    cannon->bullets.at(i).position.y = 0;
-                    musicPlayer->playSoundEffect("media/effect.wav");
-                    loopBreak = true;
-				}
-//				if (Collision::AABBCollision(&ovnis[i].position, &cannon->bullets[i].position))
-//				{
-//					kills++;
-//					musicPlayer->playSoundEffect("media/effect.wav");
-//                    loopBreak = true;
-//				}
-            }
-		}
+			cannon->drawBullets(gRenderer);
+			
+			for (auto bullet : cannon->bullets) {
+				
+				for (auto ovni : ovnis) {
+					if (loopBreak) break;
 
-//        Collision between ovnis shoots and the cannon
+					if (Collision::CircleCollision(ovni.position, bullet.position)) {
+
+						ovni.fall();
+						kills++;
+						bullet.position.y = 0;
+						musicPlayer->playSoundEffect("media/effect.wav");
+						loopBreak = true;
+					}
+
+				}
+			}
+
+
+			//Collision between ovnis shoots and the cannon
             loopBreak = false;
+		
             for (size_t k = 0; k < ovnis.size() && !loopBreak; ++k)
-        {
-            for (size_t m = 0; m < ovnis[k].bullets.size() && !loopBreak; ++m)
-            {
+			{
+				for (size_t m = 0; m < ovnis[k].bullets.size() && !loopBreak; ++m)
+				{
 //                CircleCollision is better than AABB here
                 if (Collision::CircleCollision(cannon->position, ovnis[k].bullets[m].position))
                 {
@@ -392,7 +393,7 @@ int main(int argc, char *args[])
 
             if(score.surface == NULL || realTimeGameInfo.surface == NULL)
             {
-                std::cout << "Error:" << TTF_GetError() << endl;
+                std::cout << "Error: font" << TTF_GetError() << endl;
                 return -1;
             }
 
@@ -416,9 +417,111 @@ int main(int argc, char *args[])
             SDL_RenderPresent(gRenderer);
             //std::cout << fpsMill << " dt " << deltaTime << endl;
 
+			
+
             SDL_Delay(fpsMill - deltaTime);
-        }
+		} else {
+			SDL_RenderClear(gRenderer);
+
+			gamePausedInfo = loadFontAndSetPosition(SCREEN_WIDTH / 2 - 210/2, SCREEN_HEIGHT / 2 + 55 , 210, 25);
+
+			SDL_Color colorPause;
+			colorPause.r = 0;
+			colorPause.g = 255;
+			colorPause.b = 255;
+
+			if (firstExec) {
+	
+				Text gameMainMenuOpt1;
+				Text gameMainMenuOpt2;
+				Text gameMainMenuOpt3;
+
+
+				if (slide < 30) {
+					slide += 0.05;
+					colorPause.r += 1.5;
+					gamePausedInfo.rect.y -= slide;
+					saveY = gamePausedInfo.rect.y;
+				} else {
+					slide2 += 0.05;
+					colorPause.r = 180;
+				}
+
+				
+
+				while (SDL_PollEvent(&e) != 0)
+				{
+					if (e.type == SDL_QUIT)
+						quit = true;
+					else if (e.type == SDL_KEYDOWN)
+					{
+						switch (e.key.keysym.sym)
+						{
+						case SDLK_UP:
+							cout << "up arrow";
+							break;
+						case SDLK_DOWN:
+							cout << "down arrow";
+							break;
+						case SDLK_RETURN:
+							cout << "enter pressed";
+						}
+					}
+				}
+
+				if (slide + slide2 < 35) {
+					gamePausedInfo.rect.x = SCREEN_WIDTH / 2 - gamePausedInfo.rect.w / 2;
+					gamePausedInfo.rect.y = saveY;
+					gamePausedInfo.displayText = "HELLO PLAYER";
+				} else {
+					colorPause.r = 255;
+					gamePausedInfo.rect.w = 230;
+					gamePausedInfo.rect.y = saveY;
+					gamePausedInfo.rect.x = SCREEN_WIDTH / 2 - gamePausedInfo.rect.w / 2;
+					gamePausedInfo.displayText = "PRESS P TO GO";
+					slide2 += 0.5;
+
+					if (slide2 > 905) {
+						gamePausedInfo.rect.w = 220;
+						gamePausedInfo.rect.x = SCREEN_WIDTH / 2 - gamePausedInfo.rect.w/2;
+						gamePausedInfo.rect.y = saveY;
+						gamePausedInfo.displayText = "ARE YOU READY?";
+					}
+				}
+			}
+			else {
+				colorPause.r = 255;
+				colorPause.g = 255;
+				colorPause.b = 255;
+				gamePausedInfo.rect.x = SCREEN_WIDTH / 2 - 50;
+				gamePausedInfo.rect.w = 100;
+				gamePausedInfo.rect.y = saveY;
+				gamePausedInfo.displayText = "PAUSED";
+
+			}
+
+			gamePausedInfo.surface = TTF_RenderText_Solid(gamePausedInfo.font,
+				gamePausedInfo.displayText.c_str(), colorPause);
+			gamePausedInfo.texture = SDL_CreateTextureFromSurface(gRenderer, gamePausedInfo.surface);
+			SDL_RenderCopy(gRenderer, gamePausedInfo.texture, NULL, &gamePausedInfo.rect);
+			SDL_RenderPresent(gRenderer);
+		}
 	}
 	close();
 	return 0;
 }
+
+//        \todo Keyboard states read not working
+//        currKeyStates = SDL_GetKeyboardState(NULL);
+
+//        if (currKeyStates[SDL_SCANCODE_LEFT]) cannon->position.x += 7;
+//        if (currKeyStates[SDL_SCANCODE_RIGHT]) cannon->moveX(10);
+//        if (currKeyStates[SDL_SCANCODE_UP]) cannon->moveY(-10);
+//        if (currKeyStates[SDL_SCANCODE_DOWN]) cannon->moveY(10);
+//        if (currKeyStates[SDL_SCANCODE_SPACE]) cannon->fire();
+//
+//        if (currKeyStates[SDL_SCANCODE_U]) musicPlayer->decreaseVolume();
+//        if (currKeyStates[SDL_SCANCODE_I]) musicPlayer->increaseVolume();
+//        if (currKeyStates[SDL_SCANCODE_B]) musicPlayer->previousMusic();
+//        if (currKeyStates[SDL_SCANCODE_N]) musicPlayer->nextMusic();
+

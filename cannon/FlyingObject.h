@@ -32,7 +32,7 @@
 class FlyingObject : public GameObject
 {
 private:
-    bool isFalling;
+	bool isFalling;
 	double deltaTime;
 	Vector2d vecDir;
 
@@ -40,23 +40,23 @@ private:
 public:
 	void setDeltaTime(double dt);
 
-    bool isIsFalling() const
-    {
-        return isFalling;
-    }
+	bool isIsFalling() const
+	{
+		return isFalling;
+	}
 
-    void setIsFalling(bool isFalling)
-    {
-        FlyingObject::isFalling = isFalling;
-    }
+	void setIsFalling(bool isFalling)
+	{
+		FlyingObject::isFalling = isFalling;
+	}
 
-    /* Bullets for the cannon
-    * TODO Implement bullets as a class
-    * */
-    std::vector<GameObject> bullets;
+	/* Bullets for the cannon
+	* TODO Implement bullets as a class
+	* */
+	std::vector<GameObject> bullets;
 	SDL_Texture *bulletTexture;
 
-    FlyingObject(int x, int y, int w, int h, double vel);
+	FlyingObject(int x, int y, int w, int h, double vel);
 
 	FlyingObject(int x, int y, int w, int h, double vel, std::string path, SDL_Renderer *rend, std::string pathBullet);
 
@@ -68,9 +68,9 @@ public:
 
 	SDL_Texture* getTexture(SDL_Renderer *rend, std::string path);
 
-    /* Fire bullets (squares for now)
-    * */
-    void fire();
+	/* Fire bullets (squares for now)
+	* */
+	void fire();
 
 	void fire(SDL_Rect rect);
 
@@ -83,6 +83,7 @@ public:
 	void fall();
 
 	void setDT(double dt) { deltaTime = dt; }
+
 
 };
 
@@ -115,10 +116,10 @@ void FlyingObject::draw()
 
 	//    update bullets positions
 	for (size_t i = 0; i < bullets.size(); i++) {
- 		bullets[i].updateSpeedX(18*vecDir.x);
-		bullets[i].updateSpeedY(18*vecDir.y);
-		bullets[i].moveX(deltaTime);
-		bullets[i].moveY(deltaTime);
+		bullets[i].updateSpeedX(10 * vecDir.x);
+		bullets[i].updateSpeedY(10 * vecDir.y);
+		bullets[i].moveX(0.1);
+		bullets[i].moveY(0.1);
 	}
 
 	//    remove off-screen bullets
@@ -138,7 +139,7 @@ void FlyingObject::draw()
 
 
 void FlyingObject::fire(SDL_Rect cannon) {
-	
+
 	Vector2d vFlying;
 	Vector2d vCannon;
 
@@ -159,7 +160,7 @@ void FlyingObject::fire(SDL_Rect cannon) {
 
 	int teste = 0;
 
-	if ((vFlying.x + position.w/2)> vCannon.x) {
+	if ((vFlying.x + position.w / 2)> vCannon.x) {
 		vecDir.x = -vecDir.x;
 	}
 
@@ -176,15 +177,15 @@ void FlyingObject::fire(SDL_Rect cannon) {
 
 void FlyingObject::fire()
 {
-/*    GameObject bullet;
+	/*    GameObject bullet;
 	bullet.position.x = this->position.x;
 	bullet.position.y = this->position.y + 15;
-    bullet.position.h = 10;
-    bullet.position.w = 10;
+	bullet.position.h = 10;
+	bullet.position.w = 10;
 
 	bullet.speedX = speedX;
 
-    this->bullets.push_back(bullet);
+	this->bullets.push_back(bullet);
 
 	bullet.speedX = this->speedX;
 	*/
