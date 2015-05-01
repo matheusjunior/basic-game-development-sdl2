@@ -25,6 +25,7 @@
 #include "Util.h"
 #include "FlyingObject.h"
 #include "MusicPlayer.h"
+#include "Menu.h"
 
 SDL_Window *gWindow = NULL;
 SDL_Renderer *gRenderer = NULL;
@@ -79,20 +80,6 @@ void close()
 	SDL_Quit();
 }
 
-
-Text loadFontAndSetPosition(int px, int py, int w, int h) {
-	
-	Text text;
-	text.font = TTF_OpenFont("media/emulogic.ttf", 20);
-
-	text.rect.x = px;
-	text.rect.y = py;
-	text.rect.w = w;
-	text.rect.h = h;
-	text.displayText = "Test";
-	return text;
-}
-
 /** Game main function. All event handling is first processed here
 * and delegated to classes if needed.
 * \return 0 if succeeds, -1 otherwise
@@ -115,6 +102,10 @@ int main(int argc, char *args[])
 	uint32_t startFrameTime = 0;
 	uint32_t endFrameTime = 0;
 	int saveY = 0;
+	cMenu gMenu;
+	
+
+	bool showMenu = false;
 
 	double slide = 0;
 	double slide2 = 0;
@@ -148,15 +139,15 @@ int main(int argc, char *args[])
 	Cannon* cannon = new Cannon(SCREEN_WIDTH / 2 - 40 , SCREEN_WIDTH / 2 + 30 , 80, 105, 400,
 		"media/cannon.bmp", gRenderer, "media/red-square.bmp");
 //    Load sprite sheet (array of images)
-	cannon->loadSpriteSheet("media/c1.bmp");
-	cannon->loadSpriteSheet("media/c2.bmp");
-	cannon->loadSpriteSheet("media/c3.bmp");
-	cannon->loadSpriteSheet("media/c4.bmp");
-	cannon->loadSpriteSheet("media/c5.bmp");
-	cannon->loadSpriteSheet("media/c6.bmp");
-	cannon->loadSpriteSheet("media/c7.bmp");
-	cannon->loadSpriteSheet("media/c8.bmp");
-	cannon->loadSpriteSheet("media/c9.bmp");
+	cannon->loadSpriteSheet("media/c1.png");
+	cannon->loadSpriteSheet("media/c2.png");
+	cannon->loadSpriteSheet("media/c3.png");
+	cannon->loadSpriteSheet("media/c4.png");
+	cannon->loadSpriteSheet("media/c5.png");
+	cannon->loadSpriteSheet("media/c6.png");
+	cannon->loadSpriteSheet("media/c7.png");
+	cannon->loadSpriteSheet("media/c8.png");
+	cannon->loadSpriteSheet("media/c9.png");
 	cannon->loadBaseImage();
 //    Start stopwatch to know how much time has elapsed when moving
 	cannon->getStopwatch()->start();
@@ -196,13 +187,10 @@ int main(int argc, char *args[])
 	FlyingObject point(px, py, 25, 25, 0, "media/green1-square.bmp", gRenderer, "media/red-square.bmp");
 
 	score.font = TTF_OpenFont("media/emulogic.ttf", 20);
-	realTimeGameInfo.font = TTF_OpenFont("media/emulogic.ttf", 20);
 
-	realTimeGameInfo.rect.x = 220;
-	realTimeGameInfo.rect.y = 10;
-	realTimeGameInfo.rect.w = 600;
-	realTimeGameInfo.rect.h = 25;
+	realTimeGameInfo = cMenu::loadFontAndSetPosition(220, 10, 640, 25);
 
+	
 	if (score.font == NULL || realTimeGameInfo.font == NULL)
 	{
 		std::cout << "Error: font " << TTF_GetError() << endl;
@@ -258,8 +246,7 @@ int main(int argc, char *args[])
 			}
 		}
 		
-        if (gamePaused)
-        {
+        if (gamePaused) {
             startFrameTime = SDL_GetTicks();
             totalFrames++;
 			firstExec = false;
@@ -354,16 +341,16 @@ int main(int argc, char *args[])
 			{
 				for (size_t m = 0; m < ovnis[k].bullets.size() && !loopBreak; ++m)
 				{
-//                CircleCollision is better than AABB here
-                if (Collision::CircleCollision(cannon->position, ovnis[k].bullets[m].position))
-                {
-                    cannon->setLifes(cannon->getLifes() - 1);
-                    musicPlayer->playSoundEffect("media/effect.wav");
-                    ovnis[k].bullets.erase(ovnis[k].bullets.begin() + m);
-                    loopBreak = true;
-                }
-            }
-        }
+//					CircleCollision is better than AABB here
+					if (Collision::CircleCollision(cannon->position, ovnis[k].bullets[m].position))
+					{
+						cannon->setLifes(cannon->getLifes() - 1);
+						musicPlayer->playSoundEffect("media/effect.wav");
+						ovnis[k].bullets.erase(ovnis[k].bullets.begin() + m);
+						loopBreak = true;
+					}
+				}
+           }
 //        if (cannon->getLifeState() == Cannon::LIFE_STATE::DEAD)
 //        {
 //            cout << "dead..." << endl;
@@ -391,11 +378,6 @@ int main(int argc, char *args[])
             realTimeGameInfo.surface = TTF_RenderText_Solid(realTimeGameInfo.font,
                     realTimeGameInfo.displayText.c_str(), realTimeGameInfo.color);
 
-            if(score.surface == NULL || realTimeGameInfo.surface == NULL)
-            {
-                std::cout << "Error: font" << TTF_GetError() << endl;
-                return -1;
-            }
 
             score.texture = SDL_CreateTextureFromSurface(gRenderer, score.surface);
             realTimeGameInfo.texture = SDL_CreateTextureFromSurface(gRenderer, realTimeGameInfo.surface);
@@ -408,6 +390,8 @@ int main(int argc, char *args[])
             SDL_RenderCopy(gRenderer, realTimeGameInfo.texture, NULL, &realTimeGameInfo.rect);
 
 //        Draw cannon center position
+
+			
             point.position.h = 3;
             point.position.w = 3;
             point.position.x = cannon->position.x + cannon->position.w / 2;
@@ -417,51 +401,55 @@ int main(int argc, char *args[])
             SDL_RenderPresent(gRenderer);
             //std::cout << fpsMill << " dt " << deltaTime << endl;
 
-			
 
             SDL_Delay(fpsMill - deltaTime);
 		} else {
+
+			Text* gameMainMenuOpt1;
+			Text* gameMainMenuOpt2;
+			Text* gameMainMenuOpt3;
+			SDL_Color colorPause;
+			SDL_Color colorSelected;
+
 			SDL_RenderClear(gRenderer);
 
-			gamePausedInfo = loadFontAndSetPosition(SCREEN_WIDTH / 2 - 210/2, SCREEN_HEIGHT / 2 + 55 , 210, 25);
+			gamePausedInfo = cMenu::loadFontAndSetPosition(SCREEN_WIDTH / 2 - 210/2, SCREEN_HEIGHT / 2 + 15 , 210, 25);
 
-			SDL_Color colorPause;
-			colorPause.r = 0;
+			gMenu.adjustText();
+
+			colorPause.r = 255;
 			colorPause.g = 255;
-			colorPause.b = 255;
+			colorPause.b = 0;
+
+			colorPause.r = 255;
+			colorPause.g = 0;
+			colorPause.b = 0;
 
 			if (firstExec) {
-	
-				Text gameMainMenuOpt1;
-				Text gameMainMenuOpt2;
-				Text gameMainMenuOpt3;
-
 
 				if (slide < 30) {
 					slide += 0.05;
-					colorPause.r += 1.5;
 					gamePausedInfo.rect.y -= slide;
 					saveY = gamePausedInfo.rect.y;
-				} else {
+				} else 
 					slide2 += 0.05;
-					colorPause.r = 180;
-				}
-
 				
 
 				while (SDL_PollEvent(&e) != 0)
 				{
 					if (e.type == SDL_QUIT)
 						quit = true;
-					else if (e.type == SDL_KEYDOWN)
-					{
-						switch (e.key.keysym.sym)
-						{
+					else if (e.type == SDL_KEYDOWN) {
+						switch (e.key.keysym.sym) {
 						case SDLK_UP:
-							cout << "up arrow";
+							if (showMenu) 
+								gMenu.updateSelection(MENU_UP);
+							cout << "up pressed\n";
 							break;
 						case SDLK_DOWN:
-							cout << "down arrow";
+							if (showMenu) 
+								gMenu.updateSelection(MENU_DOWN);
+							cout << "down pressed\n";
 							break;
 						case SDLK_RETURN:
 							cout << "enter pressed";
@@ -473,21 +461,9 @@ int main(int argc, char *args[])
 					gamePausedInfo.rect.x = SCREEN_WIDTH / 2 - gamePausedInfo.rect.w / 2;
 					gamePausedInfo.rect.y = saveY;
 					gamePausedInfo.displayText = "HELLO PLAYER";
-				} else {
-					colorPause.r = 255;
-					gamePausedInfo.rect.w = 230;
-					gamePausedInfo.rect.y = saveY;
-					gamePausedInfo.rect.x = SCREEN_WIDTH / 2 - gamePausedInfo.rect.w / 2;
-					gamePausedInfo.displayText = "PRESS P TO GO";
-					slide2 += 0.5;
-
-					if (slide2 > 905) {
-						gamePausedInfo.rect.w = 220;
-						gamePausedInfo.rect.x = SCREEN_WIDTH / 2 - gamePausedInfo.rect.w/2;
-						gamePausedInfo.rect.y = saveY;
-						gamePausedInfo.displayText = "ARE YOU READY?";
-					}
 				}
+				else 
+					showMenu = true;
 			}
 			else {
 				colorPause.r = 255;
@@ -497,19 +473,44 @@ int main(int argc, char *args[])
 				gamePausedInfo.rect.w = 100;
 				gamePausedInfo.rect.y = saveY;
 				gamePausedInfo.displayText = "PAUSED";
-
 			}
 
-			gamePausedInfo.surface = TTF_RenderText_Solid(gamePausedInfo.font,
-				gamePausedInfo.displayText.c_str(), colorPause);
-			gamePausedInfo.texture = SDL_CreateTextureFromSurface(gRenderer, gamePausedInfo.surface);
-			SDL_RenderCopy(gRenderer, gamePausedInfo.texture, NULL, &gamePausedInfo.rect);
+			if (showMenu) {
+
+				gameMainMenuOpt1 = gMenu.getMainMenuOpt1();
+				gameMainMenuOpt2 = gMenu.getMainMenuOpt2();
+				gameMainMenuOpt3 = gMenu.getMainMenuOpt3();
+
+				gameMainMenuOpt1->surface = TTF_RenderText_Solid(gameMainMenuOpt1->font,
+					gameMainMenuOpt1->displayText.c_str(), gameMainMenuOpt1->color);
+				gameMainMenuOpt1->texture = SDL_CreateTextureFromSurface(gRenderer, gameMainMenuOpt1->surface);
+				SDL_RenderCopy(gRenderer, gameMainMenuOpt1->texture, NULL, &gameMainMenuOpt1->rect);
+
+				gameMainMenuOpt2->surface = TTF_RenderText_Solid(gameMainMenuOpt2->font,
+					gameMainMenuOpt2->displayText.c_str(), gameMainMenuOpt2->color);
+				gameMainMenuOpt2->texture = SDL_CreateTextureFromSurface(gRenderer, gameMainMenuOpt2->surface);
+				SDL_RenderCopy(gRenderer, gameMainMenuOpt2->texture, NULL, &gameMainMenuOpt2->rect);
+
+				gameMainMenuOpt3->surface = TTF_RenderText_Solid(gameMainMenuOpt3->font,
+					gameMainMenuOpt3->displayText.c_str(), gameMainMenuOpt3->color);
+				gameMainMenuOpt3->texture = SDL_CreateTextureFromSurface(gRenderer, gameMainMenuOpt3->surface);
+				SDL_RenderCopy(gRenderer, gameMainMenuOpt3->texture, NULL, &gameMainMenuOpt3->rect);
+			}
+			else {
+				gamePausedInfo.surface = TTF_RenderText_Solid(gamePausedInfo.font,
+					gamePausedInfo.displayText.c_str(), colorPause);
+				gamePausedInfo.texture = SDL_CreateTextureFromSurface(gRenderer, gamePausedInfo.surface);
+				SDL_RenderCopy(gRenderer, gamePausedInfo.texture, NULL, &gamePausedInfo.rect);
+			}
 			SDL_RenderPresent(gRenderer);
 		}
 	}
 	close();
 	return 0;
 }
+
+
+
 
 //        \todo Keyboard states read not working
 //        currKeyStates = SDL_GetKeyboardState(NULL);

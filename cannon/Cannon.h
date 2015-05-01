@@ -88,7 +88,6 @@ Cannon::Cannon(int x, int y, int w, int h, double vel, std::string path, SDL_Ren
 	currTexture = getTexture(rend, path);
     lifes = 2;
     lifeState = STRONG;
-//	currTexture = currTexture;
 }
 
 SDL_Texture* Cannon::getTexture(SDL_Renderer *rend, std::string path) {
