@@ -26,6 +26,8 @@
 
 #include <iostream>
 
+using namespace std;
+
 
 /* TODO Document class
 * */
@@ -72,6 +74,8 @@ public:
 	* */
 	void fire();
 
+	void loadBaseImage();
+
 	void fire(SDL_Rect rect);
 
 	void setTextureBody(SDL_Texture *t);
@@ -116,8 +120,8 @@ void FlyingObject::draw()
 
 	//    update bullets positions
 	for (size_t i = 0; i < bullets.size(); i++) {
-		bullets[i].updateSpeedX(10 * vecDir.x);
-		bullets[i].updateSpeedY(10 * vecDir.y);
+		bullets[i].updateSpeedX(5 * vecDir.x);
+		bullets[i].updateSpeedY(5 * vecDir.y);
 		bullets[i].moveX(0.1);
 		bullets[i].moveY(0.1);
 	}
@@ -137,6 +141,10 @@ void FlyingObject::draw()
 }
 
 
+
+void FlyingObject::loadBaseImage(){
+	SDL_RenderCopy(objRend, currTexture, NULL, &position);
+}
 
 void FlyingObject::fire(SDL_Rect cannon) {
 
@@ -160,7 +168,7 @@ void FlyingObject::fire(SDL_Rect cannon) {
 
 	int teste = 0;
 
-	if ((vFlying.x + position.w / 2)> vCannon.x) {
+	if ((vFlying.x + position.w / 2) > vCannon.x) {
 		vecDir.x = -vecDir.x;
 	}
 
@@ -175,21 +183,7 @@ void FlyingObject::fire(SDL_Rect cannon) {
 	this->bullets.push_back(bullet);
 }
 
-void FlyingObject::fire()
-{
-	/*    GameObject bullet;
-	bullet.position.x = this->position.x;
-	bullet.position.y = this->position.y + 15;
-	bullet.position.h = 10;
-	bullet.position.w = 10;
-
-	bullet.speedX = speedX;
-
-	this->bullets.push_back(bullet);
-
-	bullet.speedX = this->speedX;
-	*/
-}
+void FlyingObject::fire(){}
 
 
 void FlyingObject::setTextureBody(SDL_Texture *t){
@@ -218,6 +212,8 @@ void FlyingObject::updateSpeedY(double acceleration, double dTime)
 {
 	deltaT = dTime;
 	speedY += acceleration * dTime;
+
+	//cout << speedY << endl;
 }
 
 

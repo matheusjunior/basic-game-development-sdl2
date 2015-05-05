@@ -35,11 +35,11 @@ private:
 	void updatePosition(Text* t, int px, int py, int w, int h);
 public:
 	void createElements();
-	
+
 	Text static loadFontAndSetPosition(int px, int py, int w, int h);
 
 	Text* loadFontAndSetPositionRef(int px, int py, int w, int h);
-	
+
 	void adjustText();
 
 	void updateSelection(int direction);

@@ -4,7 +4,7 @@
 #include <SDL_ttf.h>
 #include <SDL_image.h>
 #include <SDL_mixer.h>
-#include <time.h>
+
 
 #else
 
@@ -17,6 +17,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
+#include <time.h>
 
 #include "GameObject.h"
 #include "Cannon.h"
@@ -87,12 +88,12 @@ void close()
 int main(int argc, char *args[])
 {
 	srand(time(NULL));
-//	const Uint8 *currKeyStates;
+	//	const Uint8 *currKeyStates;
 	SDL_Event e;
 	SDL_Surface *backgroundSurf = NULL;
 	SDL_Texture *backgroundText = NULL;
-    SDL_Rect backgroundRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT + 10};
-    SDL_Rect duplicatedBackgroundRect = {0, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT + 10};
+	SDL_Rect backgroundRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT + 10 };
+	SDL_Rect duplicatedBackgroundRect = { 0, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT + 10 };
 	Text score;
 	Text realTimeGameInfo;
 	Text gamePausedInfo;
@@ -103,7 +104,7 @@ int main(int argc, char *args[])
 	uint32_t endFrameTime = 0;
 	int saveY = 0;
 	cMenu gMenu;
-	
+
 
 	bool showMenu = false;
 
@@ -111,9 +112,9 @@ int main(int argc, char *args[])
 	double slide2 = 0;
 	bool firstExec = true;
 	bool quit = false;
-    bool loopBreak = false;
-    bool gamePaused = false;
-    float startMoveTime = 0;
+	bool loopBreak = false;
+	bool gamePaused = false;
+	float startMoveTime = 0;
 	float endMoveTime = 0;
 	float dMoveTime = 0;
 	float deltaTime;
@@ -136,9 +137,10 @@ int main(int argc, char *args[])
 		return -1;
 	}
 
-	Cannon* cannon = new Cannon(SCREEN_WIDTH / 2 - 40 , SCREEN_WIDTH / 2 + 30 , 80, 105, 400,
-		"media/cannon.bmp", gRenderer, "media/red-square.bmp");
-//    Load sprite sheet (array of images)
+	Cannon* cannon = new Cannon(SCREEN_WIDTH / 2 - 40, SCREEN_HEIGHT - 130, 80, 105, 400,
+		"media/baseCannon.png", gRenderer, "media/red-square.bmp");
+	//    Load sprite sheet (array of images)
+
 	cannon->loadSpriteSheet("media/c1.png");
 	cannon->loadSpriteSheet("media/c2.png");
 	cannon->loadSpriteSheet("media/c3.png");
@@ -149,29 +151,48 @@ int main(int argc, char *args[])
 	cannon->loadSpriteSheet("media/c8.png");
 	cannon->loadSpriteSheet("media/c9.png");
 	cannon->loadBaseImage();
-//    Start stopwatch to know how much time has elapsed when moving
+	//    Start stopwatch to know how much time has elapsed when moving
 	cannon->getStopwatch()->start();
 
-//    Create enemies - flying squares
+	//    Create enemies - flying squares
 	int px = -25 + Util::GenerateRandom(0, 60);
 	int py = Util::GenerateRandom(0, 70);
 	int speed = Util::GenerateRandom(100, 200);
-	FlyingObject fly1(px, py, 25, 25, speed, "media/purple-square.bmp", gRenderer, "media/red-square.bmp");
+	FlyingObject fly1(px, py, 165, 102, speed, "media/purple-square.bmp", gRenderer, "media/red-square.bmp");
 
 	px = -25 + Util::GenerateRandom(1, 61);
 	py = Util::GenerateRandom(60, 140);
 	speed = Util::GenerateRandom(100, 200);
-	FlyingObject fly2(px, py, 25, 25, speed, "media/purple-square.bmp", gRenderer, "media/red-square.bmp");
+	FlyingObject fly2(px, py, 165, 102, speed, "media/purple-square.bmp", gRenderer, "media/red-square.bmp");
 
 	px = -25 + Util::GenerateRandom(2, 62);
 	py = Util::GenerateRandom(120, 210);
 	speed = Util::GenerateRandom(100, 200);
-	FlyingObject fly3(px, py, 25, 25, speed, "media/purple-square.bmp", gRenderer, "media/red-square.bmp");
+	FlyingObject fly3(px, py, 165, 102, speed, "media/purple-square.bmp", gRenderer, "media/red-square.bmp");
 
 	px = -55 + Util::GenerateRandom(0, 60);
 	py = Util::GenerateRandom(200, 280);
 	speed = Util::GenerateRandom(100, 00);
-	FlyingObject fly4(px, py, 25, 25, speed, "media/purple-square.bmp", gRenderer, "media/red-square.bmp");
+	FlyingObject fly4(px, py, 165, 102, speed, "media/purple-square.bmp", gRenderer, "media/red-square.bmp");
+
+	fly1.loadSpriteSheet("media/a1.png");
+	fly1.loadSpriteSheet("media/a2.png");
+	fly1.loadSpriteSheet("media/a3.png");
+	fly1.loadSpriteSheet("media/a4.png");
+	fly1.loadSpriteSheet("media/a5.png");
+	fly1.loadSpriteSheet("media/a6.png");
+	fly1.loadBaseImage();
+	fly1.getStopwatch()->start();
+
+	fly2.loadSpriteSheet("media/a1.png");
+	fly2.loadSpriteSheet("media/a2.png");
+	fly2.loadSpriteSheet("media/a3.png");
+	fly2.loadSpriteSheet("media/a4.png");
+	fly2.loadSpriteSheet("media/a5.png");
+	fly2.loadSpriteSheet("media/a6.png");
+	fly2.loadBaseImage();
+	fly2.getStopwatch()->start();
+
 
 	std::vector<FlyingObject> ovnis;
 	fly1.speedY = 0;
@@ -180,17 +201,17 @@ int main(int argc, char *args[])
 	fly4.speedY = 0;
 	ovnis.push_back(fly1);
 	ovnis.push_back(fly2);
-	ovnis.push_back(fly3);
-	ovnis.push_back(fly4);
+	//ovnis.push_back(fly3);
+	//ovnis.push_back(fly4);
 
-//    Cannon center position
+	//    Cannon center position
 	FlyingObject point(px, py, 25, 25, 0, "media/green1-square.bmp", gRenderer, "media/red-square.bmp");
 
 	score.font = TTF_OpenFont("media/emulogic.ttf", 20);
 
 	realTimeGameInfo = cMenu::loadFontAndSetPosition(220, 10, 640, 25);
 
-	
+
 	if (score.font == NULL || realTimeGameInfo.font == NULL)
 	{
 		std::cout << "Error: font " << TTF_GetError() << endl;
@@ -202,123 +223,143 @@ int main(int argc, char *args[])
 
 	//    hope the error is saved
 	musicPlayer->createPlayList();
-//	musicPlayer->playCurrPlaylist();
+	//	musicPlayer->playCurrPlaylist();
 
 	while (!quit)
 	{
 		while (SDL_PollEvent(&e) != 0)
 		{
-			if (e.type == SDL_QUIT) 
+			if (e.type == SDL_QUIT)
 				quit = true;
 			else if (e.type == SDL_KEYDOWN)
 			{
-                
-                   switch (e.key.keysym.sym)
-                    {
-						case SDLK_p:
-							gamePaused = !gamePaused;
-							break;
-                        case SDLK_ESCAPE:
-                            quit = true;
-                            break;
-                        case SDLK_SPACE:
-                            cannon->fire();
-                            break;
-                        case SDLK_RIGHT:
-                            cannon->position.x += 7;
-                            if (cannon->position.x + cannon->position.w > SCREEN_WIDTH) cannon->position.x = SCREEN_WIDTH - cannon->position.w;
-                            break;
-                        case SDLK_LEFT:
-                            cannon->position.x -= 7;
-                            if (cannon->position.x + cannon->position.w > SCREEN_WIDTH) cannon->position.x = SCREEN_WIDTH - cannon->position.w;
-                            break;
-                        case SDLK_r:
-                            cannon->setDegree(cannon->getDegree() + 5);
-                            rotation = ROTATE_RIGHT;
-                            break;
-                        case SDLK_e:
-                            cannon->setDegree(cannon->getDegree() - 5);
-                            rotation = ROTATE_LEFT;
-                            break;
-                        default:
-                            break;
-                }
+				switch (e.key.keysym.sym)
+				{
+				case SDLK_p:
+					gamePaused = !gamePaused;
+					break;
+				case SDLK_ESCAPE:
+					quit = true;
+					break;
+				case SDLK_SPACE:
+					cannon->fire();
+					break;
+				case SDLK_RIGHT:
+					cannon->position.x += 7;
+					if (cannon->position.x + cannon->position.w > SCREEN_WIDTH) cannon->position.x = SCREEN_WIDTH - cannon->position.w;
+					break;
+				case SDLK_LEFT:
+					cannon->position.x -= 7;
+					if (cannon->position.x + cannon->position.w > SCREEN_WIDTH) cannon->position.x = SCREEN_WIDTH - cannon->position.w;
+					break;
+				case SDLK_r:
+					if (cannon->updateDegree(5))
+						cannon->updateBullets(5);
+					rotation = ROTATE_RIGHT;
+					break;
+				case SDLK_e:
+					if (cannon->updateDegree(-5))
+						cannon->updateBullets(-5);
+					rotation = ROTATE_LEFT;
+					break;
+				default:
+					break;
+				}
 			}
 		}
-		
-        if (gamePaused) {
-            startFrameTime = SDL_GetTicks();
-            totalFrames++;
+
+
+		if (!gamePaused) {
+			startFrameTime = SDL_GetTicks();
+			totalFrames++;
 			firstExec = false;
-            SDL_RenderClear(gRenderer);
+			SDL_RenderClear(gRenderer);
 
-//        Scrolling background implementation
-            backgroundRect.y += 3;
-            duplicatedBackgroundRect.y += 3;
-            if(backgroundRect.y > SCREEN_HEIGHT) backgroundRect.y = 0;
-            if(duplicatedBackgroundRect.y > 0) duplicatedBackgroundRect.y = -SCREEN_HEIGHT;
+			//        Scrolling background implementation
+			backgroundRect.y += 3;
+			duplicatedBackgroundRect.y += 3;
+			if (backgroundRect.y > SCREEN_HEIGHT) backgroundRect.y = 0;
+			if (duplicatedBackgroundRect.y > 0) duplicatedBackgroundRect.y = -SCREEN_HEIGHT;
 
-//        Background image should be the first one to be rendered, otherwise overwrites renders
-            SDL_RenderCopy(gRenderer, backgroundText, NULL, &backgroundRect);
-            SDL_RenderCopy(gRenderer, backgroundText, NULL, &duplicatedBackgroundRect);
+			//        Background image should be the first one to be rendered, otherwise overwrites renders
+			SDL_RenderCopy(gRenderer, backgroundText, NULL, &backgroundRect);
+			SDL_RenderCopy(gRenderer, backgroundText, NULL, &duplicatedBackgroundRect);
 
-//        Calculate last frame duration
-            currentFrameTime = SDL_GetTicks();
-            deltaTime = (float) (currentFrameTime - lastFrameTime) / 1000;
-            lastFrameTime = SDL_GetTicks();
+			//        Calculate last frame duration
+			currentFrameTime = SDL_GetTicks();
+			deltaTime = (float)(currentFrameTime - lastFrameTime) / 1000;
+			lastFrameTime = SDL_GetTicks();
+			double elevation = 2;
 
 
+			for (auto &ovni : ovnis)
+			{
+				int randomShot;
 
-            for (size_t i = 0; i < ovnis.size(); i++)
-            {
-                int randomShot;
+				if (ovni.position.x > SCREEN_WIDTH)
+				{
+					ovni.position.x = 0;
+					ovni.position.y = Util::GenerateRandom(0, 250);
+					ovni.stopFalling();
 
-                if(ovnis[i].position.x > SCREEN_WIDTH)
-                {
-                    ovnis[i].position.x = 0;
-                    ovnis[i].position.y = Util::GenerateRandom(0, SCREEN_HEIGHT / 4) + Util::GenerateRandom(0, SCREEN_HEIGHT / 4);
-                    ovnis[i].stopFalling();
-                }
-                else if(ovnis[i].isIsFalling())
-                {
-//				FIXME check why 99 works and 9.8 doesn't
-                    ovnis[i].updateSpeedX(0, deltaTime);
-                    ovnis[i].updateSpeedY(99, deltaTime);
-                    ovnis[i].moveX(deltaTime);
-                    ovnis[i].moveY(deltaTime);
-                }
-                else
-                {
-                    randomShot = Util::GenerateRandom(0, 100);
-                    //cout << randomShot << endl;
-                    ovnis[i].moveX(deltaTime);
-                    if(randomShot > 99)
-                    { // 1% de chance de atirar
-                        ovnis[i].setDeltaTime(deltaTime);
-                        ovnis[i].fire(cannon->position);
-                    }
-                }
-                ovnis[i].setDT(deltaTime);
-                ovnis[i].draw();
-            }
-//        Animate using spritesheet
-            cannon->show(0.0f);
+				}
+				else if (ovni.isIsFalling()) {
+					ovni.updateSpeedX(0, deltaTime);
+					ovni.updateSpeedY(25, deltaTime);
+					ovni.moveX(deltaTime);
+					ovni.moveY(deltaTime);
+					ovni.position.y += 5;
+					ovni.updateDegree(elevation);
+					ovni.rotateRight(gRenderer);
+					
+					elevation += 1;
 
-            if(rotation == ROTATE_LEFT) cannon->rotateLeft(gRenderer);
-            else if(rotation == ROTATE_RIGHT) cannon->rotateRight(gRenderer);
-            else cannon->draw(gRenderer);
+					if (ovni.position.y > SCREEN_HEIGHT + 30) {
+						ovni.position.x = 0;
+						ovni.position.y = Util::GenerateRandom(0, 250);
+						ovni.stopFalling();
+					}
+				}
+				else {
+					randomShot = Util::GenerateRandom(0, 100);
+					ovni.position.y += Util::GenerateRandom(0, 1) - Util::GenerateRandom(0, 1);
+					ovni.moveX(deltaTime);
 
-            // \todo Implement a way of preventing same event processing in different frames
-            /** Draw bullets
+					if (randomShot > 99) {
+						ovni.setDeltaTime(deltaTime);
+						ovni.fire(cannon->position);
+					}
+				}
+				ovni.setDT(deltaTime);
+
+				if (!ovni.isIsFalling()) {
+					ovni.draw();
+				}
+
+			}
+
+			//        Animate using spritesheet
+			cannon->show(0.0f);
+
+			for (size_t i = 0; i < ovnis.size(); i++) {
+				ovnis[i].show(0.0);
+			}
+
+			if (rotation == ROTATE_LEFT) cannon->rotateLeft(gRenderer);
+			else if (rotation == ROTATE_RIGHT) cannon->rotateRight(gRenderer);
+			else cannon->draw(gRenderer);
+
+			// \todo Implement a way of preventing same event processing in different frames
+			/** Draw bullets
 			* Detect collision between cannon bullets and ovnis (and play sound effect if any)
 			* Increase score
 			*/
-            loopBreak = false;
+			loopBreak = false;
 			cannon->drawBullets(gRenderer);
-			
-			for (auto bullet : cannon->bullets) {
-				
-				for (auto ovni : ovnis) {
+
+			for (auto &bullet : cannon->bullets) {
+
+				for (auto &ovni : ovnis) {
 					if (loopBreak) break;
 
 					if (Collision::CircleCollision(ovni.position, bullet.position)) {
@@ -329,19 +370,17 @@ int main(int argc, char *args[])
 						musicPlayer->playSoundEffect("media/effect.wav");
 						loopBreak = true;
 					}
-
 				}
 			}
 
-
 			//Collision between ovnis shoots and the cannon
-            loopBreak = false;
-		
-            for (size_t k = 0; k < ovnis.size() && !loopBreak; ++k)
+			loopBreak = false;
+
+			for (size_t k = 0; k < ovnis.size() && !loopBreak; ++k)
 			{
 				for (size_t m = 0; m < ovnis[k].bullets.size() && !loopBreak; ++m)
 				{
-//					CircleCollision is better than AABB here
+					//					CircleCollision is better than AABB here
 					if (Collision::CircleCollision(cannon->position, ovnis[k].bullets[m].position))
 					{
 						cannon->setLifes(cannon->getLifes() - 1);
@@ -350,60 +389,57 @@ int main(int argc, char *args[])
 						loopBreak = true;
 					}
 				}
-           }
-//        if (cannon->getLifeState() == Cannon::LIFE_STATE::DEAD)
-//        {
-//            cout << "dead..." << endl;
-//        }
-            if(kills >= 1000) kills = 0;
-            std::stringstream temp;
-            temp << kills;
+			}
+			//        if (cannon->getLifeState() == Cannon::LIFE_STATE::DEAD)
+			//        {
+			//            cout << "dead..." << endl;
+			//        }
+			if (kills >= 1000) kills = 0;
+			std::stringstream temp;
+			temp << kills;
 
-            //        FIXME Poor performance
-            score.displayText = "Kills: " + temp.str();
+			//        FIXME Poor performance
+			score.displayText = "Kills: " + temp.str();
 
-            std::stringstream deltaString;
-            deltaString << deltaTime;
+			std::stringstream deltaString;
+			deltaString << deltaTime;
 
-            std::stringstream waitTime;
-            waitTime << fpsMill;
+			std::stringstream waitTime;
+			waitTime << fpsMill;
 
-            std::stringstream fspString;
-            fspString << fps;
+			std::stringstream fspString;
+			fspString << fps;
 
-            realTimeGameInfo.displayText = "DELTA: " + deltaString.str() + "  WAIT: " + waitTime.str() +
-                    "\n  FPS: " + fspString.str();
+			realTimeGameInfo.displayText = "DELTA: " + deltaString.str() + "  WAIT: " + waitTime.str() +
+				"\n  FPS: " + fspString.str();
 
-            score.surface = TTF_RenderText_Solid(score.font, score.displayText.c_str(), score.color);
-            realTimeGameInfo.surface = TTF_RenderText_Solid(realTimeGameInfo.font,
-                    realTimeGameInfo.displayText.c_str(), realTimeGameInfo.color);
+			score.surface = TTF_RenderText_Solid(score.font, score.displayText.c_str(), score.color);
+			realTimeGameInfo.surface = TTF_RenderText_Solid(realTimeGameInfo.font,
+				realTimeGameInfo.displayText.c_str(), realTimeGameInfo.color);
 
+			score.texture = SDL_CreateTextureFromSurface(gRenderer, score.surface);
+			realTimeGameInfo.texture = SDL_CreateTextureFromSurface(gRenderer, realTimeGameInfo.surface);
 
-            score.texture = SDL_CreateTextureFromSurface(gRenderer, score.surface);
-            realTimeGameInfo.texture = SDL_CreateTextureFromSurface(gRenderer, realTimeGameInfo.surface);
+			if (rotation == ROTATE_LEFT) cannon->rotateLeft(gRenderer);
+			else if (rotation == ROTATE_RIGHT) cannon->rotateRight(gRenderer);
+			else cannon->draw(gRenderer);
 
-            if(rotation == ROTATE_LEFT) cannon->rotateLeft(gRenderer);
-            else if(rotation == ROTATE_RIGHT) cannon->rotateRight(gRenderer);
-            else cannon->draw(gRenderer);
+			SDL_RenderCopy(gRenderer, score.texture, NULL, &score.rect);
+			SDL_RenderCopy(gRenderer, realTimeGameInfo.texture, NULL, &realTimeGameInfo.rect);
 
-            SDL_RenderCopy(gRenderer, score.texture, NULL, &score.rect);
-            SDL_RenderCopy(gRenderer, realTimeGameInfo.texture, NULL, &realTimeGameInfo.rect);
+			//        Draw cannon center position			
+			point.position.h = 3;
+			point.position.w = 3;
+			point.position.x = cannon->position.x + cannon->position.w / 2;
+			point.position.y = cannon->position.y + cannon->position.h / 2;
+			point.draw();
 
-//        Draw cannon center position
+			SDL_RenderPresent(gRenderer);
+			//std::cout << fpsMill << " dt " << deltaTime << endl;
 
-			
-            point.position.h = 3;
-            point.position.w = 3;
-            point.position.x = cannon->position.x + cannon->position.w / 2;
-            point.position.y = cannon->position.y + cannon->position.h / 2;
-            point.draw();
-
-            SDL_RenderPresent(gRenderer);
-            //std::cout << fpsMill << " dt " << deltaTime << endl;
-
-
-            SDL_Delay(fpsMill - deltaTime);
-		} else {
+			SDL_Delay(fpsMill - deltaTime);
+		}
+		else {
 
 			Text* gameMainMenuOpt1;
 			Text* gameMainMenuOpt2;
@@ -413,7 +449,7 @@ int main(int argc, char *args[])
 
 			SDL_RenderClear(gRenderer);
 
-			gamePausedInfo = cMenu::loadFontAndSetPosition(SCREEN_WIDTH / 2 - 210/2, SCREEN_HEIGHT / 2 + 15 , 210, 25);
+			gamePausedInfo = cMenu::loadFontAndSetPosition(SCREEN_WIDTH / 2 - 210 / 2, SCREEN_HEIGHT / 2 + 15, 210, 25);
 
 			gMenu.adjustText();
 
@@ -431,9 +467,10 @@ int main(int argc, char *args[])
 					slide += 0.05;
 					gamePausedInfo.rect.y -= slide;
 					saveY = gamePausedInfo.rect.y;
-				} else 
+				}
+				else
 					slide2 += 0.05;
-				
+
 
 				while (SDL_PollEvent(&e) != 0)
 				{
@@ -442,12 +479,12 @@ int main(int argc, char *args[])
 					else if (e.type == SDL_KEYDOWN) {
 						switch (e.key.keysym.sym) {
 						case SDLK_UP:
-							if (showMenu) 
+							if (showMenu)
 								gMenu.updateSelection(MENU_UP);
 							cout << "up pressed\n";
 							break;
 						case SDLK_DOWN:
-							if (showMenu) 
+							if (showMenu)
 								gMenu.updateSelection(MENU_DOWN);
 							cout << "down pressed\n";
 							break;
@@ -462,7 +499,8 @@ int main(int argc, char *args[])
 					gamePausedInfo.rect.y = saveY;
 					gamePausedInfo.displayText = "HELLO PLAYER";
 				}
-				else 
+				else
+					//	gamePaused = !gamePaused;
 					showMenu = true;
 			}
 			else {

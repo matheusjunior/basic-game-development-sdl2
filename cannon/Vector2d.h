@@ -2,8 +2,8 @@
 #define vector2d
 
 struct Vector2d {
-	float x;
-	float y;
+	double x;
+	double y;
 
 	Vector2d():x(0.0), y(0.0){}
 
