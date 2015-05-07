@@ -27,6 +27,18 @@ int Util::GenerateRandom(int l, int u)
 	return (int) r;
 }
 
+double Util::CosDeg(double angle) {
+	
+	if (angle == 90) return 0;
+	double angleradians = angle * M_PI / 180.0f;
+	return cos(angleradians);
+}
+
+double Util::SinDeg(double angle) {
+	double angleradians = angle * M_PI / 180.0f;
+	return sin(angleradians);
+}
+
 Vector2d Util::getDistance(Vector2d r1, Vector2d r2) {
 
 	Vector2d temp;
@@ -40,3 +52,6 @@ Vector2d Util::getDistance(Vector2d r1, Vector2d r2) {
 
 	return temp;
 }
+
+
+// git reset --hard <sha1-commit-id>

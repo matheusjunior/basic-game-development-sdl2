@@ -37,25 +37,24 @@ public:
 		return degree;
 	}
 
-	bool updateDegree(double degree) {
-		if (GameObject::degree + degree < 60 && GameObject::degree + degree > -60) {
-			GameObject::degree += degree;
+	bool updateDegree(double d) {
+		if (degree + d < 60 && degree + d > -60) {
+			degree += d;
 			return true;
 		}
 		return false;
 	}
 
 	void setDegree(double degree) {
-		
-		GameObject::degree = degree;
+		degree = degree;
 	}
 
 	Stopwatch *getStopwatch() const {
 		return stopwatch;
 	}
 
-	void setStopwatch(Stopwatch *stopwatch) {
-		GameObject::stopwatch = stopwatch;
+	void setStopwatch(Stopwatch *inStopwatch) {
+		stopwatch = inStopwatch;
 	}
 
 	/// GameObject Texture

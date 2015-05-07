@@ -11,7 +11,7 @@
 
 #include <time.h>
 #include <SDL.h>
-
+#include <math.h>
 
 #else
 
@@ -23,6 +23,11 @@ class Util
 {
 public:    
     int static GenerateRandom(int l, int u);
+
+	double static CosDeg(double angle);
+
+	double static SinDeg(double angle);
+
 	Vector2d static getDistance(Vector2d r1, Vector2d r2);
 };
 

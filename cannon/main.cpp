@@ -27,6 +27,7 @@
 #include "FlyingObject.h"
 #include "MusicPlayer.h"
 #include "Menu.h"
+#include "telefone.hpp"
 
 SDL_Window *gWindow = NULL;
 SDL_Renderer *gRenderer = NULL;
@@ -104,7 +105,7 @@ int main(int argc, char *args[])
 	uint32_t endFrameTime = 0;
 	int saveY = 0;
 	cMenu gMenu;
-
+	Telefone *gTelefone = new Telefone();
 
 	bool showMenu = false;
 
@@ -137,6 +138,17 @@ int main(int argc, char *args[])
 		return -1;
 	}
 
+
+	/*realTimeGameInfo = cMenu::loadFontAndSetPosition(220, 10, 640, 25);
+	realTimeGameInfo.texture = SDL_CreateTextureFromSurface(gRenderer, realTimeGameInfo.surface);
+	realTimeGameInfo.displayText = "ESPERANDO SEGUNDO JOGADOR";
+	SDL_RenderCopy(gRenderer, realTimeGameInfo.texture, NULL, &realTimeGameInfo.rect);*/
+	
+	while (!gTelefone->ligar("localhost") && !gTelefone->esta_chamando()) 
+		;
+	
+		
+
 	Cannon* cannon = new Cannon(SCREEN_WIDTH / 2 - 40, SCREEN_HEIGHT - 130, 80, 105, 400,
 		"media/baseCannon.png", gRenderer, "media/red-square.bmp");
 	//    Load sprite sheet (array of images)
@@ -168,7 +180,7 @@ int main(int argc, char *args[])
 	px = -25 + Util::GenerateRandom(2, 62);
 	py = Util::GenerateRandom(120, 210);
 	speed = Util::GenerateRandom(100, 200);
-	FlyingObject fly3(px, py, 165, 102, speed, "media/purple-square.bmp", gRenderer, "media/red-square.bmp");
+	FlyingObject fly3(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 165, 102, speed, "media/purple-square.bmp", gRenderer, "media/red-square.bmp");
 
 	px = -55 + Util::GenerateRandom(0, 60);
 	py = Util::GenerateRandom(200, 280);
@@ -193,7 +205,7 @@ int main(int argc, char *args[])
 	fly2.loadBaseImage();
 	fly2.getStopwatch()->start();
 
-
+	
 	std::vector<FlyingObject> ovnis;
 	fly1.speedY = 0;
 	fly2.speedY = 0;
@@ -206,6 +218,7 @@ int main(int argc, char *args[])
 
 	//    Cannon center position
 	FlyingObject point(px, py, 25, 25, 0, "media/green1-square.bmp", gRenderer, "media/red-square.bmp");
+	FlyingObject flyingRect(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 100, 100, 0, "media/green1-square.bmp", gRenderer, "media/red-square.bmp");
 
 	score.font = TTF_OpenFont("media/emulogic.ttf", 20);
 
@@ -246,11 +259,17 @@ int main(int argc, char *args[])
 					break;
 				case SDLK_RIGHT:
 					cannon->position.x += 7;
-					if (cannon->position.x + cannon->position.w > SCREEN_WIDTH) cannon->position.x = SCREEN_WIDTH - cannon->position.w;
+					gTelefone->enviar('R');
+					if (cannon->position.x + cannon->position.w > SCREEN_WIDTH) 
+						cannon->position.x = SCREEN_WIDTH - cannon->position.w;
+						
 					break;
 				case SDLK_LEFT:
 					cannon->position.x -= 7;
-					if (cannon->position.x + cannon->position.w > SCREEN_WIDTH) cannon->position.x = SCREEN_WIDTH - cannon->position.w;
+					gTelefone->enviar('L');
+					if (cannon->position.x + cannon->position.w > SCREEN_WIDTH) 
+						cannon->position.x = SCREEN_WIDTH - cannon->position.w;
+
 					break;
 				case SDLK_r:
 					if (cannon->updateDegree(5))
@@ -336,6 +355,18 @@ int main(int argc, char *args[])
 					ovni.draw();
 				}
 
+			}
+
+			char instruction;
+
+			instruction = gTelefone->recebe();
+
+			if (instruction == 'L') {
+				flyingRect.position.x -= 7;
+			}
+			
+			if (instruction == 'R') {
+				flyingRect.position.x += 7;
 			}
 
 			//        Animate using spritesheet
@@ -432,6 +463,7 @@ int main(int argc, char *args[])
 			point.position.w = 3;
 			point.position.x = cannon->position.x + cannon->position.w / 2;
 			point.position.y = cannon->position.y + cannon->position.h / 2;
+			flyingRect.draw();
 			point.draw();
 
 			SDL_RenderPresent(gRenderer);

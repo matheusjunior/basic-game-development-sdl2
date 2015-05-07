@@ -7,6 +7,5 @@
 #define RECT_HEIGHT		35
 #define MENU_UP			 1
 #define MENU_DOWN       -1
-#define PI 3.14159265
 
 #endif // consts

@@ -17,6 +17,7 @@
 
 #include "GameObject.h"
 #include "Consts.h"
+#include "Util.h"
 #include <list>
 #include <vector>
 
@@ -122,8 +123,10 @@ void Cannon::drawBullets(SDL_Renderer *renderer)
 {
 	//    update bullets positions
 	for (size_t i = 0; i < bullets.size(); i++) {
-			double px = cos(bullets[i].getDegree() * PI / 180) * 8;
-			double py = sin(bullets[i].getDegree()* PI / 180) * 8;
+		double deg = bullets[i].getDegree();
+		
+			double px = Util::CosDeg(deg) * 10;
+			double py = Util::SinDeg(deg) * 10;
 			bullets[i].position.y -= py;
 			bullets[i].position.x -= px;
 		
@@ -149,16 +152,16 @@ void Cannon::fire()
 		bullet.degree = degreeForBullets;
 		bullet.position.h = 12;
 		bullet.position.w = 12;
-		bullet.position.x = position.x + position.w / 2 - bullet.position.w / 2 - cos(bullet.getDegree()* PI / 180) *position.w/3;
-		bullet.position.y = position.y + sin(bullet.getDegree()* PI / 180) *position.h;
+		bullet.position.x = position.x + position.w / 2 - bullet.position.w / 2;
+		bullet.position.y = position.y;
 	}
 	else if (lifeState == WEAK || lifeState == DEAD)
 	{
 		bullet.degree = degreeForBullets;
 		bullet.position.h = 8;
 		bullet.position.w = 8;
-		bullet.position.x = position.x + position.w / 2 - bullet.position.w / 2 - cos(bullet.getDegree()* PI / 180) *position.w/3;
-		bullet.position.y = position.y + sin(bullet.getDegree()* PI / 180) * position.h;
+		bullet.position.x = position.x + position.w / 2 - bullet.position.w / 2;
+		bullet.position.y = position.y;
 	}
 
 	this->bullets.push_back(bullet);
